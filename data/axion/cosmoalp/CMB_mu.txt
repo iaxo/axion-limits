@@ -1,0 +1,7 @@
+#Relic ALP decay photons not producing \[Mu] distortions in CMB,
+#Cadamuro and Redondo.
+#
+0.10000000E+13 0.15848931E-18
+0.51348338E+04 0.48888729E-06
+0.88241390E+04 0.67484544E-08
+0.21007182E+11 0.10000025E-18
