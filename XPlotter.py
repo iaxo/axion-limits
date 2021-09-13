@@ -1,5 +1,5 @@
-#================================PlotFuncs.py==================================#
-#================================PlotFuncs.py==================================#
+#================================XPlotter.py==================================#
+#================================XPlotter.py==================================#
 # Igor G. Irastorza 2020
 #
 # Description:
@@ -41,7 +41,7 @@ class BasePlot():
                     x_min = 1.0e-11,x_max = 1.0e9,\
                     ticksopt_x = "normal", ticksopt_y = "normal",
                     labelfontsize=14):
-    
+
         plt.rc('text', usetex=True)
         plt.rc('font', family='times',size=labelfontsize)
         self.fig = plt.figure(figsize=(figsizex,figsizey))
@@ -79,9 +79,9 @@ class BasePlot():
 
 
     #==============================================================================#
-    # will draw a new exclusion line to the plot, no to be filled 
+    # will draw a new exclusion line to the plot, no to be filled
     #
-    def AddPlotItem(self,typeitem,linename,data,**kwargs):   
+    def AddPlotItem(self,typeitem,linename,data,**kwargs):
         y2 = self.plot.get_ylim()[1]
         kwargs['zorder']=self.zorder
         if (typeitem not in ['band','line','region']):
@@ -96,9 +96,9 @@ class BasePlot():
         self.zorder+=1
 
     # #==============================================================================#
-    # # will draw a new exclusion line to the plot, no to be filled 
+    # # will draw a new exclusion line to the plot, no to be filled
     # #
-    # def AddPlotLine(self,linename,data,**kwargs):   
+    # def AddPlotLine(self,linename,data,**kwargs):
     #     y2 = self.plot.get_ylim()[1]
     #     kwargs['zorder']=self.zorder
     #     self.plot.plot(data[:,0], data[:,1],**kwargs)
@@ -109,18 +109,18 @@ class BasePlot():
     # # will draw a new exclusion line to the plot (defined as a line and everything
     # # above it is excluded (i.e. potentially filled)
     # #
-    # def AddPlotBand(self,linename,data,**kwargs):   
+    # def AddPlotBand(self,linename,data,**kwargs):
     #     y2 = self.plot.get_ylim()[1]
     #     kwargs['zorder']=self.zorder
     #     self.plot.fill_between(data[:,0], data[:,1], y2=y2, **kwargs)
     #     self.zorder+=1
-            
+
 
     # #==============================================================================#
     # # will draw a new (exclusion) region to the plot (defined as a closed contour
     # # that is potentially filled
     # #
-    # def AddPlotRegion(self,linename,data,**kwargs):      
+    # def AddPlotRegion(self,linename,data,**kwargs):
     #     y2 = self.plot.get_ylim()[1]
     #     kwargs['zorder']=self.zorder
     #     plt.fill(data[:,0], data[:,1],**kwargs)
@@ -140,22 +140,22 @@ class BasePlot():
         plt.ioff()
         plt.show()
         self.fig.canvas.mpl_disconnect(cid)
-        
- 
-       
+
+
+
     #==============================================================================#
     # saves the plot on a file
-    # 
+    #
     def SavePlot(self,plotname,pngsave=False, openpdf=False, picklesave=False):
         filename = plotpdfdir+plotname+'.pdf'
         self.fig.savefig(filename,bbox_inches='tight')
         print (filename + " saved.")
-        
+
         if pngsave:
             self.fig.savefig(plotpngdir+plotname+'.png',bbox_inches='tight')
             print (filename + ".png saved.")
-        
-        if openpdf:            
+
+        if openpdf:
             os.startfile(filename)
             print(filename)
 
@@ -163,12 +163,12 @@ class BasePlot():
             fil = open(plotpdfdir+plotname+".pickle", "wb")
             pickle.dump(self.fig,fil)
             print (plotpdfdir+plotname+ ".pickle saved.")
-        
+
 
 
 
 #==============================================================================#
-# class representing an physics item (i.e. excluded region) 
+# class representing an physics item (i.e. excluded region)
 # to be drawn on plot
 # useful to create the object but decide later if to be plotted or not
 #==============================================================================#
@@ -196,12 +196,8 @@ class ExPltItem:
         #     plot.AddPlotRegion(self.name,data,**self.drawopt)
         # if (self.typeitem == "line"):
         #     plot.AddPlotLine(self.name,data,**self.drawopt)
-            
+
 
 #==============================================================================#
 #==============================================================================#
 #==============================================================================#
-
-
-
-
