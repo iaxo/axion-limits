@@ -11,3 +11,9 @@ __pycache__/
 
 *.pickle
 .DS_Store
+
+# Plots
+/plots/*
+!/plots/*.pdf
+!/plots/*.png
+

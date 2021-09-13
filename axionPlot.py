@@ -7,79 +7,78 @@ from XPlotter import BasePlot, ExPltItem
 # class to encapsulate the needed tools to plot sensitivities in the
 # ALP g_ag versus m_a parameter space
 class AxionGagPlot:
-
     # ==============================================================================#
     # build and plot...
     #
+    ListOfPlotTypes = {'large_panorama', 'panorama', 'LSWexps', 'haloscopes', 'haloscopes_zoom',
+                       'haloscopes_radeszoom', 'helioscopes'}
+
     def __init__(self, plottype="large_panorama", projections=False, showplot=True, saveplot=True):
         # print(projections, showplot, saveplot)
-        self.ListOfPlotTypes = {'large_panorama', 'panorama', 'LSWexps', 'haloscopes', 'haloscopes_zoom',
-                                'haloscopes_radeszoom', 'helioscopes'}
 
-        if ((plottype not in self.ListOfPlotTypes)):
+        if plottype not in self.ListOfPlotTypes:
             print('ERROR: ' + plottype + ' not a known plot type')
             exit()
 
-        # if (plottype == "large_panorama"):
-        figx = 6.5;
-        figy = 5;
-        ymin = 1e-18;
-        ymax = 1e-4;
-        xmin = 1e-11;
+        figx = 6.5
+        figy = 5
+        ymin = 1e-18
+        ymax = 1e-4
+        xmin = 1e-11
         xmax = 1e9
-        ticksopt_x = 'dense';
+        ticksopt_x = 'dense'
         ticksopt_y = 'normal'
-        labelx = '$m_a$ (eV)';
+        labelx = '$m_a$ (eV)'
         labely = r'$|g_{a\gamma}|$ (GeV$^{-1}$)'
 
-        if (plottype == "panorama"):
-            figx = 6.5;
-            figy = 6;
-            ymin = 1e-17;
-            ymax = 1e-6;
-            xmin = 1e-9;
+        if plottype == "panorama":
+            figx = 6.5
+            figy = 6
+            ymin = 1e-17
+            ymax = 1e-6
+            xmin = 1e-9
             xmax = 10
-            ticksopt_x = 'normal';
+            ticksopt_x = 'normal'
             ticksopt_y = 'normal'
 
-        if (plottype == "helioscopes"):
-            figx = 8;
-            figy = 6;
-            ymin = 1e-13;
-            ymax = 1e-8;
-            xmin = 1e-11;
+        if plottype == "helioscopes":
+            figx = 8
+            figy = 6
+            ymin = 1e-13
+            ymax = 1e-8
+            xmin = 1e-11
             xmax = 1
-            ticksopt_x = 'normal';
+            ticksopt_x = 'normal'
             ticksopt_y = 'normal'
 
-        if (plottype == "LSWexps"):
-            figx = 6.5;
-            figy = 5;
-            ymin = 1e-13;
-            ymax = 1e-6;
-            xmin = 1e-10;
+        if plottype == "LSWexps":
+            figx = 6.5
+            figy = 5
+            ymin = 1e-13
+            ymax = 1e-6
+            xmin = 1e-10
             xmax = 1e-2
-            ticksopt_x = 'normal';
+            ticksopt_x = 'normal'
             ticksopt_y = 'normal'
 
-        if (plottype in ["haloscopes", "haloscopes_zoom", "haloscopes_radeszoom"]):
-            figx = 8;
-            figy = 5;
-            ymin = 1e-1;
-            ymax = 1e3;
-            xmin = 1e-9;
+        if plottype in ["haloscopes", "haloscopes_zoom", "haloscopes_radeszoom"]:
+            figx = 8
+            figy = 5
+            ymin = 1e-1
+            ymax = 1e3
+            xmin = 1e-9
             xmax = 1
-            if (plottype in ["haloscopes_zoom"]):
-                xmin = 3e-7;
+            if plottype in ["haloscopes_zoom"]:
+                xmin = 3e-7
                 xmax = 3e-2
-            if (plottype in ["haloscopes_radeszoom"]):
-                xmin = 3.4e-5;
+            if plottype in ["haloscopes_radeszoom"]:
+                xmin = 3.4e-5
                 xmax = 4.5e-5
-            ticksopt_x = 'normal';
+            ticksopt_x = 'normal'
             ticksopt_y = 'normal'
             labely = r'$|C_{a\gamma}|\tilde{\rho}_a^{1/2}$'
 
-        self.axplot = BasePlot(xlab=labelx, ylab=labely, \
+        self.axplot = BasePlot(xlab=labelx, ylab=labely,
                                figsizex=figx, figsizey=figy,
                                y_min=ymin, y_max=ymax,
                                x_min=xmin, x_max=xmax,
@@ -88,12 +87,12 @@ class AxionGagPlot:
         self.axionDB = BuildDB()
         self.PlotData(plottype, projections)
         self.PlotLabels(plottype, projections)
-        if (showplot):
-            self.axplot.ShowPlot();
-        if (saveplot):
+        if showplot:
+            self.axplot.ShowPlot()
+        if saveplot:
             print('saving...')
-            self.axplot.SavePlot('AxionPhoton_' + plottype, picklesave=True);
-        print('done');
+            self.axplot.SavePlot('AxionPhoton_' + plottype, picklesave=True)
+        print('done')
 
     # ==============================================================================#
     # which lines & regions to plot here...
@@ -102,10 +101,10 @@ class AxionGagPlot:
         print("projections=", projections)
 
         # ===========================================================================#
-        if (plottype == "large_panorama"):
+        if plottype == "large_panorama":
             for item in ['qcdband', 'ksvz']:
                 self.axionDB[item].DrawItem(self.axplot)
-            if (projections):
+            if projections:
                 for item in ['ABRA1', 'ABRA1_l',  # 'KLASH',
                              'ADMXprosp_2GHz', 'ADMXprosp_2GHz_l', 'ADMXprosp_10GHz', 'ADMXprosp_10GHz_l',
                              'CAPP4_l', 'MADMAX_l',  # 'BRASS'
@@ -120,7 +119,7 @@ class AxionGagPlot:
                          'Overduin', 'Ressell', 'endlist2_gamma_projimprov', 'telescopes', 'telescopes_new',
                          'HBalpbound', 'solar_nu', 'CAST']:
                 self.axionDB[item].DrawItem(self.axplot)
-            if (projections):
+            if projections:
                 for item in ['ALPSII_l', 'BabyIAXO_l', 'IAXOplus_l']:
                     self.axionDB[item].DrawItem(self.axplot)
             for item in ['OSCAR2015', 'PVLAS2015', 'BeamDump']:
@@ -128,7 +127,7 @@ class AxionGagPlot:
 
         # ===========================================================================#
 
-        if (plottype == "helioscopes"):
+        if plottype == "helioscopes":
             for item in ['qcdband', 'ksvz',
                          'admx_hf_2016', 'ADMX2018', 'ADMX2019', 'ADMX_sidecar',
                          'CAPP-8TB', 'HAYSTAC', 'HAYSTAC2020', 'ORGAN', 'QUAX', 'QUAX2021', 'RADES2021', 'ADMX_SLIC',
@@ -150,7 +149,7 @@ class AxionGagPlot:
                 self.axionDB[item].DrawItem(self.axplot)
 
         # ===========================================================================#
-        if (plottype == "panorama"):
+        if plottype == "panorama":
             for item in ['qcdband', 'ksvz', 'dfsz',
                          'admx_hf_2016', 'ADMX2018', 'ADMX2019', 'ADMX_sidecar',
                          'CAPP-8TB', 'CAPP2021', 'HAYSTAC', 'HAYSTAC2020', 'ORGAN', 'QUAX', 'QUAX2021',
@@ -159,12 +158,12 @@ class AxionGagPlot:
                          'endlist2_gamma_projimprov', 'telescopes', 'telescopes_new',
                          'HBalpbound_l', 'solar_nu', 'CAST']:
                 self.axionDB[item].DrawItem(self.axplot)
-            if (projections):
+            if projections:
                 for item in ['ABRA1', 'KLASH', 'IAXODM', 'ORGANprosp', 'castcapp2', 'CAPP4', 'ADMXprosp_2GHz',
                              'ADMXprosp_10GHz', 'MADMAX',
                              'ADMXprosp_2GHz_l', 'ADMXprosp_10GHz_l', 'MADMAX_l', 'CAST']:
                     self.axionDB[item].DrawItem(self.axplot)
-            if (projections):
+            if projections:
                 for item in ['ALPSII_l', 'BabyIAXO', 'IAXO', 'IAXOplus', 'BabyIAXO_l', 'IAXO_l', 'IAXOplus_l']:
                     self.axionDB[item].DrawItem(self.axplot)
             for item in ['SHAFT', 'ABRA_2021']:
@@ -173,12 +172,12 @@ class AxionGagPlot:
                 self.axionDB[item].DrawItem(self.axplot)
 
         # ===========================================================================#
-        if (plottype == "LSWexps"):
+        if plottype == "LSWexps":
             for item in ['qcdband', 'ksvz',
                          'THintMayer', 'THintCIBER', 'hess', 'mrk421', 'sn1987a_photon', 'FERMI_NG1275', 'CAST',
                          'HBhint']:
                 self.axionDB[item].DrawItem(self.axplot)
-            if (projections):
+            if projections:
                 for item in ['ALPSII', 'STAX1', 'STAX2', 'ALPSII', 'JURA']:
                     self.axionDB[item].DrawItem(self.axplot)
                 self.axionDB[item].DrawItem(self.axplot)
@@ -186,7 +185,7 @@ class AxionGagPlot:
                 self.axionDB[item].DrawItem(self.axplot)
 
         # ===========================================================================#
-        if (plottype in ["haloscopes", "haloscopes_zoom", "haloscopes_radeszoom"]):
+        if plottype in ["haloscopes", "haloscopes_zoom", "haloscopes_radeszoom"]:
             self.axionDB['CAST'].drawopt['facecolor'] = 'steelblue'
             for item in ['qcdband', 'ksvz',
                          'ADMX2018', 'ADMX2019', 'ADMX_sidecar',  # 'ADMX2019_2',
@@ -195,7 +194,7 @@ class AxionGagPlot:
                          'RADES2021', 'admx', 'CAST']:
                 RenormItem(self.axionDB[item])
                 self.axionDB[item].DrawItem(self.axplot)
-            if (projections):
+            if projections:
                 for item in ['ABRA1', 'ABRA2', 'ABRA3', 'ABRA1_l', 'KLASH', 'TOORAD',  # 'IAXODM','IAXODM_l',
                              'ADMXprosp_2GHz', 'ADMXprosp_2GHz_l', 'ADMXprosp_10GHz', 'ADMXprosp_10GHz_l',
                              'CAPP4_l', 'MADMAX_l', 'ORGANprosp', 'BRASS']:
@@ -204,7 +203,7 @@ class AxionGagPlot:
             for item in ['old_haloscopes']:
                 RenormItem(self.axionDB[item])
                 self.axionDB[item].DrawItem(self.axplot)
-            if (projections):
+            if projections:
                 for item in ['BabyIAXO', 'BabyIAXO_l', 'IAXO', 'IAXO_l', 'IAXOplus', 'IAXOplus_l']:
                     RenormItem(self.axionDB[item])
                     self.axionDB[item].DrawItem(self.axplot)
@@ -214,7 +213,7 @@ class AxionGagPlot:
     #
     def PlotLabels(self, plottype, projections=False):
         # ===========================================================================#
-        if (plottype == "large_panorama"):
+        if plottype == "large_panorama":
             plt.text(1e-8, 2e-10, r'{\bf Helioscopes (CAST)}', color="black", size=10)
             plt.text(1e-7, 2e-7, r'{\bf Laboratory}', color="white", size=10)
             plt.text(1e-9, 5e-12, r"$\gamma \textrm{-rays}$", color="black", size=10, ha="center")
@@ -241,7 +240,7 @@ class AxionGagPlot:
             plt.text(1.3e-5, 2.5e-14, 'HAYSTAC', color="black", size=4, ha='center', va='center', rotation=90)
             # plt.text(1.1e-5,2.5e-14,'KLASH',color="black",size=5,ha='center',va='center',rotation=90)
 
-            if (projections):
+            if projections:
                 plt.text(1e-3, 3e-11, r'{ BabyIAXO}', color="black", size=8, ha='center', va='center')
                 plt.text(1e-3, 5e-12, r'{ IAXO}', color="black", size=8, ha='center', va='center')
                 plt.text(1e-6, 3e-11, r'{ ALPS-II}', color="black", size=8, ha='center', va='center')
@@ -254,7 +253,7 @@ class AxionGagPlot:
                 plt.text(7e-9, 4e-15, '"DM-\n Radios"', color="black", size=6, ha='center', va='center')
 
         # ===========================================================================#
-        if (plottype == "panorama"):
+        if plottype == "panorama":
             plt.text(1e-5, 2e-10, r'{\bf Helioscopes (CAST)}', color="black", size=11)
             plt.text(1e-7, 2e-7, r'{\bf Laboratory}', color="white", size=11)
             plt.text(2e-9, 6e-12, r"HE $\gamma \textrm{-rays}$", color="black", size=10)
@@ -267,14 +266,14 @@ class AxionGagPlot:
             plt.text(3, 1.3e-9, 'Sun', color="black", size=9, ha='center')
             # plt.text(1e2,2e-9,r'{\bf Sun}',color="white",size=10)
 
-            if (projections):
+            if projections:
                 plt.text(2e-3, 2.5e-11, r'BabyIAXO', color="black", size=10, ha='center', va='center')
                 plt.text(2e-3, 7e-12, r'{\bf IAXO}', color="black", size=11, ha='center', va='center')
                 # plt.text(1e-5,1e-12,r'{\bf IAXO+}',color="black",size=9,ha='center',va='center')
                 plt.text(5e-7, 3e-11, r'{\bf ALPS-II}', color="black", size=10, ha='center', va='center')
                 # plt.text(5e-7,1.5e-12,r'{\bf JURA}',color="black",size=9,ha='center',va='center')
         # ===========================================================================#
-        if (plottype == "helioscopes"):
+        if plottype == "helioscopes":
             plt.text(3e-4, 8.5e-11, r'{\bf CAST}', color="black", size=13)
             # plt.text(1e-7,2e-7,r'{\bf Laboratory}',color="white",size=12)
             plt.text(1e-8, 6e-12, r"T-hints", color="red", size=11)
@@ -294,7 +293,7 @@ class AxionGagPlot:
             plt.text(1.5e-11, 7e-12, 'SN1987A', color="black", size=9)
             plt.text(6e-10, 7e-12, 'Fermi\nNG1275', color="black", size=9)
 
-            if (projections):
+            if projections:
                 plt.text(3e-4, 2e-11, r'BabyIAXO', color="black", size=12)
                 plt.text(3e-4, 5e-12, r'{\bf IAXO}', color="black", size=13)
                 # plt.text(1e-5,1e-12,r'{\bf IAXO+}',color="black",size=9,ha='center',va='center')
@@ -302,7 +301,7 @@ class AxionGagPlot:
                 # plt.text(5e-7,1.5e-12,r'{\bf JURA}',color="black",size=9,ha='center',va='center')
 
         # ===========================================================================#
-        if (plottype == "haloscopes"):
+        if plottype == "haloscopes":
             plt.text(2.5e-3, 110, r'{\bf CAST}', color="black", size=12, ha='center', rotation=-57)
             plt.text(1e-8, 3, 'ABRA/DM-Radio', color="black", size=12, ha='center', rotation=-57)
             plt.text(3.3e-7, 70, 'KLASH', color="black", size=11, ha='center', va='center', rotation=90)
@@ -318,7 +317,7 @@ class AxionGagPlot:
             plt.text(1.2e-4, 30, 'ORGAN', color="black", size=8, ha='center', va='center')
             plt.text(3e-5, 25, 'RADES', color="black", size=8, ha='center', va='center', rotation=90)
 
-            if (projections):
+            if projections:
                 plt.text(1.8e-3, 83, r'BabyIAXO', color="black", size=10, ha='center', va='center', rotation=-57)
                 plt.text(1e-3, 36, r'{\bf IAXO}', color="black", size=11, ha='center', va='center', rotation=-57)
                 plt.text(0.01, 12, 'TOORAD', color="black", size=8, ha='center', va='center', rotation=90)
@@ -327,7 +326,7 @@ class AxionGagPlot:
                 # plt.text(5e-7,1.5e-12,r'{\bf JURA}',color="black",size=9,ha='center',va='center')
 
         # ===========================================================================#
-        if (plottype == "LSWexps"):
+        if plottype == "LSWexps":
             plt.text(1e-3, 1e-10, r'CAST', color="black", size=10)
             plt.text(1e-4, 1.4e-7, r'{ ALPS-I}', color="white", size=10, ha='center', va='center')
             plt.text(1e-7, 1.5e-7, r'{ CROWS}', color="white", size=10, ha='center', va='center')
@@ -343,7 +342,7 @@ class AxionGagPlot:
                 plt.text(2e-5, 1.3e-12, r'{\bf JURA}', color="black", size=9, ha='center', va='center')
 
         # ===========================================================================#
-        if (plottype in ["haloscopes_zoom", "haloscopes_radeszoom"]):
+        if plottype in ["haloscopes_zoom", "haloscopes_radeszoom"]:
             plt.text(4e-3, 144, r'CAST', color="black", size=10, ha='center', va='center', rotation=-40)
             plt.text(1e-3, 2.8, 'KSVZ', color="green", size=9, va='center', ha='center')
             plt.text(2e-3, 0.36, 'Axion models', color="green", size=9, ha='center')
@@ -351,7 +350,7 @@ class AxionGagPlot:
             plt.text(8.3e-6, 400, 'BNL\n+UF', color="black", size=8, ha='center', va='center')
             plt.text(34.6e-6, 25, 'RADES', color="black", size=8, ha='center', va='center', rotation=90)
 
-            if (projections):
+            if projections:
                 plt.text(8e-6, 1.14, 'ADMX/CAPP', color="black", size=10, ha='center', va='center')
                 plt.text(1.2e-4, 1.15, 'MADMAX', color="black", size=8, ha='center', va='center')
                 plt.text(1.2e-4, 30, 'ORGAN', color="black", size=8, ha='center', va='center')
@@ -394,10 +393,10 @@ class AxionGaePlot:
         self.axionDB = BuildGaeDB()
         self.PlotData(plottype, projections)
         self.PlotLabels(plottype, projections)
-        if (showplot):
-            self.axplot.ShowPlot();
-        if (saveplot):
-            self.axplot.SavePlot('AxionElectron_' + plottype);
+        if showplot:
+            self.axplot.ShowPlot()
+        if saveplot:
+            self.axplot.SavePlot('AxionElectron_' + plottype)
 
     # ==============================================================================#
     # which lines & regions to plot here...
@@ -407,8 +406,8 @@ class AxionGaePlot:
                      'AJ53_starhint', 'AJ83_starhint', 'CAST_gae']:
             self.axionDB[item].DrawItem(self.axplot)
 
-        if (projections):
-            for item in ['IAXO_gae', 'IAXOplus_gae', 'IAXO_gae_l', 'IAXOplus_gae_l', ]:
+        if projections:
+            for item in ['IAXO_gae', 'IAXOplus_gae', 'IAXO_gae_l', 'IAXOplus_gae_l']:
                 self.axionDB[item].DrawItem(self.axplot)
 
     # ==============================================================================#
@@ -417,7 +416,7 @@ class AxionGaePlot:
     def PlotLabels(self, plottype, projections=False):
         plt.text(2e-4, 1.2e-11, r'{\bf CAST}', color="white", size=12)
 
-        if (projections):
+        if projections:
             plt.text(2e-4, 6e-13, r'{\bf IAXO}', color="black", size=12)
             plt.text(2e-4, 3.2e-13, 'IAXO+', color="black", size=11)
 

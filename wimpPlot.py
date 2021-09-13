@@ -7,28 +7,30 @@ from XPlotter import BasePlot, ExPltItem
 # class to encapsulate the needed tools to plot sensitivities in the
 # ALP g_ag versus m_a parameter space
 class WimpPlot:
-
     # ==============================================================================#
     # build and plot...
     #
+
+    ListOfPlotTypes = {'large_panorama', 'panorama', 'lowmass'}
+
     def __init__(self, plottype="lowmass", projections=False, showplot=True, saveplot=True):
         # print(projections, showplot, saveplot)
         self.ListOfPlotTypes = {'large_panorama', 'panorama', 'lowmass'}
 
-        if ((plottype not in self.ListOfPlotTypes)):
+        if plottype not in self.ListOfPlotTypes:
             print('ERROR: ' + plottype + ' not a known plot type')
             exit()
 
         # if (plottype == "lowmass"):
-        figx = 6;
-        figy = 6;
-        ymin = 1e-45;
-        ymax = 1e-37;
-        xmin = 0.2;
+        figx = 6
+        figy = 6
+        ymin = 1e-45
+        ymax = 1e-37
+        xmin = 0.2
         xmax = 20
-        ticksopt_x = 'normal';
+        ticksopt_x = 'normal'
         ticksopt_y = 'normal'
-        labelx = r'WIMP mass $m_\chi$ (GeV)';
+        labelx = r'WIMP mass $m_\chi$ (GeV)'
         labely = r'SI WIMP-nucleon cross section $\sigma^{\rm SI}_N$ (cm$^2$)'
 
         self.wimpplot = BasePlot(xlab=labelx, ylab=labely, \
@@ -40,12 +42,12 @@ class WimpPlot:
         self.wimpDB = BuildDB()
         self.PlotData(plottype, projections)
         self.PlotLabels(plottype, projections)
-        if (showplot):
-            self.wimpplot.ShowPlot();
-        if (saveplot):
+        if showplot:
+            self.wimpplot.ShowPlot()
+        if saveplot:
             print('saving...')
-            self.wimpplot.SavePlot('WIMP_' + plottype);
-        print('done');
+            self.wimpplot.SavePlot('WIMP_' + plottype)
+        print('done')
 
         # ==============================================================================#
 
@@ -54,7 +56,7 @@ class WimpPlot:
     def PlotData(self, plottype, projections=False):
 
         # ===========================================================================#
-        if (plottype == "lowmass"):
+        if plottype == "lowmass":
             for item in ['COGENT', 'CRESST_1', 'CRESST_2', 'CDMS_Si', 'DAMA']:
                 self.wimpDB[item].DrawItem(self.wimpplot)
             # if (projections):
@@ -69,7 +71,7 @@ class WimpPlot:
     #
     def PlotLabels(self, plottype, projections=False):
         # ===========================================================================#
-        if (plottype == "lowmass"):
+        if plottype == "lowmass":
             pass
             # plt.text(1e-6,2e-10,r'{\bf Helioscopes}',color="black",size=10)
             # plt.text(1e-7,2e-7,r'{\bf Laboratory}',color="white",size=10)
