@@ -113,7 +113,7 @@ def BuildDB():
     db['NEWSG2018'] = ExPltItem("NEWSG2018", "line", path + "newsg.dat", color="red")
     db['CRESST2015'] = ExPltItem("CRESST2015", "line", path + "cresst_2015.dat", color="blue")
     db['CDMSlite2015'] = ExPltItem("CDMSlite2015", "line", path + "cdmsLite_2015.dat", color="red")
-    db['LUX2015'] = ExPltItem("LUX2015", "line", path + "lux_2015.dat", color="red")
+    db['LUX2015'] = ExPltItem("LUX2015", "line", path + "LUX_2015.dat", color="red")
     db['EDELWEISS2016'] = ExPltItem("EDELWEISS2016", "line", path + "edelweiss2016.dat", color="red")
     db['SuperCDMS'] = ExPltItem("SuperCDMS", "line", path + "superCDMS.dat", color="orange")
     db['DarkSide2018'] = ExPltItem("DarkSide2018", "line", path + "darkside2018_noQ.dat", color="red")

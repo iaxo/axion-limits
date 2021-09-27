@@ -502,7 +502,7 @@ def BuildDB():
                             linewidth=0.5)
     db['EBL2'] = ExPltItem('EBL2', 'region', path + 'cosmoalp/EBL2.txt', facecolor="limegreen", edgecolor="darkgreen",
                            linewidth=0.5)
-    db['cmb_mu'] = ExPltItem('cmb_mu', 'region', path + 'cosmoalp/cmb_mu.txt', facecolor="green", edgecolor="darkgreen",
+    db['cmb_mu'] = ExPltItem('cmb_mu', 'region', path + 'cosmoalp/CMB_mu.txt', facecolor="green", edgecolor="darkgreen",
                              linewidth=0.5)
     db['CMB_DEsuE'] = ExPltItem('CMB_DEsuE', 'band', path + 'cosmoalp/CMB_DEsuE.txt', facecolor="forestgreen",
                                 edgecolor="darkgreen", linewidth=0.5)
@@ -553,7 +553,7 @@ def BuildDB():
     db['CAPP4'] = ExPltItem('CAPP4', 'line', path + 'CAPP4.dat', color="darkgreen", linewidth=0.1, linestyle="-")
     db['MADMAX'] = ExPltItem('MADMAX', 'band', path + 'MADMAX.dat', facecolor="limegreen", edgecolor="black",
                              linewidth=0.1, alpha=0.1, linestyle="-")
-    db['ADMXprosp_2GHz'] = ExPltItem('ADMXprosp_2GHz', 'band', path + 'admx_prospects_2ghz.dat', facecolor="limegreen",
+    db['ADMXprosp_2GHz'] = ExPltItem('ADMXprosp_2GHz', 'band', path + 'ADMX_prospects_2GHz.dat', facecolor="limegreen",
                                      edgecolor="black", linewidth=0.1, alpha=0.1, linestyle="-")
     db['ADMXprosp_10GHz'] = ExPltItem('ADMXprosp_10GHz', 'band', path + 'ADMX_prospects_10GHz.dat',
                                       facecolor="limegreen", edgecolor="black", linewidth=0.1, alpha=0.1, linestyle="-")
@@ -583,7 +583,7 @@ def BuildDB():
                               linestyle="--")
     db['MADMAX_l'] = ExPltItem('MADMAX', 'line', path + 'MADMAX.dat', color="darkgreen", linewidth=0.3, alpha=1,
                                linestyle="--")
-    db['ADMXprosp_2GHz_l'] = ExPltItem('ADMXprosp_2GHz', 'line', path + 'admx_prospects_2ghz.dat', color="darkgreen",
+    db['ADMXprosp_2GHz_l'] = ExPltItem('ADMXprosp_2GHz', 'line', path + 'ADMX_prospects_2GHz.dat', color="darkgreen",
                                        linewidth=0.3, alpha=1, linestyle="--")
     db['ADMXprosp_10GHz_l'] = ExPltItem('ADMXprosp_10GHz', 'line', path + 'ADMX_prospects_10GHz.dat', color="darkgreen",
                                         linewidth=0.3, alpha=1, linestyle="--")
