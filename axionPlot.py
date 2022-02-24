@@ -110,7 +110,7 @@ class AxionGagPlot:
                              'CAPP4_l', 'MADMAX_l',  # 'BRASS'
                              'ORGANprosp']:
                     self.axionDB[item].DrawItem(self.axplot)
-            for item in ['ADMX2018', 'ADMX2019', 'ADMX_sidecar',
+            for item in ['ADMX2018', 'ADMX2019', 'ADMX2021', 'ADMX_sidecar',
                          'CAPP-8TB', 'HAYSTAC', 'HAYSTAC2020', 'ORGAN', 'QUAX', 'QUAX2021', 'RADES2021', 'ADMX_SLIC',
                          'old_haloscopes', 'admx', 'admx_hf_2016',
                          'hess', 'mrk421', 'sn1987a_photon', 'FERMI_NG1275',
@@ -129,7 +129,7 @@ class AxionGagPlot:
 
         if plottype == "helioscopes":
             for item in ['qcdband', 'ksvz',
-                         'admx_hf_2016', 'ADMX2018', 'ADMX2019', 'ADMX_sidecar',
+                         'admx_hf_2016', 'ADMX2018', 'ADMX2019','ADMX2021', 'ADMX_sidecar',
                          'CAPP-8TB', 'HAYSTAC', 'HAYSTAC2020', 'ORGAN', 'QUAX', 'QUAX2021', 'RADES2021', 'ADMX_SLIC',
                          'old_haloscopes', 'admx',
                          'THintMayer', 'THintCIBER', 'HBhint', 'hess', 'mrk421', 'sn1987a_photon', 'FERMI_NG1275',
@@ -151,7 +151,7 @@ class AxionGagPlot:
         # ===========================================================================#
         if plottype == "panorama":
             for item in ['qcdband', 'ksvz', 'dfsz',
-                         'admx_hf_2016', 'ADMX2018', 'ADMX2019', 'ADMX_sidecar',
+                         'admx_hf_2016', 'ADMX2018', 'ADMX2019','ADMX2021', 'ADMX_sidecar',
                          'CAPP-8TB', 'CAPP2021', 'HAYSTAC', 'HAYSTAC2020', 'ORGAN', 'QUAX', 'QUAX2021',
                          'old_haloscopes', 'admx', 'RADES2021', 'ADMX_SLIC',
                          'hess', 'mrk421', 'sn1987a_photon', 'FERMI_NG1275',
@@ -188,7 +188,7 @@ class AxionGagPlot:
         if plottype in ["haloscopes", "haloscopes_zoom", "haloscopes_radeszoom"]:
             self.axionDB['CAST'].drawopt['facecolor'] = 'steelblue'
             for item in ['qcdband', 'ksvz',
-                         'ADMX2018', 'ADMX2019', 'ADMX_sidecar',  # 'ADMX2019_2',
+                         'ADMX2018', 'ADMX2019', 'ADMX2021', 'ADMX_sidecar',  # 'ADMX2019_2',
                          'CAPP-8TB', 'CAPP_multicell', 'CAPP2021', 'HAYSTAC', 'HAYSTAC2020', 'ORGAN', 'QUAX',
                          'QUAX2021', 'ADMX_SLIC',
                          'RADES2021', 'admx', 'CAST']:
@@ -450,6 +450,7 @@ def BuildDB():
 
     db['ADMX_sidecar'] = ExPltItem("ADMX_sidecar", "band", path + "ADMX_sidecar.txt", facecolor="limegreen",
                                    edgecolor="darkgreen", linewidth=0.2)
+    db['ADMX2021'] = ExPltItem("ADMX2021","band", path+"ADMX2021.txt",facecolor="limegreen",edgecolor="darkgreen",linewidth=0.2)
     db['CAPP-8TB'] = ExPltItem("CAPP-8TB", "band", path + "CAPP-8TB.txt", facecolor="limegreen", edgecolor="darkgreen",
                                linewidth=0.2)
     db['CAPP_multicell'] = ExPltItem("CAPP_multicell_2020", "band", path + "CAPP_multicell_2020.dat",
