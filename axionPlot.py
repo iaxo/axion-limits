@@ -141,7 +141,7 @@ class AxionGagPlot:
             # for item in ['ADMXprosp_2GHz_l','ADMXprosp_10GHz_l','MADMAX_l','CAST']:
             #    self.axionDB[item].DrawItem(self.axplot)
             if (projections):
-                for item in ['ALPSII_l', 'BabyIAXO', 'IAXO', 'IAXOplus', 'BabyIAXO_l', 'IAXO_l', 'IAXOplus_l']:
+                for item in ['ALPSII_l', 'BabyIAXO', 'IAXO', 'IAXOplus', 'BabyIAXO_l', 'IAXO_l', 'IAXOplus_l', 'AMELIE']:
                     self.axionDB[item].DrawItem(self.axplot)
             for item in ['SHAFT', 'ABRA_2021', 'BASE_2021']:
                 self.axionDB[item].DrawItem(self.axplot)
@@ -219,7 +219,7 @@ class AxionGagPlot:
             plt.text(1e-9, 5e-12, r"$\gamma \textrm{-rays}$", color="black", size=10, ha="center")
             # plt.text(1e-8,1e-13,'Haloscopes',color="black",size=9)
             plt.text(5e7, 4e-8, 'SN1987A', color="black", size=6, rotation=-90, ha='center', va='center')
-            plt.text(3e-4, 21e-14, 'KSVZ', color="green", size=6, rotation=47)
+            plt.text(3e-4, 21e-14, 'KSVZ', color="black", size=6, rotation=47)
             plt.text(5, 1e-13, 'Telescopes', color="black", size=6, rotation=90)
             plt.text(2e2, 1.6e-10, 'Horizontal \n Branch Stars', color="black", size=7, va='center', ha='center')
             plt.text(1e2, 2e-9, r'{\bf Sun}', color="white", size=10)
@@ -259,10 +259,10 @@ class AxionGagPlot:
             plt.text(2e-9, 6e-12, r"HE $\gamma \textrm{-rays}$", color="black", size=10)
             plt.text(5e-6, 1e-13, r'{\bf Haloscopes}', color="black", size=11, ha='center')
             plt.text(3e-4, 2e-13, 'KSVZ', color="green", size=9, rotation=40)
-            # plt.text(0.5e-3,4e-14,'Axion models',color="green",size=9,rotation=40)
+            # plt.text(0.5e-3,4e-14,'Axion models',color="black",size=9,rotation=40)
             plt.text(0.5e-3, 1e-13, 'DSFZ', color="green", size=9, rotation=40)
             plt.text(5, 3e-13, 'Telescopes', color="black", size=8, rotation=90)
-            plt.text(1, 0.9e-10, 'HB', color="darkgreen", size=9)
+            plt.text(1, 0.9e-10, 'HB', color="black", size=9)
             plt.text(3, 1.3e-9, 'Sun', color="black", size=9, ha='center')
             # plt.text(1e2,2e-9,r'{\bf Sun}',color="white",size=10)
 
@@ -274,16 +274,17 @@ class AxionGagPlot:
                 # plt.text(5e-7,1.5e-12,r'{\bf JURA}',color="black",size=9,ha='center',va='center')
         # ===========================================================================#
         if plottype == "helioscopes":
-            plt.text(3e-4, 8.5e-11, r'{\bf CAST}', color="black", size=13)
+            plt.text(3e-6, 8.5e-11, r'{\bf CAST}', color="blue", size=13)
             # plt.text(1e-7,2e-7,r'{\bf Laboratory}',color="white",size=12)
             plt.text(1e-8, 6e-12, r"T-hints", color="red", size=11)
             # plt.text(2e-9,6e-12,r"HE $\gamma \textrm{-rays}$",color="black",size=10)
             plt.text(1e-6, 1e-12, r'{\bf Haloscopes}', color="black", size=13)
-            plt.text(1.15e-3, 0.75e-12, 'KSVZ', color="green", size=10, rotation=57)
-            plt.text(4.7e-3, 5e-13, 'Axion models', color="green", size=10, rotation=57)
+            plt.text(1.15e-3, 0.75e-12, 'KSVZ', color="black", size=10, rotation=57)
+            plt.text(4.7e-3, 5e-13, 'Axion models', color="black", size=10, rotation=57)
             # plt.text(5,3e-13,'Telescopes',color="black",size=8,rotation=90)
-            plt.text(8e-2, 7e-11, 'HB', color="darkgreen", size=10)
+            plt.text(8e-2, 7e-11, 'HB', color="black", size=10)
             plt.text(1e-1, 1.3e-11, 'HB hint', color="red", size=10)
+            plt.text(3.5e-3, 6.e-12, 'WD \ncooling\n hint ', color="red", size=10, ha="center")
             # plt.text(3,1.3e-9,'Sun',color="black",size=9,ha='center')
             # plt.text(1e2,2e-9,r'{\bf Sun}',color="white",size=10)
             plt.text(7e-10, 2e-9, 'ABRA\n-10cm', color="black", size=10)
@@ -294,9 +295,10 @@ class AxionGagPlot:
             plt.text(6e-10, 7e-12, 'Fermi\nNG1275', color="black", size=9)
 
             if projections:
+                plt.text(1e-3, 8.5e-11, r'{\bf AMELIE}', color="gray", size=11)
                 plt.text(3e-4, 2e-11, r'BabyIAXO', color="black", size=12)
-                plt.text(3e-4, 5e-12, r'{\bf IAXO}', color="black", size=13)
-                # plt.text(1e-5,1e-12,r'{\bf IAXO+}',color="black",size=9,ha='center',va='center')
+                plt.text(1.75e-4, 5e-12, r'{\bf IAXO}', color="black", size=13)
+                plt.text(1.4e-4,3.2e-12,r'{\bf IAXO+}',color="black",size=9,ha='center',va='center')
                 plt.text(5e-7, 2.7e-11, r'{ ALPS-II}', color="black", size=12)
                 # plt.text(5e-7,1.5e-12,r'{\bf JURA}',color="black",size=9,ha='center',va='center')
 
@@ -595,6 +597,8 @@ def BuildDB():
     db['KLASH_l'] = ExPltItem('KLASH', 'line', path + 'KLASH.dat', color="darkgreen", linewidth=0.1, alpha=1,
                               linestyle="--")
     db['IAXODM_l'] = ExPltItem('IAXODM.dat', 'line', path + 'ORGAN2.dat', color="darkgreen", linewidth=0.1, alpha=1,
+                               linestyle="--")
+    db['AMELIE'] = ExPltItem('AMELIE', 'line', path + 'amelie_1m3_arXiv_1508.03006.txt', color="gray", linewidth=0.6, alpha=1,
                                linestyle="--")
 
     db['JURA'] = ExPltItem('JURA', 'line', path + 'ALPSIII.dat', color="black", linewidth=0.5, alpha=1, linestyle=":")
