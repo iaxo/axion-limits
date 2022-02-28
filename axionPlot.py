@@ -275,7 +275,6 @@ class AxionGagPlot:
         # ===========================================================================#
         if plottype == "helioscopes":
             plt.text(3e-6, 8.5e-11, r'{\bf CAST}', color="blue", size=13)
-            plt.text(1e-3, 8.5e-11, r'{\bf AMELIE}', color="gray", size=11)
             # plt.text(1e-7,2e-7,r'{\bf Laboratory}',color="white",size=12)
             plt.text(1e-8, 6e-12, r"T-hints", color="red", size=11)
             # plt.text(2e-9,6e-12,r"HE $\gamma \textrm{-rays}$",color="black",size=10)
@@ -295,6 +294,7 @@ class AxionGagPlot:
             plt.text(6e-10, 7e-12, 'Fermi\nNG1275', color="black", size=9)
 
             if projections:
+                plt.text(1e-3, 8.5e-11, r'{\bf AMELIE}', color="gray", size=11)
                 plt.text(3e-4, 2e-11, r'BabyIAXO', color="black", size=12)
                 plt.text(3e-4, 5e-12, r'{\bf IAXO}', color="black", size=13)
                 # plt.text(1e-5,1e-12,r'{\bf IAXO+}',color="black",size=9,ha='center',va='center')
