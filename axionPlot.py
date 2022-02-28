@@ -141,7 +141,7 @@ class AxionGagPlot:
             # for item in ['ADMXprosp_2GHz_l','ADMXprosp_10GHz_l','MADMAX_l','CAST']:
             #    self.axionDB[item].DrawItem(self.axplot)
             if (projections):
-                for item in ['ALPSII_l', 'BabyIAXO', 'IAXO', 'IAXOplus', 'BabyIAXO_l', 'IAXO_l', 'IAXOplus_l']:
+                for item in ['ALPSII_l', 'BabyIAXO', 'IAXO', 'IAXOplus', 'BabyIAXO_l', 'IAXO_l', 'IAXOplus_l', 'AMELIE']:
                     self.axionDB[item].DrawItem(self.axplot)
             for item in ['SHAFT', 'ABRA_2021', 'BASE_2021']:
                 self.axionDB[item].DrawItem(self.axplot)
@@ -274,7 +274,8 @@ class AxionGagPlot:
                 # plt.text(5e-7,1.5e-12,r'{\bf JURA}',color="black",size=9,ha='center',va='center')
         # ===========================================================================#
         if plottype == "helioscopes":
-            plt.text(3e-4, 8.5e-11, r'{\bf CAST}', color="black", size=13)
+            plt.text(3e-6, 8.5e-11, r'{\bf CAST}', color="blue", size=13)
+            plt.text(1e-3, 8.5e-11, r'{\bf AMELIE}', color="gray", size=11)
             # plt.text(1e-7,2e-7,r'{\bf Laboratory}',color="white",size=12)
             plt.text(1e-8, 6e-12, r"T-hints", color="red", size=11)
             # plt.text(2e-9,6e-12,r"HE $\gamma \textrm{-rays}$",color="black",size=10)
@@ -595,6 +596,8 @@ def BuildDB():
     db['KLASH_l'] = ExPltItem('KLASH', 'line', path + 'KLASH.dat', color="darkgreen", linewidth=0.1, alpha=1,
                               linestyle="--")
     db['IAXODM_l'] = ExPltItem('IAXODM.dat', 'line', path + 'ORGAN2.dat', color="darkgreen", linewidth=0.1, alpha=1,
+                               linestyle="--")
+    db['AMELIE'] = ExPltItem('AMELIE', 'line', path + 'amelie_1m3_arXiv_1508.03006.txt', color="gray", linewidth=0.6, alpha=1,
                                linestyle="--")
 
     db['JURA'] = ExPltItem('JURA', 'line', path + 'ALPSIII.dat', color="black", linewidth=0.5, alpha=1, linestyle=":")
