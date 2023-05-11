@@ -1,0 +1,38 @@
+[build-system]
+requires = [
+    "hatchling",
+]
+build-backend = "hatchling.build"
+
+
+[project]
+name = "axion-limits"
+description = "A Python library for generating axion sensitivity plots."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "latex",
+    "matplotlib",
+    "numpy",
+    "scipy",
+]
+dynamic = [
+    "version",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+]
+
+[project.urls]
+"Download" = "https://github.com/iaxo/axion-limits/releases"
+"Homepage" = "https://github.com/iaxo/axion-limits"
+"Bug Tracker" = "https://github.com/iaxo/axion-limits/issues"
+
+[tool.hatch.version]
+path = "src/caenhv/version.py"
