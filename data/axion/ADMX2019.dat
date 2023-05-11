@@ -1,7 +1,7 @@
 # ADMX Run 2019 publisehd in 10.1103/PhysRevLett.124.101303
 # only the standard dark matter model with 0.45 GeV/cc density and maxwell-boltzman lineshape is shown.
 # Values of "1" indicate no limit set typically due to mode crossing, see paper for details
-# Axion Mass (eV) MB Limit (GeV^-1) 
+# Axion Mass (eV) MB Limit (GeV^-1)
 
 2.80432E-06	1
 2.80432E-06	3.20000E-16
@@ -1797,4 +1797,3 @@
 3.32295E-06	3.10000E-15
 3.32324E-06	3.00000E-15
 3.32324E-06	1
-

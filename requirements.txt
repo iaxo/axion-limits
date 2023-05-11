@@ -1,5 +1,4 @@
-numpy
-matplotlib
-scipy
 latex
-
+matplotlib
+numpy
+scipy

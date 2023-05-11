@@ -11,14 +11,16 @@ class WimpPlot:
     # build and plot...
     #
 
-    ListOfPlotTypes = {'large_panorama', 'panorama', 'lowmass'}
+    ListOfPlotTypes = {"large_panorama", "panorama", "lowmass"}
 
-    def __init__(self, plottype="lowmass", projections=False, showplot=True, saveplot=True):
+    def __init__(
+        self, plottype="lowmass", projections=False, showplot=True, saveplot=True
+    ):
         # print(projections, showplot, saveplot)
-        self.ListOfPlotTypes = {'large_panorama', 'panorama', 'lowmass'}
+        self.ListOfPlotTypes = {"large_panorama", "panorama", "lowmass"}
 
         if plottype not in self.ListOfPlotTypes:
-            print('ERROR: ' + plottype + ' not a known plot type')
+            print("ERROR: " + plottype + " not a known plot type")
             exit()
 
         # if (plottype == "lowmass"):
@@ -28,16 +30,23 @@ class WimpPlot:
         ymax = 1e-37
         xmin = 0.2
         xmax = 20
-        ticksopt_x = 'normal'
-        ticksopt_y = 'normal'
-        labelx = r'WIMP mass $m_\chi$ (GeV)'
-        labely = r'SI WIMP-nucleon cross section $\sigma^{\rm SI}_N$ (cm$^2$)'
+        ticksopt_x = "normal"
+        ticksopt_y = "normal"
+        labelx = r"WIMP mass $m_\chi$ (GeV)"
+        labely = r"SI WIMP-nucleon cross section $\sigma^{\rm SI}_N$ (cm$^2$)"
 
-        self.wimpplot = BasePlot(xlab=labelx, ylab=labely, \
-                                 figsizex=figx, figsizey=figy,
-                                 y_min=ymin, y_max=ymax,
-                                 x_min=xmin, x_max=xmax,
-                                 ticksopt_x=ticksopt_x, ticksopt_y=ticksopt_y)
+        self.wimpplot = BasePlot(
+            xlab=labelx,
+            ylab=labely,
+            figsizex=figx,
+            figsizey=figy,
+            y_min=ymin,
+            y_max=ymax,
+            x_min=xmin,
+            x_max=xmax,
+            ticksopt_x=ticksopt_x,
+            ticksopt_y=ticksopt_y,
+        )
 
         self.wimpDB = BuildDB()
         self.PlotData(plottype, projections)
@@ -45,25 +54,32 @@ class WimpPlot:
         if showplot:
             self.wimpplot.ShowPlot()
         if saveplot:
-            print('saving...')
-            self.wimpplot.SavePlot('WIMP_' + plottype)
-        print('done')
+            print("saving...")
+            self.wimpplot.SavePlot("WIMP_" + plottype)
+        print("done")
 
         # ==============================================================================#
 
     # which lines & regions to plot here...
     #
     def PlotData(self, plottype, projections=False):
-
         # ===========================================================================#
         if plottype == "lowmass":
-            for item in ['COGENT', 'CRESST_1', 'CRESST_2', 'CDMS_Si', 'DAMA']:
+            for item in ["COGENT", "CRESST_1", "CRESST_2", "CDMS_Si", "DAMA"]:
                 self.wimpDB[item].DrawItem(self.wimpplot)
             # if (projections):
             #     for item in ['ALPSII_l','JURA_l','BabyIAXO_l','IAXO_l','IAXOplus_l']:
             #         self.wimpDB[item].DrawItem(self.wimpplot)
-            for item in ['NEWSG2018', 'CRESST2015', 'CDMSlite2015', 'LUX2015', 'EDELWEISS2016', 'SuperCDMS',
-                         'DarkSide2018', 'DAMIC2016']:
+            for item in [
+                "NEWSG2018",
+                "CRESST2015",
+                "CDMSlite2015",
+                "LUX2015",
+                "EDELWEISS2016",
+                "SuperCDMS",
+                "DarkSide2018",
+                "DAMIC2016",
+            ]:
                 self.wimpDB[item].DrawItem(self.wimpplot)
 
     # ==============================================================================#
@@ -104,20 +120,46 @@ def BuildDB():
     path = "data/wimp/"
 
     # hints
-    db['COGENT'] = ExPltItem("COGENT", "region", path + "cogent.dat", facecolor="orange", edgecolor='red')
-    db['CDMS_Si'] = ExPltItem("CDMS_Si", "region", path + "cdms_Si.dat", facecolor="skyblue", edgecolor='blue')
-    db['CRESST_1'] = ExPltItem("CRESST_1", "region", path + "cresst_1.dat", facecolor="pink", edgecolor='red')
-    db['CRESST_2'] = ExPltItem("CRESST_2", "region", path + "cresst_2.dat", facecolor="pink", edgecolor='red')
-    db['DAMA'] = ExPltItem("DAMA_no_channelling", "region", path + "dama.dat", facecolor="orange", edgecolor='red')
+    db["COGENT"] = ExPltItem(
+        "COGENT", "region", path + "cogent.dat", facecolor="orange", edgecolor="red"
+    )
+    db["CDMS_Si"] = ExPltItem(
+        "CDMS_Si", "region", path + "cdms_Si.dat", facecolor="skyblue", edgecolor="blue"
+    )
+    db["CRESST_1"] = ExPltItem(
+        "CRESST_1", "region", path + "cresst_1.dat", facecolor="pink", edgecolor="red"
+    )
+    db["CRESST_2"] = ExPltItem(
+        "CRESST_2", "region", path + "cresst_2.dat", facecolor="pink", edgecolor="red"
+    )
+    db["DAMA"] = ExPltItem(
+        "DAMA_no_channelling",
+        "region",
+        path + "dama.dat",
+        facecolor="orange",
+        edgecolor="red",
+    )
 
-    db['NEWSG2018'] = ExPltItem("NEWSG2018", "line", path + "newsg.dat", color="red")
-    db['CRESST2015'] = ExPltItem("CRESST2015", "line", path + "cresst_2015.dat", color="blue")
-    db['CDMSlite2015'] = ExPltItem("CDMSlite2015", "line", path + "cdmsLite_2015.dat", color="red")
-    db['LUX2015'] = ExPltItem("LUX2015", "line", path + "LUX_2015.dat", color="red")
-    db['EDELWEISS2016'] = ExPltItem("EDELWEISS2016", "line", path + "edelweiss2016.dat", color="red")
-    db['SuperCDMS'] = ExPltItem("SuperCDMS", "line", path + "superCDMS.dat", color="orange")
-    db['DarkSide2018'] = ExPltItem("DarkSide2018", "line", path + "darkside2018_noQ.dat", color="red")
-    db['DAMIC2016'] = ExPltItem("DAMIC2016", "line", path + "damic2016.dat", color="red")
+    db["NEWSG2018"] = ExPltItem("NEWSG2018", "line", path + "newsg.dat", color="red")
+    db["CRESST2015"] = ExPltItem(
+        "CRESST2015", "line", path + "cresst_2015.dat", color="blue"
+    )
+    db["CDMSlite2015"] = ExPltItem(
+        "CDMSlite2015", "line", path + "cdmsLite_2015.dat", color="red"
+    )
+    db["LUX2015"] = ExPltItem("LUX2015", "line", path + "LUX_2015.dat", color="red")
+    db["EDELWEISS2016"] = ExPltItem(
+        "EDELWEISS2016", "line", path + "edelweiss2016.dat", color="red"
+    )
+    db["SuperCDMS"] = ExPltItem(
+        "SuperCDMS", "line", path + "superCDMS.dat", color="orange"
+    )
+    db["DarkSide2018"] = ExPltItem(
+        "DarkSide2018", "line", path + "darkside2018_noQ.dat", color="red"
+    )
+    db["DAMIC2016"] = ExPltItem(
+        "DAMIC2016", "line", path + "damic2016.dat", color="red"
+    )
 
     # db['ksvz'] = ExPltItem("ksvz","region",path+"ksvz.dat",facecolor="white",edgecolor="orange",linewidth=1)
 
@@ -191,7 +233,7 @@ def BuildDB():
     # db['BabyIAXO_l'] = ExPltItem('BAbyIAXO','line',path+'miniIAXO.dat',color="black", linewidth=0.3, alpha=1, linestyle="--")
     # db['IAXO_l'] = ExPltItem('IAXO','line',path+'IAXO_nominal.txt', color="black",linewidth=0.5, alpha=1, linestyle="--")
     # db['IAXOplus_l'] = ExPltItem('IAXOplus','line',path+'IAXO_plus.txt',color="black", linewidth=0.5, alpha=1, linestyle="--")
-    # db['ALPSII_l'] = ExPltItem('ALPSII','line',path+'ALPSII.dat',color="black", linewidth=0.5, alpha=1, linestyle=":") 
+    # db['ALPSII_l'] = ExPltItem('ALPSII','line',path+'ALPSII.dat',color="black", linewidth=0.5, alpha=1, linestyle=":")
     # db['CAPP4_l'] = ExPltItem('ORGANprosp','line',path+'CAPP4.dat',color="darkgreen",linewidth=0.1, alpha=1, linestyle="--")
     # db['MADMAX_l'] = ExPltItem('MADMAX','line',path+'MADMAX.dat',color="darkgreen",linewidth=0.1, alpha=1, linestyle="--")
     # db['ADMXprosp_2GHz_l'] = ExPltItem('ADMXprosp_2GHz','line',path+'admx_prospects_2ghz.dat',color="darkgreen",linewidth=0.1, alpha=1, linestyle="--")

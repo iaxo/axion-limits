@@ -1,5 +1,5 @@
 # IAXO nominal projection
-# corresponds to scenario "enhanced" of the IAXO LoI 
+# corresponds to scenario "enhanced" of the IAXO LoI
 #
 1e-15        1
 1e-15        4.350160E-12
