@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 HBalpbound from Ayala et al.
+=======
+HBalpbound from Ayala et al. 
+>>>>>>> dd83912 (first commit)
 
 
 0.10000000E-14 0.10835105E+04

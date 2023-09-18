@@ -1,5 +1,9 @@
 # IAXO nominal projection
+<<<<<<< HEAD
 # corresponds to scenario "enhanced" of the IAXO LoI
+=======
+# corresponds to scenario "enhanced" of the IAXO LoI 
+>>>>>>> dd83912 (first commit)
 #
 1e-15        1
 1e-15        4.350160E-12
@@ -378,4 +382,8 @@
 8.050000	2.993269E-09
 9.050000	3.386882E-09
 905.0000	3.386882E-07
+<<<<<<< HEAD
 905.0000	1
+=======
+905.0000	1
+>>>>>>> dd83912 (first commit)

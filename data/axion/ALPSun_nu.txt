@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 #Solar axion emission increases neutrino flux, from
 #Raffelt & Gondolo.
+=======
+#Solar axion emission increases neutrino flux, from 
+#Raffelt & Gondolo. 
+>>>>>>> dd83912 (first commit)
 #
 0.10000000E-13 0.13803842E+05
 0.10000000E+03 0.13777582E+05

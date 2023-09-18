@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 Combination of LSW experiments,
+=======
+Combination of LSW experiments, 
+>>>>>>> dd83912 (first commit)
 ALPS 2010 w/wo gas, X-rays of Rizzo et al., OSQAR 2015
 
 0.10000000E-14 0.29756598E-07

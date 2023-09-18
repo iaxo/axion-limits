@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 Yale prelimininary Dark matter search,
 
+=======
+Yale prelimininary Dark matter search, 
+ 
+>>>>>>> dd83912 (first commit)
 
 0.12377875E-03 0.10000000E+01
 0.12377875E-03 0.31622776E-06

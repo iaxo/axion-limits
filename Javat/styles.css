@@ -1,0 +1,152 @@
+/* Estilos generales */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.left-column {
+  width: 300px;
+  float: left;
+  padding-right: 10px;
+}
+
+.center-column {
+  width: 100%;
+  text-align: center; /* Centrar contenido horizontalmente */
+}
+
+.right-column {
+  width: calc(100% - 310px); /* 300px del ancho de la columna + 10px de padding */
+  float: right;
+  padding-left: 10px;
+}
+
+
+
+/* Estilos para el contenedor del formulario */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.form-container label {
+  margin-bottom: 10px;
+}
+
+.form-container input,
+.form-container select,
+.form-container button {
+  margin-bottom: 10px;
+}
+
+.form-container button {
+  margin-right: 20px;
+}
+
+/* Estilos para el canvas */
+#svgContainer {
+  border: 5px solid #ccc;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Estilos para el contenedor de la tabla */
+.table-container {
+  margin-top: 20px;
+}
+
+
+#textTable {
+  width: 75%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+#textTable th,
+#textTable td {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+/*Estilo para los loaders*/
+#loaders{
+  display: flex;
+  align-content: center;
+  margin: 20px;
+}
+
+
+/* Estilos para los campos de entrada horizontales */
+.horizontal-input {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.horizontal-input label {
+  margin-right: 10px;
+}
+
+/* Estilos para los campos de entrada verticales */
+.vertical-input {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+}
+.center-text {
+  text-align: center;
+  margin-top: 20px;
+}
+.custom-file-input-label {
+  background-color: #007bff;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.custom-file-input-label:hover {
+  background-color: #0056b3;
+}
+.additional-info {
+  margin-top: 20px; /* Agrega un margen superior para separar del contenido anterior */
+  padding: 20px; /* Agrega un espacio interno para el contenido de la información adicional */
+  background-color: #f7f7f7; /* Cambia el color de fondo según tus preferencias */
+  float: left;
+  text-align: left;
+  width: calc(60% - 150px); /* 300px del ancho de la columna + 10px de padding */
+
+}
+.draggable {
+  cursor: move;
+}
+
+.editing {
+  border: 2px dashed blue;
+}
+.step {
+  margin-top: 15px;
+}
+.advanced-info {
+  margin-top: 20px; /* Agrega un margen superior para separar del contenido anterior */
+  padding: 20px; /* Agrega un espacio interno para el contenido de la información adicional */
+  background-color: #f7f7f7; /* Cambia el color de fondo según tus preferencias */
+  float: right;
+  text-align: left;
+  width: 30%; /* 300px del ancho de la columna + 10px de padding */
+
+}

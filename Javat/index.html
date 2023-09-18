@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Canvas con Texto</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+  </script>    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdfkit@0.10.0/js/pdfkit.standalone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/svg-to-pdfkit@0.1.8/source.js"></script>
+
+
+  </head>
+<body>
+  <div class="container">
+
+    <div class="left-column">
+
+      <div class="form-container">
+
+        <div class="horizontal-input">
+          <button id="createButton">Add Element</button>
+          <label for="textInput">Text:</label>
+          <input type="text" id="textInput" placeholder="Write the text">
+        </div>
+        <div class="horizontal-input">
+          <label for="fontInput">Font:</label>
+          <select id="fontInput">
+            <option value="Arial">Arial</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Verdana">Verdana</option>
+          </select>
+        </div>
+        
+        <div class="horizontal-input">
+          <label for="xInput">X:</label>
+          <div class="input-container">
+            <input type="number" id="xInput" min="0" max="750" step="1" value="50">
+          </div>
+          <label for="yInput">Y:</label>
+          <div class="input-container">
+            <input type="number" id="yInput" min="0" max="450" step="1" value="50">
+          </div>
+        </div>
+        <div class="vertical-input">
+          <label for="sizeInput">Text size:</label>
+          <input type="number" id="sizeInput" min="10" max="100" value="30">
+        </div>
+        <div class="vertical-input">
+          <label for="rotationInput">Text rotation:</label>
+          <input type="number" id="rotationInput" min="-180" max="180" value="0">
+        </div>
+        <div class="vertical-input">
+          <label for="colorInput">Text color:</label>
+          <input type="color" id="colorInput" value="#000000">
+        </div>
+      </div>
+    </div>
+
+    <div class="center-column">
+      <div class="center-text">
+        <label for="svgInput" class="custom-file-input-label">Load Image</label>
+        <input type="file" id="svgInput" accept=".svg" style="display: none;">
+      </div>
+      <div class="center-text">
+        <label for="loadTxtInput" class="custom-file-input-label">Load txt</label>
+        <input type="file" id="loadTxtInput" accept=".txt" style="display: none;">
+      </div>
+      
+      <svg id="svgContainer" xmlns="http://www.w3.org/2000/svg"></svg>
+
+      <div id="buttonsContainer">
+        <button id="downloadDataBtn">Download Data</button>
+        <button id="downloadSvgBtn">Download SVG</button>     
+        <button id="downloadPdfBtn">Download PDF</button>
+      </div>
+    </div>
+
+
+    <div class="right-column">
+      <div class="table-container">
+        <table id="textTable">
+          <tr>
+            <th>Name</th>
+            <th>X</th>
+            <th>Y</th>
+            <th>Size</th>
+            <th>Rotation</th>
+            <th>Color</th>
+            <th>Font</th>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+   
+  </div> 
+
+<div>
+  <div class="additional-info">
+    Additional Information: In this section, we will explain how to add labels to the graph, step by step.
+    <div class="step">
+      Step 1:
+      Load your graph (the app only accepts SVG format) using the button at the top of the canvas labeled "Load Image."
+    </div>
+    <div class="step">
+      Step 2:
+      To add a label, begin by clicking the "Add Element" button. Afterward, input the desired text within the box on the right. You'll observe the text materializing on the canvas at the top-left corner.  
+    </div>
+    <div class="step">
+      Step 3:
+      Begin modifying the characteristics of your text. You can click on the text to drag it across the canvas and then change its properties, such as Font, Size, Rotation, and Color.
+    </div>
+    <div class="step">
+      Step 4:
+      Once you're satisfied with the drawn text and want to add more labels, click on "Add Element" again to add a second text and repeat the process.
+    </div>
+    <div class="step">
+      Step 5:
+      If you've finished adding text to the canvas, you can download a TXT file containing the information of the drawn texts to keep a record. Click the "Download Data" button below the canvas.
+    </div>
+    <div class="step">
+      Step 6:
+      You can also download the file in PDF format or SVG to maintain the same format using the "Download PDF" and "Download SVG" buttons, respectively, located below the canvas.
+    </div>
+  </div>
+  <div class="advanced-info">
+    More Information about Adding Text from a TXT File.
+    <div>
+      This app allows the user to load a TXT file to print the text on the SVG as long as the TXT file follows this structure:
+    </div>
+    <div>
+      Name, X, Y, Size, Rotation, Color, Font.
+    </div>
+    <div>
+      Please note that the first line should be omitted.
+    </div>
+    <div>
+      Once you've created a second label, you won't be able to modify the first label. You can only drag it.
+    </div>
+    <div class="step">
+      Known Bugs: After creating a text, you can drag it, and the coordinates will be updated in the table. However, if you've created several texts and you want to drag one that isn't the last, its coordinates won't update in the correct place. Instead, they will update in the last row of the table.
+    </div>
+  </div>
+</div>
+
+
+  
+   
+
+<script src="script.js"></script>
+
+</body>
+</html>
