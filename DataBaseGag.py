@@ -5,16 +5,16 @@ import sqlite3 as sql
 #CREATES THE DATABASE (JUST 1 TIME UNLESS LOTS OF DATA NEED TO BE UPDATED)
 #CreateDB()
 def CreateDB():
-    conn = sql.connect("./AxionsGag.db")#modificarlo para que si ya existe haga un pass
+    conn = sql.connect("./AxionsGag.db")
     conn.commit()
     conn.close()
 
 
 #CREATES THE TABLE OF THE DATABASE IS THE INTERFACE OF THE DATABASE 
-#(ASWELL IT NEEDS TO BE CRATED ONCE UNLESS LOTS OF DATA NEEDS TO BE UPDATED)
+#(ASWELL IT NEEDS TO BE CREATED ONCE UNLESS LOTS OF DATA NEEDS TO BE UPDATED)
 #CreataTable
 def CreateTable():
-    conn = sql.connect("/home/tfg_2022_1/git/axion-limits/AxionsGag.db")#modificarlo para que si ya existe haga un pass
+    conn = sql.connect("/home/tfg_2022_1/git/axion-limits/AxionsGag.db")
     cursor = conn.cursor()
     cursor.execute(
         """CREATE TABLE Axions (
