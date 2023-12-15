@@ -65,7 +65,7 @@ This will plot all types of graphs listed without their projections. To include 
 
 These graphs are generated directly without labels since we have a web application capable of adding them interactively.
 
-([Label's APP](http://htmlpreview.github.io/?https://github.com/DanielMartinezMiravete/Axion-limts/blob/main/Javatrain/svg/index.html))
+[Label's APP](https://danielmartinezmiravete.github.io/Labels-App/)
 
 This is only a preview of the app. To interact with it, you must download the repository. The app is located in the 'Java' folder, and you will also find another folder called 'plot' where the different plots are stored to verify the correct functioning of the app.
 
