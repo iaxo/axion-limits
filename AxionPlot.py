@@ -10,69 +10,114 @@ class AxionGagPlottest:
     ListOfPlotTypes = {'large_panorama', 'panorama', 'LSWexps', 'haloscopes', 'haloscopes_zoom',
                        'haloscopes_radeszoom', 'helioscopes'}
 
-    def __init__(self, plottype="large_panorama", projections=False, showplot=True, saveplot=True):
-        # print(projections, showplot, saveplot)
+    def __init__(self, plottype="None", projections=False, showplot=True, saveplotname=None,
+                     figx=None, figy=None, ymin=None, ymax=None, xmin=None, xmax=None, ticksopt_x=None,
+                     ticksopt_y=None, labelx='$m_a$ (eV)', labely=r'$|g_{a\gamma}|$ (GeV$^{-1}$)'):
 
         if plottype not in self.ListOfPlotTypes:
-            print('ERROR: ' + plottype + ' not a known plot type')
-            exit()
+            print('Warning: ' + plottype + ' not a known plot type')
 
-        figx = 6.5
-        figy = 5
-        ymin = 1e-18
-        ymax = 1e-4
-        xmin = 1e-11
-        xmax = 1e9
-        ticksopt_x = 'dense'
-        ticksopt_y = 'normal'
-        labelx = '$m_a$ (eV)'
-        labely = r'$|g_{a\gamma}|$ (GeV$^{-1}$)'
+        #default values for the plot (with no specified type)
+        if (plottype in ["large_panorama"]) or (plottype not in self.ListOfPlotTypes):
+            if figx is None:
+                figx = 6.5
+            if figy is None:
+                figy = 5
+            if ymin is None:
+                ymin = 1e-18
+            if ymax is None:
+                ymax = 1e-4
+            if xmin is None:
+                xmin = 1e-11
+            if xmax is None:
+                xmax = 1e9
+            if ticksopt_x is None:
+                ticksopt_x = 'dense'
+            if ticksopt_y is None:
+                ticksopt_y = 'normal'
 
+        #default values for the plot (with specified type)
         if plottype == "panorama":
-            figx = 6.5
-            figy = 6
-            ymin = 1e-17
-            ymax = 1e-6
-            xmin = 1e-9
-            xmax = 10
-            ticksopt_x = 'normal'
-            ticksopt_y = 'normal'
+            if figx is None:
+                figx = 6.5
+            if figy is None:
+                figy = 6
+            if ymin is None:
+                ymin = 1e-17
+            if ymax is None:
+                ymax = 1e-6
+            if xmin is None:
+                xmin = 1e-9
+            if xmax is None:
+                xmax = 10
+            if ticksopt_x is None:
+                ticksopt_x = 'normal'
+            if ticksopt_y is None:
+                ticksopt_y = 'normal'
 
         if plottype == "helioscopes":
-            figx = 8
-            figy = 6
-            ymin = 1e-13
-            ymax = 1e-8
-            xmin = 1e-11
-            xmax = 1
-            ticksopt_x = 'normal'
-            ticksopt_y = 'normal'
+            if figx is None:
+                figx = 8
+            if figy is None:
+                figy = 6
+            if ymin is None:
+                ymin = 1e-13
+            if ymax is None:
+                ymax = 1e-8
+            if xmin is None:
+                xmin = 1e-11
+            if xmax is None:
+                xmax = 1
+            if ticksopt_x is None:
+                ticksopt_x = 'normal'
+            if ticksopt_y is None:
+                ticksopt_y = 'normal'
 
         if plottype == "LSWexps":
-            figx = 6.5
-            figy = 5
-            ymin = 1e-13
-            ymax = 1e-6
-            xmin = 1e-10
-            xmax = 1e-2
-            ticksopt_x = 'normal'
-            ticksopt_y = 'normal'
+            if figx is None:
+                figx = 6.5
+            if figy is None:
+                figy = 5
+            if ymin is None:
+                ymin = 1e-13
+            if ymax is None:
+                ymax = 1e-6
+            if xmin is None:
+                xmin = 1e-10
+            if xmax is None:
+                xmax = 1e-2
+            if ticksopt_x is None:
+                ticksopt_x = 'normal'
+            if ticksopt_y is None:
+                ticksopt_y = 'normal'
 
         if plottype in ["haloscopes", "haloscopes_zoom", "haloscopes_radeszoom"]:
-            figx = 8
-            figy = 5
-            ymin = 1e-1
-            ymax = 1e3
-            xmin = 1e-9
-            xmax = 1
-            if plottype in ["haloscopes_zoom"]:
-                xmin = 3e-7
-                xmax = 3e-2
-            if plottype in ["haloscopes_radeszoom"]:
-                xmin = 3.4e-5
-                xmax = 4.5e-5
-            ticksopt_x = 'normal'
-            ticksopt_y = 'normal'
+            if figx is None:
+                figx = 8
+            if figy is None:
+                figy = 5
+            if ymin is None:
+                ymin = 1e-1
+            if ymax is None:
+                ymax = 1e3
+            if xmin is None:
+                if plottype in ["haloscopes"]:
+                    xmin = 1e-9
+                if plottype in ["haloscopes_zoom"]:
+                    xmin = 3e-7
+                if plottype in ["haloscopes_radeszoom"]:
+                    xmin = 3.4e-5
+            if xmax is None:
+                if plottype in ["haloscopes"]:
+                    xmax = 1
+                if plottype in ["haloscopes_zoom"]:
+                    xmax = 3e-2
+                if plottype in ["haloscopes_radeszoom"]:
+                    xmax = 4.5e-5
+            if ticksopt_x is None:
+                ticksopt_x = 'normal'
+            if ticksopt_y is None:
+                ticksopt_y = 'normal'
             labely = r'$|C_{a\gamma}|\tilde{\rho}_a^{1/2}$'
 
         #plot the background
@@ -91,14 +136,18 @@ class AxionGagPlottest:
 
         if showplot:
             self.axplot.ShowPlot()
-        if saveplot:
-            print('saving...')
-            self.axplot.SavePlot('AxionPhoton_' + plottype, picklesave=False)
-        print('done')
+
+        if type(save_plotname)==str:
+            if len(save_plotname) > 0:
+                print('saving...')
+                self.savePlot(save_plotname)
+                print('done')
 
         
     def plotdatatest(self, plottype, projections = False):
         print("projections=", projections)    
+        if plottype not in self.ListOfPlotTypes:
+            plottype = "noPlotType"
 
         if plottype in ["haloscopes", "haloscopes_zoom", "haloscopes_radeszoom"]:
             plottype = "haloscopes"
@@ -491,16 +540,17 @@ class AxionGaePlottest:
     # ==============================================================================#
     # build and plot...
     #
-    def __init__(self, plottype="helioscopes", projections=False, showplot=True, saveplot=True):
+    def __init__(self, plottype="helioscopes", projections=False, showplot=True, saveplot=True,
+                    figx=6, figy=5, xmin=1.0e-4, xmax=1., ymin=1.0e-13, ymax=1.0e-10, labelfontsize=13):
 
         figx = 6
         figy = 5
 
         self.axplot = BasePlot(xlab='$m_a$ (eV)', ylab=r'$|g_{ae}g_{a\gamma}|^{1/2}$ (GeV$^{-1/2}$)',
                                figsizex=figx, figsizey=figy,
-                               y_min=1.0e-13, y_max=1.0e-10,
-                               x_min=1.0e-4, x_max=1.,
-                               labelfontsize=13)
+                               y_min=ymin, y_max=ymax,
+                               x_min=xmin, x_max=xmax,
+                               labelfontsize=labelfontsize)
 
         self.axionDB = BuildGaeDB()
         self.PlotData(plottype, projections)

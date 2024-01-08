@@ -164,14 +164,18 @@ class BasePlot:
     # ==============================================================================#
     # saves the plot on a file
     #
-    def SavePlot(self, plotname, pngsave=False, openpdf=False, picklesave=False):
-        filename = plotpdfdir + plotname + ".pdf"
-        self.fig.savefig(filename, bbox_inches="tight")
+    def SavePlot(self, plotname, pngsave=False, svgsave=False, openpdf=False, picklesave=False):
+        filename = "plots/" + plotname
+
+        if not (plotname.endswith('.pdf')):
+            filename = filename + '.pdf'
+
+        self.fig.savefig(filename, bbox_inches='tight')
         print(filename + " saved.")
 
         if pngsave:
-            self.fig.savefig(plotpngdir + plotname + ".png", bbox_inches="tight")
-            print(filename + ".png saved.")
+            self.fig.savefig(plotname + '.png', bbox_inches='tight')
+            print(filename.replace(".pdf", ".png") + ".png saved.")
 
         if openpdf:
             os.startfile(filename)
