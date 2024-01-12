@@ -121,189 +121,179 @@ AxionsGae= [
 ]
 
 large_panorama = [
-    [r'{\bf Helioscopes (CAST)}', 1e-8, 1e-8, " color='black', size=10", 1, 0],
-    [r'{\bf Laboratory}', 1e-9, 1e-9, " color='white', size=10", 1, 0],
-    [r'$\gamma \textrm{-rays}$', 1e-9, 1e-9, " color='black', size=10, ha='center'", 1, 0],
-    # plt.text(1e-8,1e-13,'Haloscopes',color='black',size=9)
-    ["SN1987A", 5e7, 5e7, " color='black', size=6, rotation=-90, ha='center', va='center'", 1, 0],
-    ["KSVZ", 3e-4, 3e-4, " color='black', size=6, rotation=47", 1, 0],
-    ["Telescopes", 5, 5, " color='black', size=6, rotation=90", 1, 0],
-    ["Horizontal \n Branch Stars", 2e2, 2e2, " color='black', size=7, va='center', ha='center'", 1, 0],
-    [r'{\bf Sun}', 1e2, 1e2, " color='white', size=10", 1, 0],
-    [r'{\bf Beam dump}', 1.5e7, 1.5e7, " color='white', size=8, rotation=-45, ha='center', va='center'", 1, 0],
-    ["X rays", 1e4, 1e4, " color='white', size=10, rotation=-57, ha='center', va='center'", 1, 0],
-    # plt.text(1e5,1e-14,r'{\bf EBL}',color='black',size=10,rotation=-57,ha='center',va='center')
-    ["Extra-galactic \n Background Light", 1e5, 1e5, " color='black', size=9, rotation=-57, ha='center', va='center'", 1, 0],
-    [r'{\bf CMB}', 2e8, 2e8, " color='white', size=9, rotation=-57, ha='center', va='center'", 1, 0],
-    ["Big-Bang \n Nucleosynthesis", 3e7, 3e7, " color='black', size=10, rotation=-57, ha='center', va='center'", 1, 0],
-    ["H$_2$ ionization \n fraction", 1e2, 1e2, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
+    [r'{\bf Helioscopes (CAST)}', 1e-5, 2e-10, " color='black', size=11", 1, 0],
+    [r'{\bf Laboratory}', 1e-7, 2e-7, " color='white', size=11", 1, 0],
+    [r'HE $\gamma \textrm{-rays}$', 2e-9, 6e-12, " color='black', size=10", 1, 0],
+    [r'{\bf Haloscopes}', 5e-6, 1e-13, " color='black', size=11, ha='center'", 1, 0],
+    ['KSVZ', 3e-4, 21e-14, " color='black', size=6, rotation=47", 1, 0],
+    ['Telescopes', 5, 1e-13, " color='black', size=6, rotation=90", 1, 0],
+    ['Horizontal \n Branch Stars', 2e2, 1.6e-10, " color='black', size=7, va='center', ha='center'", 1, 0],
+    [r'{\bf Sun}', 1e2, 2e-9, " color='white', size=10", 1, 0],
+    [r'{\bf Beam dump}', 1.5e7, 5e-6, " color='white', size=8, rotation=-45, ha='center', va='center'", 1, 0],
+    ['X rays', 1e4, 3e-17, " color='white', size=10, rotation=-57, ha='center', va='center'", 1, 0],
+    # [ 1e-14, r'{\bf EBL}',  1e5, " "color='black',size=10,rotation=-57,ha='center',va='center'"", 1, 0],
+    ['Extra-galactic \n Background Light', 1e5, 1e-14, " color='black', size=9, rotation=-57, ha='center', va='center'", 1, 0],
+    [r'{\bf CMB}', 2e8, 1e-14, " color='white', size=9, rotation=-57, ha='center', va='center'", 1, 0],
+    ['Big-Bang \n Nucleosynthesis', 3e7, 1e-10, " color='black', size=10, rotation=-57, ha='center', va='center'", 1, 0],
+    ['H$_2$ ionization \n fraction', 1e2, 1e-13, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
 
     # added for Gaia's plot
-    ["ADMX", 2.9e-6, 2.9e-6, " color='black', size=6, ha='center', va='center', rotation=90", 1, 0],
-    ["BNL\n+UF", 8.3e-6, 8.3e-6, " color='black', size=5, ha='center', va='center', rotation=90", 1, 0],
-    ["HAYSTAC", 1.3e-5, 1.3e-5, " color='black', size=4, ha='center', va='center', rotation=90", 1, 0],
-    # plt.text(1.1e-5,2.5e-14,'KLASH',color='black',size=5,ha='center',va='center',rotation=90)
+    ['ADMX', 2.9e-6, 3e-13, " color='black', size=6, ha='center', va='center', rotation=90", 1, 0],
+    ['BNL\n+UF', 8.3e-6, 3.5e-12, " color='black', size=5, ha='center', va='center', rotation=90", 1, 0],
+    ['HAYSTAC', 1.3e-5, 2.5e-14, " color='black', size=4, ha='center', va='center', rotation=90", 1, 0],
+    # [ 2.5e-14, 'KLASH',  1.1e-5, " "color='black',size=5,ha='center',va='center',rotation=90"", 1, 0],
 
-        [r'{ BabyIAXO}', 1e-3, 1e-3, " color='black', size=8, ha='center', va='center'", 1, 1],
-        [r'{ IAXO}', 1e-3, 1e-3, " color='black', size=8, ha='center', va='center'", 1, 1],
-        [r'{ ALPS-II}', 1e-6, 1e-6, " color='black', size=8, ha='center', va='center'", 1, 1],
-        # plt.text(1e-6,5e-12,r'{\bf JURA}',color='black',size=8,ha='center',va='center')
 
-        # added for Gaia's plot
-        ["ADMX+CAPP", 8e-6, 8e-6, " color='black', size=5, ha='center', va='center', rotation=47", 1, 1],
-        ["MADMAX", 2e-4, 2e-4, " color='black', size=5, ha='center', va='center', rotation=47", 1, 1],
-        ["ORGAN", 1.2e-4, 1.2e-4, " color='black', size=5, ha='center', va='center', rotation=90", 1, 1],
-        ["DM-\n Radios", 7e-9, 7e-9, " color='black', size=6, ha='center', va='center'", 1, 1],
+    [r'{ BabyIAXO}', 1e-3, 3e-11, " color='black', size=8, ha='center', va='center'", 1, 1],
+    [r'{ IAXO}', 1e-3, 5e-12, " color='black', size=8, ha='center', va='center'", 1, 1],
+    [r'{ ALPS-II}', 1e-6, 3e-11, " color='black', size=8, ha='center', va='center'", 1, 1],
+    # [r'{\bf JURA}', 1e-6, 5e-12, "color='black',size=8,ha='center',va='center'", 1, 0],
+
+    # added for Gaia's plot
+    ['ADMX+CAPP', 8e-6, 2e-16, " color='black', size=5, ha='center', va='center', rotation=47", 1, 1],
+    ['MADMAX', 2e-4, 8e-15, " color='black', size=5, ha='center', va='center', rotation=47", 1, 1],
+    ['ORGAN', 1.2e-4, 6e-13, " color='black', size=5, ha='center', va='center', rotation=90", 1, 1],
+    ['DM-\n Radios', 7e-9, 4e-15, " color='black', size=6, ha='center', va='center'", 1, 1],
+
+    # ===========================================================================#
 ]
-
-
-# ===========================================================================#
 panorama = [
-    [r'{\bf Helioscopes (CAST)}', 1e-5, 1e-5, " color='black', size=11", 1, 0],
-    [r'{\bf Laboratory}', 1e-7, 1e-7, " color='white', size=11", 1, 0],
-    [r'HE $\gamma \textrm{-rays}$', 2e-9, 2e-9, " color='black', size=10", 1, 0],
-    [r'{\bf Haloscopes}', 5e-6, 5e-6, " color='black', size=11, ha='center'", 1, 0],
-    ["KSVZ", 3e-4, 3e-4, " color='green', size=9, rotation=40", 1, 0],
-    # plt.text(0.5e-3,4e-14,'Axion models',color='black',size=9,rotation=40)
-    ["DSFZ", 0.5e-3, 0.5e-3, " color='green', size=9, rotation=40", 1, 0],
-    ["Telescopes", 5, 5, " color='black', size=8, rotation=90", 1, 0],
-    ["HB", 1, 1, " color='black', size=9", 1, 0],
-    ["Sun", 3, 3, " color='black', size=9, ha='center'", 1, 0],
-    # plt.text(1e2,2e-9,r'{\bf Sun}',color='white',size=10)
+    [r'{\bf Helioscopes (CAST)}', 1e-5, 2e-10, "color='black', size=11", 1, 0],
+    [r'{\bf Laboratory}', 1e-7, 2e-7, " color='white', size=11", 1, 0],
+    [r'HE $\gamma \textrm{-rays}$', 2e-9, 6e-12, " color='black', size=10", 1, 0],
+    [r'{\bf Haloscopes}', 5e-6, 1e-13, " color='black', size=11, ha='center'", 1, 0],
+    ['KSVZ', 3e-4, 2e-13, " color='green', size=9, rotation=40", 1, 0],
+    # ['Axion models', 0.5e-3, 4e-14, "color='black',size=9,rotation=40", 1, 0],
+    ['DSFZ', 0.5e-3, 1e-13, " color='green', size=9, rotation=40", 1, 0],
+    ['Telescopes', 5, 3e-13, " color='black', size=8, rotation=90", 1, 0],
+    ['HB', 1, 0.9e-10, " color='black', size=9", 1, 0],
+    ['Sun', 3, 1.3e-9, " color='black', size=9, ha='center'", 1, 0],
+    # [r'{\bf Sun}', 1e2, 2e-9, "color='white',size=10", 1, 0],
 
-        [r'BabyIAXO', 2e-3, 2e-3, " color='black', size=10, ha='center', va='center'", 1, 1],
-        [r'{\bf IAXO}', 2e-3, 2e-3, " color='black', size=11, ha='center', va='center'", 1, 1],
-        # plt.text(1e-5,1e-12,r'{\bf IAXO+}',color='black',size=9,ha='center',va='center')
-        [r'{\bf ALPS-II}', 5e-7, 5e-7, " color='black', size=10, ha='center', va='center'", 1, 1],
-        # plt.text(5e-7,1.5e-12,r'{\bf JURA}',color='black',size=9,ha='center',va='center')
+
+    [r'BabyIAXO', 2e-3, 2.5e-11, " color='black', size=10, ha='center', va='center'", 1, 1],
+    [r'{\bf IAXO}', 2e-3, 7e-12, " color='black', size=11, ha='center', va='center'", 1, 1],
+    # [r'{\bf IAXO+}', 1e-5, 1e-12, "color='black',size=9,ha='center',va='center'", 1, 1],
+    [r'{\bf ALPS-II}', 5e-7, 3e-11, " color='black', size=10, ha='center', va='center'", 1, 1],
+    # [r'{\bf JURA}', 5e-7, 1.5e-12, "color='black',size=9,ha='center',va='center'", 1, 1],
 ]
 
-
-# ===========================================================================#
 helioscopes = [
-    [r'{\bf CAST}', 3e-6, 3e-6, " color='blue', size=13", 1, 0],
-    # plt.text(1e-7,2e-7,r'{\bf Laboratory}',color='white',size=12)
-    [r'T-hints', 1e-8, 1e-8, " color='red', size=11", 1, 0],
-    # plt.text(2e-9,6e-12,r'HE $\gamma \textrm{-rays}$',color='black',size=10)
-    [r'{\bf Haloscopes}', 1e-6, 1e-6, " color='black', size=13", 1, 0],
-    ["KSVZ", 1.15e-3, 1.15e-3, " color='black', size=10, rotation=57", 1, 0],
-    ["Axion models", 4.7e-3, 4.7e-3, " color='black', size=10, rotation=57", 1, 0],
-    # plt.text(5,3e-13,'Telescopes',color='black',size=8,rotation=90)
-    ["HB", 8e-2, 8e-2, " color='black', size=10", 1, 0],
-    ["HB hint", 1e-1, 1e-1, " color='red', size=10", 1, 0],
-    ["WD \ncooling\n hint ", 3.5e-3, 3.5e-3, " color='red', size=10, ha='center'", 1, 0],
-    # plt.text(3,1.3e-9,'Sun',color='black',size=9,ha='center')
-    # plt.text(1e2,2e-9,r'{\bf Sun}',color='white',size=10)
-    ["ABRA\n-10cm", 7e-10, 7e-10, " color='black', size=10", 1, 0],
-    ["SHAFT", 2e-11, 2e-11, " color='black', size=10", 1, 0],
-    ["HESS", 3e-8, 3e-8, " color='black', size=9, ha='center'", 1, 0],
-    ["Mrk421", 1e-8, 1e-8, " color='black', size=9, ha='center'", 1, 0],
-    ["SN1987A", 1.5e-11, 1.5e-11, " color='black', size=9", 1, 0],
-    ["Fermi\nNG1275", 6e-10, 6e-10, " color='black', size=9", 1, 0],
+    [r'{\bf CAST}', 3e-6, 8.5e-11, " color='blue', size=13", 1, 0],
+    # [r'{\bf Laboratory}', 1e-7, 2e-7, "color='white',size=12", 1, 0],
+    [r'T-hints', 1e-8, 6e-12, " color='red', size=11", 1, 0],
+    # [r'HE $\gamma \textrm{-rays}$', 2e-9, 6e-12, "color='black',size=10", 1, 0],
+    [r'{\bf Haloscopes}', 1e-6, 1e-12, " color='black', size=13", 1, 0],
+    ['KSVZ', 1.15e-3, 0.75e-12, " color='black', size=10, rotation=57", 1, 0],
+    ['Axion models', 4.7e-3, 5e-13, " color='black', size=10, rotation=57", 1, 0],
+    # ['Telescopes', 5, 3e-13, "color='black',size=8,rotation=90", 1, 0],
+    ['HB', 8e-2, 7e-11, " color='black', size=10", 1, 0],
+    ['HB hint', 1e-1, 1.3e-11, " color='red', size=10", 1, 0],
+    ['WD \ncooling\n hint ', 3.5e-3, 6.e-12, " color='red', size=10, ha='center'", 1, 0],
+    # ['Sun', 3, 1.3e-9, "color='black',size=9,ha='center'", 1, 0],
+    # [r'{\bf Sun}', 1e2, 2e-9, "color='white',size=10", 1, 0],
+    ['ABRA\n-10cm', 7e-10, 2e-9, " color='black', size=10", 1, 0],
+    ['SHAFT', 2e-11, 4e-10, " color='black', size=10", 1, 0],
+    ['HESS', 3e-8, 2e-11, " color='black', size=9, ha='center'", 1, 0],
+    ['Mrk421', 1e-8, 4e-11, " color='black', size=9, ha='center'", 1, 0],
+    ['SN1987A', 1.5e-11, 7e-12, " color='black', size=9", 1, 0],
+    ['Fermi\nNG1275', 6e-10, 7e-12, " color='black', size=9", 1, 0],
 
-   
-        [r'{\bf AMELIE}', 1e-3, 1e-3, " color='gray', size=11", 1, 1],
-        [r'BabyIAXO', 3e-4, 3e-4, " color='black', size=12", 1, 1],
-        [r'{\bf IAXO}', 1.75e-4, 1.75e-4, " color='black', size=13", 1, 1],
-        [r'{\bf IAXO+}', 1.4e-4, 3.2e-12, " color='black',size=9,ha='center',va='center'", 1, 1],
-        [r'{ ALPS-II}', 5e-7, 5e-7, " color='black', size=12", 1, 1],
-        # plt.text(5e-7,1.5e-12,r'{\bf JURA}',color='black',size=9,ha='center',va='center')
+
+    [r'{\bf AMELIE}', 1e-3, 8.5e-11, " color='gray', size=11", 1, 1],
+    [r'BabyIAXO', 3e-4, 2e-11, " color='black', size=12", 1, 1],
+    [r'{\bf IAXO}', 1.75e-4, 5e-12, " color='black', size=13", 1, 1],
+    [r'{\bf IAXO+}', 1.4e-4, 3.2e-12, "color='black',size=9,ha='center',va='center'", 1, 1],
+    [r'{ ALPS-II}', 5e-7, 2.7e-11, " color='black', size=12", 1, 1],
+    # [r'{\bf JURA}', 5e-7, 1.5e-12, "color='black',size=9,ha='center',va='center'", 1, 1],
 ]
 
-
-
-# ===========================================================================#
 haloscopes = [
-    [r'{\bf CAST}', 2.5e-3, 2.5e-3, " color='black', size=12, ha='center', rotation=-57", 1, 0],
-    ["ABRA/DM-Radio", 1e-8, 1e-8, " color='black', size=12, ha='center', rotation=-57", 1, 0],
-    ["KLASH", 3.3e-7, 3.3e-7, " color='black', size=11, ha='center', va='center', rotation=90", 1, 0],
-    ["KSVZ", 1e-3, 1e-3, " color='green', size=9, va='center', ha='center'", 1, 0],
-    ["Axion models", 1e-3, 1e-3, " color='green', size=9, ha='center'", 1, 0],
-    [r'{\bf ADMX}', 2.9e-6, 2.9e-6, " color='black', size=12, ha='center', va='center', rotation=90", 1, 0],
-    ["ACTION/IAXO-DM", 9.5e-7, 9.5e-7, " color='black', size=10, ha='center', va='center', rotation=90", 1, 0],
-    ["BNL\n+UF", 8.3e-6, 8.3e-6, " color='black', size=8, ha='center', va='center'", 1, 0],
-    ["ADMX", 7e-6, 7e-6, " color='black', size=10, ha='center', va='center'", 1, 0],
-    ["CAPP", 1.9e-5, 1.9e-5, " color='black', size=10, ha='center', va='center'", 1, 0],
-    ["HAYSTAC", 1.46e-5, 1.46e-5, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
-    ["MADMAX", 1.2e-4, 1.2e-4, " color='black', size=8, ha='center', va='center'", 1, 0],
-    ["ORGAN", 1.2e-4, 1.2e-4, " color='black', size=8, ha='center', va='center'", 1, 0],
-    ["RADES", 3e-5, 3e-5, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
+    [r'{\bf CAST}', 2.5e-3, 110, " color='black', size=12, ha='center', rotation=-57", 1, 0],
+    ['ABRA/DM-Radio', 1e-8, 3, " color='black', size=12, ha='center', rotation=-57", 1, 0],
+    ['KLASH', 3.3e-7, 70, " color='black', size=11, ha='center', va='center', rotation=90", 1, 0],
+    ['KSVZ', 1e-3, 2.5, " color='green', size=9, va='center', ha='center'", 1, 0],
+    ['Axion models', 1e-3, 0.32, " color='green', size=9, ha='center'", 1, 0],
+    [r'{\bf ADMX}', 2.9e-6, 70, " color='black', size=12, ha='center', va='center', rotation=90", 1, 0],
+    ['ACTION/IAXO-DM', 9.5e-7, 70, " color='black', size=10, ha='center', va='center', rotation=90", 1, 0],
+    ['BNL\n+UF', 8.3e-6, 650, " color='black', size=8, ha='center', va='center'", 1, 0],
+    ['ADMX', 7e-6, 0.86, " color='black', size=10, ha='center', va='center'", 1, 0],
+    ['CAPP', 1.9e-5, 2.24, " color='black', size=10, ha='center', va='center'", 1, 0],
+    ['HAYSTAC', 1.46e-5, 25, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
+    ['MADMAX', 1.2e-4, 1.15, " color='black', size=8, ha='center', va='center'", 1, 0],
+    ['ORGAN', 1.2e-4, 30, " color='black', size=8, ha='center', va='center'", 1, 0],
+    ['RADES', 3e-5, 25, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
 
-        [r'BabyIAXO', 1.8e-3, 1.8e-3, " color='black', size=10, ha='center', va='center', rotation=-57", 1, 1],
-        [r'{\bf IAXO}', 1e-3, 1e-3, " color='black', size=11, ha='center', va='center', rotation=-57", 1, 1],
-        ["TOORAD", 0.01, 0.01, " color='black', size=8, ha='center', va='center', rotation=90", 1, 1],
-        # plt.text(1e-5,1e-12,r'{\bf IAXO+}',color='black',size=9,ha='center',va='center')
-        # plt.text(5e-7,3e-11,r'{\bf ALPS-II}',color='black',size=10,ha='center',va='center')
-        # plt.text(5e-7,1.5e-12,r'{\bf JURA}',color='black',size=9,ha='center',va='center')
+
+    [r'BabyIAXO', 1.8e-3, 83, " color='black', size=10, ha='center', va='center', rotation=-57", 1, 1],
+    [r'{\bf IAXO}', 1e-3, 36, " color='black', size=11, ha='center', va='center', rotation=-57", 1, 1],
+    ['TOORAD', 0.01, 12, " color='black', size=8, ha='center', va='center', rotation=90", 1, 1],
+    # [r'{\bf IAXO+}', 1e-5, 1e-12, "color='black',size=9,ha='center',va='center'", 1, 0],
+    # [r'{\bf ALPS-II}', 5e-7, 3e-11, "color='black',size=10,ha='center',va='center'", 1, 0],
+    # [r'{\bf JURA}', 5e-7, 1.5e-12, "color='black',size=9,ha='center',va='center'", 1, 0],
 ]
 
-
-# ===========================================================================#
 LSWexps = [
-    [r'CAST', 1e-3, 1e-3, " color='black', size=10", 1, 0],
-    [r'{ ALPS-I}', 1e-4, 1e-4, " color='white', size=10, ha='center', va='center'", 1, 0],
-    [r'{ CROWS}', 1e-7, 1e-7, " color='white', size=10, ha='center', va='center'", 1, 0],
-    [r'{ PVLAS}', 3e-3, 3e-3, " color='black', size=10, ha='center', va='center', rotation=45", 1, 0],
-    [r'{ OSQAR}', 1e-4, 1e-4, " color='black', size=10, ha='center', va='center'", 1, 0],
-    [r'T-hints', 2e-9, 2e-9, " color='black', size=10", 1, 0],
+    [r'CAST', 1e-3, 1e-10, " color='black', size=10", 1, 0],
+    [r'{ ALPS-I}', 1e-4, 1.4e-7, " color='white', size=10, ha='center', va='center'", 1, 0],
+    [r'{ CROWS}', 1e-7, 1.5e-7, " color='white', size=10, ha='center', va='center'", 1, 0],
+    [r'{ PVLAS}', 3e-3, 1e-7, " color='black', size=10, ha='center', va='center', rotation=45", 1, 0],
+    [r'{ OSQAR}', 1e-4, 2e-8, " color='black', size=10, ha='center', va='center'", 1, 0],
+    [r'T-hints', 2e-9, 6e-12, " color='black', size=10", 1, 0],
 
-    
-        ["STAX1", 3e-6, 3e-6, " color='black', size=10, ha='center', va='center'", 1, 1],
-        ["STAX2", 2e-6, 2e-6, " color='black', size=10, ha='center', va='center'", 1, 1],
-        # plt.text(1e-5,1e-12,r'{\bf IAXO+}',color='black',size=9,ha='center',va='center')
-        [r'{\bf ALPS-II}', 1e-6, 1e-6, " color='black', size=10, ha='center', va='center'", 1, 1],
-        [r'{\bf JURA}', 2e-5, 2e-5, " color='black', size=9, ha='center', va='center'", 1, 1],
+
+    ['STAX1', 3e-6, 1e-10, " color='black', size=10, ha='center', va='center'", 1, 1],
+    ['STAX2', 2e-6, 5e-12, " color='black', size=10, ha='center', va='center'", 1, 1],
+    # [r'{\bf IAXO+}', 1e-5, 1e-12, "color='black',size=9,ha='center',va='center'", 1, 1],
+    [r'{\bf ALPS-II}', 1e-6, 3e-11, " color='black', size=10, ha='center', va='center'", 1, 1],
+    [r'{\bf JURA}', 2e-5, 1.3e-12, " color='black', size=9, ha='center', va='center'", 1, 1],
 ]
 
-
-# ===========================================================================#
 haloscopes_zoom = [
-    [r'CAST', 4e-3, 4e-3, " color='black', size=10, ha='center', va='center', rotation=-40", 1, 0],
-    ["KSVZ", 1e-3, 1e-3, " color='green', size=9, va='center', ha='center'", 1, 0],
-    ["Axion models", 2e-3, 2e-3, " color='green', size=9, ha='center'", 1, 0],
-    [r'{ ADMX}', 2.9e-6, 2.9e-6, " color='black', size=12, ha='center', va='center', rotation=90", 1, 0],
-    ["BNL\n+UF", 8.3e-6, 8.3e-6, " color='black', size=8, ha='center', va='center'", 1, 0],
-    ["RADES", 34.6e-6, 34.6e-6, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
-     ["CAPP", 8.1e-6, 8.1e-6, " color='black', size=8, ha='center', va='top', rotation=90", 1, 0],
-        
-        ["HAYSTAC", 1.96e-5, 1.96e-5, " color='black', size=8, ha='center', va='top', rotation=90", 1, 0],
-        
+    [r'CAST', 4e-3, 144, " color='black', size=10, ha='center', va='center', rotation=-40", 1, 0],
+    ['KSVZ', 1e-3, 2.8, " color='green', size=9, va='center', ha='center'", 1, 0],
+    ['Axion models', 2e-3, 0.36, " color='green', size=9, ha='center'", 1, 0],
+    [r'{ ADMX}', 2.9e-6, 70, " color='black', size=12, ha='center', va='center', rotation=90", 1, 0],
+    ['BNL\n+UF', 8.3e-6, 400, " color='black', size=8, ha='center', va='center'", 1, 0],
+    ['RADES', 34.6e-6, 25, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
 
-        ["QUAX", 4.3e-5, 4.3e-5, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
-        ["ORGAN", 1.2e-4, 1.2e-4, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
-   
-        ["ADMX/CAPP", 8e-6, 8e-6, " color='black', size=10, ha='center', va='center'", 1, 1],
-        ["MADMAX", 1.2e-4, 1.2e-4, " color='black', size=8, ha='center', va='center'", 1, 1],
-        ["ORGAN", 1.2e-4, 1.2e-4, " color='black', size=8, ha='center', va='center'", 1, 1],
-        [r'BabyIAXO', 2e-3, 2e-3, " color='black', size=10, ha='center', va='center', rotation=-40", 1, 1],
-        [r'IAXO', 1.5e-3, 1.5e-3, " color='black', size=10, ha='center', va='center', rotation=-40", 1, 1],
-        ["BRASS", 2.6e-4, 2.6e-4, " color='black', size=8, ha='center', va='center', rotation=15", 1, 1],
-        ["TOORAD", 0.01, 0.01, " color='black', size=8, ha='center', va='center', rotation=90", 1, 1],       
+    ['CAPP', 8.1e-6, 0.93, " color='black', size=8, ha='center', va='top', rotation=90", 1, 0],
+    ['HAYSTAC', 1.96e-5, 1.00, " color='black', size=8, ha='center', va='top', rotation=90", 1, 0],
+    ['QUAX', 4.3e-5, 3.6, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
+    ['ORGAN', 1.2e-4, 45, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
+
+    ['ADMX/CAPP', 8e-6, 1.14, " color='black', size=10, ha='center', va='center'", 1, 1],
+    ['MADMAX', 1.2e-4, 1.15, " color='black', size=8, ha='center', va='center'", 1, 1],
+    ['ORGAN', 1.2e-4, 30, " color='black', size=8, ha='center', va='center'", 1, 1],
+    [r'BabyIAXO', 2e-3, 63, " color='black', size=10, ha='center', va='center', rotation=-40", 1, 1],
+    [r'IAXO', 1.5e-3, 24, " color='black', size=10, ha='center', va='center', rotation=-40", 1, 1],
+    ['BRASS', 2.6e-4, 16, " color='black', size=8, ha='center', va='center', rotation=15", 1, 1],
+    ['TOORAD', 0.01, 12, " color='black', size=8, ha='center', va='center', rotation=90", 1, 1],
+
 ]
 
 
 haloscopes_radeszoom = [
-    [r'CAST', 4e-3, 4e-3, " color='black', size=10, ha='center', va='center', rotation=-40", 1, 0],
-    ["KSVZ", 1e-3, 1e-3, " color='green', size=9, va='center', ha='center'", 1, 0],
-    ["Axion models", 2e-3, 2e-3, " color='green', size=9, ha='center'", 1, 0],
-    [r'{ ADMX}', 2.9e-6, 2.9e-6, " color='black', size=12, ha='center', va='center', rotation=90", 1, 0],
-    ["BNL\n+UF", 8.3e-6, 8.3e-6, " color='black', size=8, ha='center', va='center'", 1, 0],
-    ["RADES", 34.6e-6, 34.6e-6, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
-     ["CAPP", 8.1e-6, 8.1e-6, " color='black', size=8, ha='center', va='top', rotation=90", 1, 0],
-        
-        ["HAYSTAC", 1.96e-5, 1.96e-5, " color='black', size=8, ha='center', va='top', rotation=90", 1, 0],
-        
+    [r'CAST', 4e-3, 144, " color='black', size=10, ha='center', va='center', rotation=-40", 1, 0],
+    ['KSVZ', 1e-3, 2.8, " color='green', size=9, va='center', ha='center'", 1, 0],
+    ['Axion models', 2e-3, 0.36, " color='green', size=9, ha='center'", 1, 0],
+    [r'{ ADMX}', 2.9e-6, 70, " color='black', size=12, ha='center', va='center', rotation=90", 1, 0],
+    ['BNL\n+UF', 8.3e-6, 400, " color='black', size=8, ha='center', va='center'", 1, 0],
+    ['RADES', 34.6e-6, 25, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
 
-        ["QUAX", 4.3e-5, 4.3e-5, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
-        ["ORGAN", 1.2e-4, 1.2e-4, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
-   
-        ["ADMX/CAPP", 8e-6, 8e-6, " color='black', size=10, ha='center', va='center'", 1, 1],
-        ["MADMAX", 1.2e-4, 1.2e-4, " color='black', size=8, ha='center', va='center'", 1, 1],
-        ["ORGAN", 1.2e-4, 1.2e-4, " color='black', size=8, ha='center', va='center'", 1, 1],
-        [r'BabyIAXO', 2e-3, 2e-3, " color='black', size=10, ha='center', va='center', rotation=-40", 1, 1],
-        [r'IAXO', 1.5e-3, 1.5e-3, " color='black', size=10, ha='center', va='center', rotation=-40", 1, 1],
-        ["BRASS", 2.6e-4, 2.6e-4, " color='black', size=8, ha='center', va='center', rotation=15", 1, 1],
-        ["TOORAD", 0.01, 0.01, " color='black', size=8, ha='center', va='center', rotation=90", 1, 1],       
+    ['CAPP', 8.1e-6, 0.93, " color='black', size=8, ha='center', va='top', rotation=90", 1, 0],
+    ['HAYSTAC', 1.96e-5, 1.00, " color='black', size=8, ha='center', va='top', rotation=90", 1, 0],
+    ['QUAX', 4.3e-5, 3.6, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
+    ['ORGAN', 1.2e-4, 45, " color='black', size=8, ha='center', va='center', rotation=90", 1, 0],
+
+    ['ADMX/CAPP', 8e-6, 1.14, " color='black', size=10, ha='center', va='center'", 1, 1],
+    ['MADMAX', 1.2e-4, 1.15, " color='black', size=8, ha='center', va='center'", 1, 1],
+    ['ORGAN', 1.2e-4, 30, " color='black', size=8, ha='center', va='center'", 1, 1],
+    [r'BabyIAXO', 2e-3, 63, " color='black', size=10, ha='center', va='center', rotation=-40", 1, 1],
+    [r'IAXO', 1.5e-3, 24, " color='black', size=10, ha='center', va='center', rotation=-40", 1, 1],
+    ['BRASS', 2.6e-4, 16, " color='black', size=8, ha='center', va='center', rotation=15", 1, 1],
+    ['TOORAD', 0.01, 12, " color='black', size=8, ha='center', va='center', rotation=90", 1, 1],
+
 ]
 
 
