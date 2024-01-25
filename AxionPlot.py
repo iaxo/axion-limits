@@ -38,7 +38,7 @@ class AxionGagPlot:
                 ):
 
         if plottype not in self.ListOfPlotTypes:
-            print('Warning: ' + plottype + ' not a known plot type')
+            print('Warning: ' + plottype + ' not a known plot type. Using default values and wildType column in database')
 
         #default values for the plot (with no specified type)
         if (plottype in ["large_panorama"]) or (plottype not in self.ListOfPlotTypes):

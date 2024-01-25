@@ -13,7 +13,7 @@ AxionsGag = [
     ['IAXO', 'band', PATH_DATA + 'IAXO_nominal.txt', "facecolor='deepskyblue', linewidth=0.5, alpha=0.1, linestyle='-'", 1, 1, 1, 0, 1, 0, 1],
     ['CAST', 'band', PATH_DATA + 'cast_env_2016.dat', "facecolor='deepskyblue', edgecolor='blue', linewidth=0.5", 1, 1, 1, 0, 1, 0, 1],
 ]
-database.insert_row(AxionsGag)
+database.insert_rows(AxionsGag)
 data = database.read_rows()
 print(data)
 '''
@@ -31,7 +31,7 @@ AxionsGae= [
     ["IAXO_gae", "band", path2 + "sqrtgaagae_sc2.dat", "facecolor='skyblue', edgecolor='black', linewidth=0.5, alpha=0.3", 0, 1],
     ["IAXOplus_gae", "band", path2 + "sqrtgaagae_sc3.dat", "facecolor='skyblue', edgecolor='black', linewidth=0.5, alpha=0.3", 0, 1],
 ]
-database.insert_row(AxionsGae)
+database.insert_rows(AxionsGae)
 data = database.read_rows()
 print(data)
 '''
@@ -44,7 +44,7 @@ labels = [
     ["CAST", 1.0e-6, 1.0e-6, "color='blue', fontsize=10", 1, 0],
     ["IAXO", 1.0e-6, 1.0e-6, "color='blue', fontsize=10", 1, 1],
 ]
-database.insert_row(labels)
+database.insert_rows(labels)
 data = database.read_rows()
 print(data)
 '''

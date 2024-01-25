@@ -5,7 +5,7 @@ plottype = "" # plottype not in AxionGagPlot.ListOfPlotTypes will be interpreted
 
 # Load the desired database (the second parameter is the table name inside the database, see DataBaseClass.py for more info)
 database = db.DataBaseGag("databases/Axions.db", "AxionsGag")
-labels = db.DataBaseLabels("databases/Axions.db", "large_panorama")
+labels = db.DataBaseLabels("databases/Axions.db", plottype if plottype in AxionGagPlot.ListOfPlotTypes else "large_panorama")
 '''
 # Here you can edit the database if you want. Note that the database file will be edited too.
 
@@ -13,6 +13,8 @@ labels = db.DataBaseLabels("databases/Axions.db", "large_panorama")
 database.insert_row("exp_name", "line", "path_to_datafile", "color='red', linewidth=2", 1, 0, 0, 0, 0, 0, 0)
 # Or change the drawOptions of a row:
 database.update_row("exp_name", "drawOptions", "color='blue', linewidth=1")
+# Or change if it is drawn in the large panorama plot: (1 for yes, 0 for no)
+database.update_row("exp_name", "large_panorama", 1)
 # Or delete a row:
 database.delete_rows("name='exp_name'", confirm=True)
 '''

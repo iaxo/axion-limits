@@ -107,6 +107,10 @@ Or change the drawOptions of a row:
 ```
 database.update_row("exp_name", "drawOptions", "color='blue', linewidth=1")
 ```
+Or change if it is drawn in the large panorama plot: (1 for yes, 0 for no)
+```
+database.update_row("exp_name", "large_panorama", 1)
+```
 Or delete a row:
 ```
 database.delete_rows("name='exp_name'") # set parameter confirm=True to avoid the security check
@@ -149,12 +153,11 @@ print(data)
 ```
 For the labels:
 ```
-# Example of usage:
 import DataBaseClass as db
 database = db.DataBaseLabels("databases/NewAxions.db") # this will create (if it doesnt already exists) a table named Labels (default) at databases/NewAxions.db
 labels = [
-    ["CAST", 1.0e-6, 1.0e-6, "color='blue', fontsize=10", 1, 0],
-    ["IAXO", 1.0e-6, 1.0e-6, "color='blue', fontsize=10", 1, 1],
+    ["CAST", 2.0e-4, 1.2e-11, "color='white', fontsize=12", 1, 0],
+    ["IAXO", 2.0e-4, 6.0e-13, "color='black', fontsize=12", 1, 1],
 ]
 database.insert_rows(labels)
 data = database.read_rows()
@@ -168,5 +171,6 @@ print(data)
 
 ## Acknowledgement
 The original code is https://github.com/iaxo/axion-limits/
-Modified by Daniel Martínez Miravete in his summer internship for the Physics Degree within the IAXO group of GIFNA (Unizar). Internship supervised by Juan Antonio García Pascual and Álvaro Ezquerro Sastre. Also, very helpfull insight was given by David Díez Ibáñez and Luis Obis Aparicio.
+
+Modified by Daniel Martínez Miravete in his summer internship (https://github.com/DanielMartinezMiravete/Axion_Limits_Memory) for the Physics Bachelor within the IAXO group of GIFNA (Unizar). Internship supervised by Juan Antonio García Pascual and Álvaro Ezquerro Sastre. Also, very helpfull insight was given by David Díez Ibáñez and Luis Obis Aparicio.
 

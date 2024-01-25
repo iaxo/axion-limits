@@ -110,35 +110,6 @@ class BasePlot:
             self.plot.plot(data[:, 0], data[:, 1], **kwargs)
         self.zorder += 1
 
-    # #==============================================================================#
-    # # will draw a new exclusion line to the plot, no to be filled
-    # #
-    # def AddPlotLine(self,linename,data,**kwargs):
-    #     y2 = self.plot.get_ylim()[1]
-    #     kwargs['zorder']=self.zorder
-    #     self.plot.plot(data[:,0], data[:,1],**kwargs)
-    #     self.zorder+=1
-
-    # #==============================================================================#
-    # # will draw a new exclusion line to the plot (defined as a line and everything
-    # # above it is excluded (i.e. potentially filled)
-    # #
-    # def AddPlotBand(self,linename,data,**kwargs):
-    #     y2 = self.plot.get_ylim()[1]
-    #     kwargs['zorder']=self.zorder
-    #     self.plot.fill_between(data[:,0], data[:,1], y2=y2, **kwargs)
-    #     self.zorder+=1
-
-    # #==============================================================================#
-    # # will draw a new (exclusion) region to the plot (defined as a closed contour
-    # # that is potentially filled
-    # #
-    # def AddPlotRegion(self,linename,data,**kwargs):
-    #     y2 = self.plot.get_ylim()[1]
-    #     kwargs['zorder']=self.zorder
-    #     plt.fill(data[:,0], data[:,1],**kwargs)
-    #     self.zorder+=1
-
     def onclick(self, event):
         print(
             "%s click: button=%d, x=%d, y=%d, xdata=%g, ydata=%gf"
@@ -209,13 +180,6 @@ class ExPltItem:
     def DrawItem(self, plot):
         print(self.name, self.filename, self.drawopt)
         plot.AddPlotItem(self.typeitem, self.name, self.data, **self.drawopt)
-        # if (self.typeitem == "band"):
-        #     plot.AddPlotBand(self.name,data,**self.drawopt)
-        # if (self.typeitem == "region"):
-        #     plot.AddPlotRegion(self.name,data,**self.drawopt)
-        # if (self.typeitem == "line"):
-        #     plot.AddPlotLine(self.name,data,**self.drawopt)
-
 
 # ==============================================================================#
 # ==============================================================================#

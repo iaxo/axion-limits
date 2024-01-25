@@ -2,4 +2,5 @@ numpy
 matplotlib
 scipy
 latex
+sqlite3
 
