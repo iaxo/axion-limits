@@ -14,7 +14,7 @@ This files are not intended to be modified by the user.
 
 The files that are meant to be modified and used by the user are the following:
 1. buildDataBase.py : this is an example of the building of the database .db files. It also serves as backup to be able to recreate the Axions.db in case this one is lost or edited unintentionally.
-2. example.py : this is the main file to be handled by the user to make the desired plot. Here load (and edit if you want) the database tables and call the corresponding AxionPlot constructor to make the plot.
+2. generateAxionPlot.py : this is the main file to be handled by the user to make the desired plot. Here load (and edit if you want) the database tables and call the corresponding AxionPlot constructor to make the plot.
 
 # Directories description
 1. Javat : all needed files (html and java) for the labels app.
@@ -73,9 +73,9 @@ The files that are meant to be modified and used by the user are the following:
 
 ## Getting Started
 
-To recreate these images, we need to execute the Python script called "example.py" as follows:
+To recreate these images, we need to execute the Python script called "generateAxionPlot.py" as follows:
 ```
-python3 example.py
+python3 generateAxionPlot.py
 ```
 This will plot the large_panorama plottype of graphs (without their projections). To generate another plottype or include the projections, we should modify the plottype variable to the desired one. Also you can add the projections by the "projections" parameter in AxionGagPlot constructor and set it to True.
 
