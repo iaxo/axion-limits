@@ -63,10 +63,10 @@ The files that are meant to be modified and used by the user are the following:
 
 ## Close up Haloscopes plot without proyections
 
-### [Download (.pdf)](https://github.com/DanielMartinezMiravete/Axion-limts/raw/main/Javatrain/plots/Labeled/AxionPhoton_haloscopeslabeled.pdf)
-### [Download (.png)](https://github.com/DanielMartinezMiravete/Axion-limts/raw/main/Javatrain/plots/Labeled/AxionPhoton_haloscopes.png)
-### [Download (.svg)](https://github.com/DanielMartinezMiravete/Axion-limts/raw/main/Javatrain/plots/Labeled/AxionPhoton_haloscopes.svg)
-
+### [Download (.pdf)](https://github.com/DanielMartinezMiravete/Axion_Limits_Memory/blob/main/Javat/plots/Labeled/AxionPhoton_haloscopeslabeled.pdf)
+### [Download (.png)](https://github.com/DanielMartinezMiravete/Axion_Limits_Memory/blob/main/Javat/plots/Labeled/AxionPhoton_haloscopes.png)
+### [Download (.svg)](https://github.com/DanielMartinezMiravete/Axion_Limits_Memory/blob/main/Javat/plots/Labeled/AxionPhoton_haloscopes.svg)
+For the haloscopes, there are additional graphs zooming in on different areas.
 ### &nbsp;
 
 ---
@@ -79,7 +79,7 @@ python3 generateAxionPlot.py
 ```
 This will plot the large_panorama plottype of graphs (without their projections). To generate another plottype or include the projections, we should modify the plottype variable to the desired one. Also you can add the projections by the "projections" parameter in AxionGagPlot constructor and set it to True.
 
-To quickly add new labels to the plots in a easy way (although this would not be saved anywhere to be reproduced) you may use the labels app programmed in the Javat directory. Or just click on the following link: 
+To quickly add new labels to the plots in a easy way (although this would not be saved anywhere to be reproduced) you may use the labels app programmed in the Javat directory. Or just click on the following link:
 [Label's APP](https://danielmartinezmiravete.github.io/Labels-App/)
 
 You can start the app by opening the HTML script called 'index.html'. This application is only capable of modifying SVG files. Instructions for the webpage are provided within the webpage itself.
@@ -98,7 +98,7 @@ database = db.DataBaseGag("databases/Axions.db", "AxionsGag") # load table Axion
 labels = db.DataBaseLabels("databases/Axions.db", "large_panorama") # load table large_panorama of labeles from the database file databases/Axions.db
 ````
 
-Once loaded, you can edit the database if you want. Note that the database file will be edited too. 
+Once loaded, you can edit the database if you want. Note that the database file will be edited too.
 For example, you can add a new row with the following command:
 ```
 database.insert_row("exp_name", "line", "path_to_datafile", "color='red', linewidth=2", 1, 0, 0, 0, 0, 0, 0)
@@ -130,7 +130,7 @@ AxionsGag = [
     ['IAXO', 'band', PATH_DATA + 'IAXO_nominal.txt', "facecolor='deepskyblue', linewidth=0.5, alpha=0.1, linestyle='-'", 1, 0, 0, 0, 0, 0, 0],
     ['CAST', 'band', PATH_DATA + 'cast_env_2016.dat', "facecolor='deepskyblue', edgecolor='blue', linewidth=0.5", 1, 0, 0, 0, 0, 0, 0],
 ]
-database.insert_rows(AxionsGag) 
+database.insert_rows(AxionsGag)
 data = database.read_rows()
 print(data)
 ```
@@ -173,4 +173,3 @@ print(data)
 The original code is https://github.com/iaxo/axion-limits/
 
 Modified by Daniel Martínez Miravete in his summer internship (https://github.com/DanielMartinezMiravete/Axion_Limits_Memory) for the Physics Bachelor within the IAXO group of GIFNA (Unizar). Internship supervised by Juan Antonio García Pascual and Álvaro Ezquerro Sastre. Also, very helpfull insight was given by David Díez Ibáñez and Luis Obis Aparicio.
-

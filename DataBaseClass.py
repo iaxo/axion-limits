@@ -1,6 +1,6 @@
 import sqlite3 as sql
 
-'''
+"""
 # Example of usage:
 import DataBaseClass as db
 database = db.DataBaseGag("Axions.db")
@@ -16,9 +16,9 @@ AxionsGag = [
 database.insert_rows(AxionsGag)
 data = database.read_rows()
 print(data)
-'''
+"""
 
-'''
+"""
 # Example of usage:
 import DataBaseClass as db
 database = db.DataBaseGae("Axions.db")
@@ -34,9 +34,9 @@ AxionsGae= [
 database.insert_rows(AxionsGae)
 data = database.read_rows()
 print(data)
-'''
+"""
 
-'''
+"""
 # Example of usage:
 import DataBaseClass as db
 database = db.DataBaseLabels("Axions.db")
@@ -47,11 +47,12 @@ labels = [
 database.insert_rows(labels)
 data = database.read_rows()
 print(data)
-'''
+"""
+
 
 # DataBase class is not intended to be used directly, but to be inherited by DataBaseGag and DataBaseGae
 class DataBase:
-    def __init__(self, file_database="Axions.db", name : str ="Axions"):
+    def __init__(self, file_database="Axions.db", name: str = "Axions"):
         self.FILE_DATABASE = file_database
         try:
             self.conn = sql.connect(self.FILE_DATABASE)
@@ -62,7 +63,7 @@ class DataBase:
         self.cursor = self.conn.cursor()
         self.name = name
 
-    def get_rows(self, selection : str = ""):
+    def get_rows(self, selection: str = ""):
         instruction = f"SELECT * FROM {self.name}"
         if selection != "":
             instruction += f" WHERE {selection}"
@@ -72,17 +73,23 @@ class DataBase:
         return rows
 
     def update_row(self, name, field, value):
-        instruction = f"UPDATE {self.name} SET {field} = '{value}' WHERE name = '{name}'"
+        instruction = (
+            f"UPDATE {self.name} SET {field} = '{value}' WHERE name = '{name}'"
+        )
         self.cursor.execute(instruction)
         self.conn.commit()
 
-    def delete_rows(self, selection : str = "", confirm : bool = False):
+    def delete_rows(self, selection: str = "", confirm: bool = False):
         instruction = f"DELETE FROM {self.name}"
         if selection != "":
             instruction += f" WHERE {selection}"
 
         if not confirm:
-            print("WARNING: You are trying to delete all rows " + ("WHERE '"+selection+"' " if selection != "" else "") + "from the table")
+            print(
+                "WARNING: You are trying to delete all rows "
+                + ("WHERE '" + selection + "' " if selection != "" else "")
+                + "from the table"
+            )
             ans = input("Are you sure? (y/n)\n")
             if ans not in ["y", "yes", "Y", "YES"]:
                 print("Aborting")
@@ -96,9 +103,8 @@ class DataBase:
         self.conn.close()
 
 
-
 class DataBaseGag(DataBase):
-    def __init__(self, file_database="Axions.db", name : str ="AxionsGag"):
+    def __init__(self, file_database="Axions.db", name: str = "AxionsGag"):
         DataBase.__init__(self, file_database, name)
 
         self.cursor.execute(
@@ -118,7 +124,20 @@ class DataBaseGag(DataBase):
         )
         self.conn.commit()
 
-    def insert_row(self, name, type, path, drawOptions="", noPT=1, LP=0, P=0, Helios=0, Halos=0, LSW=0 ,projection=0):
+    def insert_row(
+        self,
+        name,
+        type,
+        path,
+        drawOptions="",
+        noPT=1,
+        LP=0,
+        P=0,
+        Helios=0,
+        Halos=0,
+        LSW=0,
+        projection=0,
+    ):
         instruction = f"INSERT INTO {self.name}  VALUES ('{name}', '{type}','{path}','{drawOptions}','{noPT}','{LP}','{P}','{Helios}','{Halos}',{LSW},{projection})"
         self.cursor.execute(instruction)
         self.conn.commit()
@@ -130,7 +149,7 @@ class DataBaseGag(DataBase):
 
 
 class DataBaseGae(DataBase):
-    def __init__(self, file_database="Axions.db", name : str ="AxionsGae"):
+    def __init__(self, file_database="Axions.db", name: str = "AxionsGae"):
         DataBase.__init__(self, file_database, name)
 
         self.cursor.execute(
@@ -155,8 +174,9 @@ class DataBaseGae(DataBase):
         self.cursor.executemany(instruction, rows)
         self.conn.commit()
 
+
 class DataBaseLabels(DataBase):
-    def __init__(self, file_database="Axions.db", name : str ="Labels"):
+    def __init__(self, file_database="Axions.db", name: str = "Labels"):
         DataBase.__init__(self, file_database, name)
 
         self.cursor.execute(
@@ -171,7 +191,9 @@ class DataBaseLabels(DataBase):
         )
         self.conn.commit()
 
-    def insert_row(self, label, x_position, y_position, drawOptions="", on=1, projection=0):
+    def insert_row(
+        self, label, x_position, y_position, drawOptions="", on=1, projection=0
+    ):
         instruction = f"INSERT INTO {self.name}  VALUES ('{label}', '{x_position}', '{y_position}', '{drawOptions}', {on}, {projection})"
         self.cursor.execute(instruction)
         self.conn.commit()

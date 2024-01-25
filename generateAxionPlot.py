@@ -1,12 +1,15 @@
 from AxionPlot import *
 import DataBaseClass as db
 
-plottype = "" # plottype not in AxionGagPlot.ListOfPlotTypes will be interpreted as 'wildType' in the database
+plottype = ""  # plottype not in AxionGagPlot.ListOfPlotTypes will be interpreted as 'wildType' in the database
 
 # Load the desired database (the second parameter is the table name inside the database, see DataBaseClass.py for more info)
 database = db.DataBaseGag("databases/Axions.db", "AxionsGag")
-labels = db.DataBaseLabels("databases/Axions.db", plottype if plottype in AxionGagPlot.ListOfPlotTypes else "large_panorama")
-'''
+labels = db.DataBaseLabels(
+    "databases/Axions.db",
+    plottype if plottype in AxionGagPlot.ListOfPlotTypes else "large_panorama",
+)
+"""
 # Here you can edit the database if you want. Note that the database file will be edited too.
 
 # For example, you can add a new row with the following command:
@@ -17,19 +20,22 @@ database.update_row("exp_name", "drawOptions", "color='blue', linewidth=1")
 database.update_row("exp_name", "large_panorama", 1)
 # Or delete a row:
 database.delete_rows("name='exp_name'", confirm=True)
-'''
+"""
 
-AxionGagPlot(database, labels, plottype,
-                 projections=False,
-                 showplot=True,
-                 saveplotname="testingGag.png")
+AxionGagPlot(
+    database,
+    labels,
+    plottype,
+    projections=False,
+    showplot=True,
+    saveplotname="testingGag.png",
+)
 
 
 # Load the desired database (the second parameter is the table name inside the database, see DataBaseClass.py for more info)
 database = db.DataBaseGag("databases/Axions.db", "AxionsGae")
 labels = db.DataBaseLabels("databases/Axions.db", "Gae_labels")
 
-AxionGaePlot(database, labels, "",
-                 projections=True,
-                 showplot=True,
-                 saveplotname="testingGae.png")
+AxionGaePlot(
+    database, labels, "", projections=True, showplot=True, saveplotname="testingGae.png"
+)

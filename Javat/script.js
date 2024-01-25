@@ -28,7 +28,7 @@ let initialX, initialY;
 const createdTextElements = [];
 
 function createDraggable(text) {
-  
+
   const draggable = svgContainer.append("g")
     .attr("class", "draggable")
     .attr("transform", "translate(50, 50)");
@@ -54,7 +54,7 @@ function createDraggable(text) {
   //Initialize Color
   const initialTextColor = "#000000"; // Default black color
   textElement.style("fill", initialTextColor);
-  
+
   draggable.on("mousedown", function(e) {
     isDragging = true;
     draggingElement = this;
@@ -89,7 +89,7 @@ function createDraggable(text) {
     initialX += deltaX;
     initialY += deltaY;
 
-  
+
     const rotation = -rotationInput.node().value;
     textElement.attr("transform", `rotate(${rotation})`);
   });
@@ -141,7 +141,7 @@ function createDraggable(text) {
   xInput.on("input", function() {
     const newX = +xInput.node().value;
     const index = createdTextElements.findIndex(elem => elem.textElement.node() === textElement.node());
-  
+
     if (index !== -1) {
       // Actualiza el valor de traslación en X
       createdTextElements[index].textElement.attr("transform", `translate(${newX}, ${0})`);
@@ -149,18 +149,18 @@ function createDraggable(text) {
       updateTable();
     }
   });
-  
+
   yInput.on("input", function() {
     const newY = +yInput.node().value;
     const index = createdTextElements.findIndex(elem => elem.textElement.node() === textElement.node());
-  
+
     if (index !== -1) {
       // Actualiza el valor de traslación en Y
       createdTextElements[index].textElement.attr("transform", `translate(${0}, ${newY})`);
       updateTable();
     }
   });
-  
+
   //agregar evento para el tamaño
   sizeInput.on("input", function() {
     const fontSize = sizeInput.node().value;
@@ -184,7 +184,7 @@ function createDraggable(text) {
     }
   });
   // agregar eventar para seleccion de color del texto
-    
+
   colorInput.on("input", function() {
     const textColor = colorInput.node().value;
     textElement.style("fill", textColor);
@@ -207,7 +207,7 @@ function createDraggable(text) {
       initialFontFamily: initialFontFamily,
       initialTextColor: initialTextColor
     });
-    
+
     return { draggable, textElement }; // Devuelve el elemento arrastrable y su elemento de texto
 
   }
@@ -292,7 +292,7 @@ function createDraggable(text) {
     document.getElementById('rotationInput').addEventListener('input', updateTable);
     document.getElementById('colorInput').addEventListener('input', updateTable);
     document.getElementById('fontInput').addEventListener('input', updateTable);
-  
+
 
   function updateTable() {
       if (lastAddedRow) {

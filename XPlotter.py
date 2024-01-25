@@ -135,18 +135,24 @@ class BasePlot:
     # ==============================================================================#
     # saves the plot on a file
     #
-    def SavePlot(self, plotname, pngsave=False, svgsave=False, openpdf=False, picklesave=False):
+    def SavePlot(
+        self, plotname, pngsave=False, svgsave=False, openpdf=False, picklesave=False
+    ):
         filename = "plots/" + plotname
 
-        if not (plotname.endswith('.pdf')):
-            filename = filename + '.pdf'
+        if not (plotname.endswith(".pdf")):
+            filename = filename + ".pdf"
 
-        self.fig.savefig(filename, bbox_inches='tight')
+        self.fig.savefig(filename, bbox_inches="tight")
         print(filename + " saved.")
 
         if pngsave:
-            self.fig.savefig(plotname + '.png', bbox_inches='tight')
+            self.fig.savefig(plotname + ".png", bbox_inches="tight")
             print(filename.replace(".pdf", ".png") + ".png saved.")
+
+        if svgsave:
+            self.fig.savefig(plotpngdir + plotname + ".svg", bbox_inches="tight")
+            print(filename + ".svg saved.")
 
         if openpdf:
             os.startfile(filename)
@@ -180,6 +186,7 @@ class ExPltItem:
     def DrawItem(self, plot):
         print(self.name, self.filename, self.drawopt)
         plot.AddPlotItem(self.typeitem, self.name, self.data, **self.drawopt)
+
 
 # ==============================================================================#
 # ==============================================================================#
