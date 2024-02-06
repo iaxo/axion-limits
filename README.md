@@ -98,7 +98,7 @@ database = db.DataBaseGag("databases/Axions.db", "AxionsGag") # load table Axion
 labels = db.DataBaseLabels("databases/Axions.db", "large_panorama") # load table large_panorama of labeles from the database file databases/Axions.db
 ````
 
-Once loaded, you can edit the database if you want. Note that the database file will be edited too.
+Once loaded, you can edit the database if you want. By default, the database file will not be editted. To commit the changes to the db file, set parameter commit=True at the constructor or use the DataBase.set_commit(True) method.
 For example, you can add a new row with the following command:
 ```
 database.insert_row("exp_name", "line", "path_to_datafile", "color='red', linewidth=2", 1, 0, 0, 0, 0, 0, 0)
@@ -116,11 +116,11 @@ Or delete a row:
 database.delete_rows("name='exp_name'") # set parameter confirm=True to avoid the security check
 ```
 ### Creating a new database
-To create a new database for a new plot you may follow this examples. Keep in mind that the order in which the experiments are added to the database will be the order in which they are plotted, so the last experiments added will be drawn o top of the firsts experiments added to the database.
+To create a new database for a new plot you may follow this examples. Keep in mind that the order in which the experiments are added to the database will be the order in which they are plotted, so the last experiments added will be drawn o top of the firsts experiments added to the database. Note the parameter commit=True at the constructor of the databases to commit the changes to the db file.
 For a Gag exclusion plot:
 ```
 import DataBaseClass as db
-database = db.DataBaseGag("databases/NewAxions.db") # this will create (if it doesnt already exists) a table named AxionsGag (default) at databases/NewAxions.db
+database = db.DataBaseGag("databases/NewAxions.db", commit=True) # this will create (if it doesnt already exists) a table named AxionsGag (default) at databases/NewAxions.db
 AxionsGag = [
     ['qcdband', 'band', PATH_DATA + 'QCD_band.dat', "facecolor='yellow'", 1, 0, 0, 0, 0, 0, 0],
     ['old_haloscopes', 'band', PATH_DATA + 'MicrowaveCavities.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 1, 0, 0, 0, 0, 0, 0],
@@ -137,7 +137,7 @@ print(data)
 For a Gae exclusion plot:
 ```
 import DataBaseClass as db
-database = db.DataBaseGae("databses/NewAxions.db")  # this will create (if it doesnt already exists) a table named AxionsGae (default) at databases/NewAxions.db
+database = db.DataBaseGae("databses/NewAxions.db", commit=True)  # this will create (if it doesnt already exists) a table named AxionsGae (default) at databases/NewAxions.db
 AxionsGae= [
     ["DFSZ1_starhint", "region", path1 + "DFSZ1_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='springgreen', edgecolor='darkgreen', alpha=0.2", 1, 0],
     ["AJ83_starhint", "region", path1 + "AJ83_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='red', edgecolor='red', alpha=0.2", 1, 0],
@@ -154,7 +154,7 @@ print(data)
 For the labels:
 ```
 import DataBaseClass as db
-database = db.DataBaseLabels("databases/NewAxions.db") # this will create (if it doesnt already exists) a table named Labels (default) at databases/NewAxions.db
+database = db.DataBaseLabels("databases/NewAxions.db", commit=True) # this will create (if it doesnt already exists) a table named Labels (default) at databases/NewAxions.db
 labels = [
     ["CAST", 2.0e-4, 1.2e-11, "color='white', fontsize=12", 1, 0],
     ["IAXO", 2.0e-4, 6.0e-13, "color='black', fontsize=12", 1, 1],

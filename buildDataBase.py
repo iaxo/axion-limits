@@ -305,32 +305,32 @@ gae_labels = [
 ]
 
 # ===========================================================================#
-expGag = db.DataBaseGag(FILE_DATABASE, "AxionsGag")
+expGag = db.DataBaseGag(FILE_DATABASE, "AxionsGag", True)
 expGag.insert_rows(AxionsGag)
 
-expGae = db.DataBaseGae(FILE_DATABASE, "AxionsGae")
+expGae = db.DataBaseGae(FILE_DATABASE, "AxionsGae", True)
 expGae.insert_rows(AxionsGae)
 
-lp = db.DataBaseLabels(FILE_DATABASE, "large_panorama")
+lp = db.DataBaseLabels(FILE_DATABASE, "large_panorama", True)
 lp.insert_rows(large_panorama)
 
-pa = db.DataBaseLabels(FILE_DATABASE, "panorama")
+pa = db.DataBaseLabels(FILE_DATABASE, "panorama", True)
 pa.insert_rows(panorama)
 
-he = db.DataBaseLabels(FILE_DATABASE, "helioscopes")
+he = db.DataBaseLabels(FILE_DATABASE, "helioscopes", True)
 he.insert_rows(helioscopes)
 
-h = db.DataBaseLabels(FILE_DATABASE, "haloscopes")
+h = db.DataBaseLabels(FILE_DATABASE, "haloscopes", True)
 h.insert_rows(haloscopes)
 
-l = db.DataBaseLabels(FILE_DATABASE, "LSWexps")
+l = db.DataBaseLabels(FILE_DATABASE, "LSWexps", True)
 l.insert_rows(LSWexps)
 
-hz = db.DataBaseLabels(FILE_DATABASE, "haloscopes_zoom")
+hz = db.DataBaseLabels(FILE_DATABASE, "haloscopes_zoom", True)
 hz.insert_rows(haloscopes_zoom)
 
-hrz = db.DataBaseLabels(FILE_DATABASE, "haloscopes_radeszoom")
+hrz = db.DataBaseLabels(FILE_DATABASE, "haloscopes_radeszoom", True)
 hrz.insert_rows(haloscopes_radeszoom)
 
-gae = db.DataBaseLabels(FILE_DATABASE, "Gae_labels")
+gae = db.DataBaseLabels(FILE_DATABASE, "Gae_labels", True)
 gae.insert_rows(gae_labels)

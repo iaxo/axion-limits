@@ -52,7 +52,9 @@ print(data)
 
 # DataBase class is not intended to be used directly, but to be inherited by DataBaseGag and DataBaseGae
 class DataBase:
-    def __init__(self, file_database="Axions.db", name: str = "Axions"):
+    def __init__(
+        self, file_database="Axions.db", name: str = "Axions", commit: bool = False
+    ):
         self.FILE_DATABASE = file_database
         try:
             self.conn = sql.connect(self.FILE_DATABASE)
@@ -62,6 +64,10 @@ class DataBase:
 
         self.cursor = self.conn.cursor()
         self.name = name
+        self.commit = commit  # If commit is True, the database file will be updated
+
+    def set_commit(self, commit: bool):
+        self.commit = commit
 
     def get_rows(self, selection: str = ""):
         instruction = f"SELECT * FROM {self.name}"
@@ -77,29 +83,32 @@ class DataBase:
             f"UPDATE {self.name} SET {field} = '{value}' WHERE name = '{name}'"
         )
         self.cursor.execute(instruction)
-        self.conn.commit()
+        if self.commit:
+            self.conn.commit()
 
     def delete_rows(self, selection: str = "", confirm: bool = False):
         instruction = f"DELETE FROM {self.name}"
         if selection != "":
             instruction += f" WHERE {selection}"
-
-        if not confirm:
-            print(
-                "WARNING: You are trying to delete all rows "
-                + ("WHERE '" + selection + "' " if selection != "" else "")
-                + "from the table"
-            )
-            ans = input("Are you sure? (y/n)\n")
-            if ans not in ["y", "yes", "Y", "YES"]:
-                print("Aborting")
-                return
-
         self.cursor.execute(instruction)
-        self.conn.commit()
+
+        if self.commit:
+            if not confirm:
+                print(
+                    "WARNING: You are trying to delete all rows "
+                    + ("WHERE '" + selection + "' " if selection != "" else "")
+                    + "from the table"
+                )
+                ans = input("Are you sure? (y/n)\n")
+                if ans not in ["y", "yes", "Y", "YES"]:
+                    print("Aborting")
+                    return
+
+            self.conn.commit()
 
     def __del__(self):
-        self.conn.commit()
+        if self.commit:
+            self.conn.commit()
         self.conn.close()
 
 
@@ -122,7 +131,8 @@ class DataBaseGag(DataBase):
             projection INTEGER
             )"""
         )
-        self.conn.commit()
+        if self.commit:
+            self.conn.commit()
 
     def insert_row(
         self,
@@ -140,12 +150,14 @@ class DataBaseGag(DataBase):
     ):
         instruction = f"INSERT INTO {self.name}  VALUES ('{name}', '{type}','{path}','{drawOptions}','{noPT}','{LP}','{P}','{Helios}','{Halos}',{LSW},{projection})"
         self.cursor.execute(instruction)
-        self.conn.commit()
+        if self.commit:
+            self.conn.commit()
 
     def insert_rows(self, rows):
         instruction = f"INSERT INTO {self.name} VALUES (?,?,?,?,?,?,?,?,?,?,?)"
         self.cursor.executemany(instruction, rows)
-        self.conn.commit()
+        if self.commit:
+            self.conn.commit()
 
 
 class DataBaseGae(DataBase):
@@ -162,17 +174,20 @@ class DataBaseGae(DataBase):
             projection INTEGER
             )"""
         )
-        self.conn.commit()
+        if self.commit:
+            self.conn.commit()
 
     def insert_row(self, name, type, path, drawOptions="", noPT=1, projection=0):
         instruction = f"INSERT INTO {self.name}  VALUES ('{name}', '{type}','{path}','{drawOptions}',{noPT},{projection})"
         self.cursor.execute(instruction)
-        self.conn.commit()
+        if self.commit:
+            self.conn.commit()
 
     def insert_rows(self, rows):
         instruction = f"INSERT INTO {self.name} VALUES (?, ?, ?, ?, ?, ?)"
         self.cursor.executemany(instruction, rows)
-        self.conn.commit()
+        if self.commit:
+            self.conn.commit()
 
 
 class DataBaseLabels(DataBase):
@@ -189,17 +204,20 @@ class DataBaseLabels(DataBase):
             projection INTEGER
             )"""
         )
-        self.conn.commit()
+        if self.commit:
+            self.conn.commit()
 
     def insert_row(
         self, label, x_position, y_position, drawOptions="", on=1, projection=0
     ):
         instruction = f"INSERT INTO {self.name}  VALUES ('{label}', '{x_position}', '{y_position}', '{drawOptions}', {on}, {projection})"
         self.cursor.execute(instruction)
-        self.conn.commit()
+        if self.commit:
+            self.conn.commit()
 
     def insert_rows(self, rows):
         instruction = f"INSERT INTO {self.name} VALUES (?, ?, ?, ?, ?, ?)"
 
         self.cursor.executemany(instruction, rows)
-        self.conn.commit()
+        if self.commit:
+            self.conn.commit()
