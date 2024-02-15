@@ -138,10 +138,10 @@ class BasePlot:
     def SavePlot(
         self, plotname, pngsave=False, svgsave=False, openpdf=False, picklesave=False
     ):
-        filename = "plots/" + plotname
-
-        if not (plotname.endswith(".pdf")):
-            filename = filename + ".pdf"
+        if not plotname.startswith("plots/"):
+            filename = "plots/" + plotname
+        else:
+            filename = plotname
 
         self.fig.savefig(filename, bbox_inches="tight")
         print(filename + " saved.")
