@@ -34,7 +34,9 @@ exclude: |
     (?x)^(
         data/.*|
         plots/.*|
+        myPlotScripts/.*|
         Javat/plots/.*|
         databases/.*|
         buildDataBase.py
+        generateAxionPlot.py
     )$

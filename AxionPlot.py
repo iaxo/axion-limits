@@ -28,145 +28,23 @@ def RenormItem(item):
 
 
 class AxionGagPlot:
-    ListOfPlotTypes = {
-        "large_panorama",
-        "panorama",
-        "LSWexps",
-        "haloscopes",
-        "haloscopes_zoom",
-        "haloscopes_radeszoom",
-        "helioscopes",
-    }
-
     def __init__(
         self,
-        database: db.DataBaseGag,
-        labels: db.DataBaseLabels,
-        plottype="",
-        projections=False,
+        experiments,
+        plotCag=False,
         showplot=True,
         saveplotname=None,
-        figx=None,
-        figy=None,
-        ymin=None,
-        ymax=None,
-        xmin=None,
-        xmax=None,
-        ticksopt_x=None,
-        ticksopt_y=None,
+        figx=6.5,
+        figy=5,
+        xmin=1e-11,
+        xmax=1e9,
+        ymin=1e-18,
+        ymax=1e-4,
+        ticksopt_x="dense",
+        ticksopt_y="normal",
         labelx="$m_a$ (eV)",
         labely=r"$|g_{a\gamma}|$ (GeV$^{-1}$)",
     ):
-        if plottype not in self.ListOfPlotTypes:
-            print(
-                "Warning: "
-                + plottype
-                + " not a known plot type. Using default values and wildType column in database"
-            )
-
-        # default values for the plot (with no specified type)
-        if (plottype in ["large_panorama"]) or (plottype not in self.ListOfPlotTypes):
-            if figx is None:
-                figx = 6.5
-            if figy is None:
-                figy = 5
-            if ymin is None:
-                ymin = 1e-18
-            if ymax is None:
-                ymax = 1e-4
-            if xmin is None:
-                xmin = 1e-11
-            if xmax is None:
-                xmax = 1e9
-            if ticksopt_x is None:
-                ticksopt_x = "dense"
-            if ticksopt_y is None:
-                ticksopt_y = "normal"
-
-        # default values for the plot (with specified type)
-        if plottype == "panorama":
-            if figx is None:
-                figx = 6.5
-            if figy is None:
-                figy = 6
-            if ymin is None:
-                ymin = 1e-17
-            if ymax is None:
-                ymax = 1e-6
-            if xmin is None:
-                xmin = 1e-9
-            if xmax is None:
-                xmax = 10
-            if ticksopt_x is None:
-                ticksopt_x = "normal"
-            if ticksopt_y is None:
-                ticksopt_y = "normal"
-
-        if plottype == "helioscopes":
-            if figx is None:
-                figx = 8
-            if figy is None:
-                figy = 6
-            if ymin is None:
-                ymin = 1e-13
-            if ymax is None:
-                ymax = 1e-8
-            if xmin is None:
-                xmin = 1e-11
-            if xmax is None:
-                xmax = 1
-            if ticksopt_x is None:
-                ticksopt_x = "normal"
-            if ticksopt_y is None:
-                ticksopt_y = "normal"
-
-        if plottype == "LSWexps":
-            if figx is None:
-                figx = 6.5
-            if figy is None:
-                figy = 5
-            if ymin is None:
-                ymin = 1e-13
-            if ymax is None:
-                ymax = 1e-6
-            if xmin is None:
-                xmin = 1e-10
-            if xmax is None:
-                xmax = 1e-2
-            if ticksopt_x is None:
-                ticksopt_x = "normal"
-            if ticksopt_y is None:
-                ticksopt_y = "normal"
-
-        if plottype in ["haloscopes", "haloscopes_zoom", "haloscopes_radeszoom"]:
-            if figx is None:
-                figx = 8
-            if figy is None:
-                figy = 5
-            if ymin is None:
-                ymin = 1e-1
-            if ymax is None:
-                ymax = 1e3
-            if xmin is None:
-                if plottype in ["haloscopes"]:
-                    xmin = 1e-9
-                if plottype in ["haloscopes_zoom"]:
-                    xmin = 3e-7
-                if plottype in ["haloscopes_radeszoom"]:
-                    xmin = 3.4e-5
-            if xmax is None:
-                if plottype in ["haloscopes"]:
-                    xmax = 1
-                if plottype in ["haloscopes_zoom"]:
-                    xmax = 3e-2
-                if plottype in ["haloscopes_radeszoom"]:
-                    xmax = 4.5e-5
-            if ticksopt_x is None:
-                ticksopt_x = "normal"
-            if ticksopt_y is None:
-                ticksopt_y = "normal"
-            labely = r"$|C_{a\gamma}|\tilde{\rho}_a^{1/2}$"
-
         # plot the background
         self.axplot = BasePlot(
             xlab=labelx,
@@ -181,13 +59,12 @@ class AxionGagPlot:
             ticksopt_y=ticksopt_y,
         )
 
-        self.axionDB = database
-        self.labelsDB = labels
+        self.axionDB = experiments
+        self.plotCag = plotCag
         # print(self.axionDB.get_rows())
 
-        # Plotting Data & Labels
-        self.PlotData(plottype, projections)
-        self.PlotLabels(projections)
+        # Plotting Data
+        self.PlotData()
 
         if showplot:
             self.axplot.ShowPlot()
@@ -198,33 +75,19 @@ class AxionGagPlot:
                 self.axplot.SavePlot(saveplotname)
                 print("done")
 
-    def PlotData(self, plottype, projections=False):
-        print("projections = ", projections)
-        if plottype not in self.ListOfPlotTypes:
-            plottype = "wildType"
-        if "haloscopes" in plottype:
-            plottype = "haloscopes"  # all haloscopes have the same column assigned ("haloscopes") in the database
+    def PlotData(self):
+        data = self.axionDB  # .get_rows(f"{plottype}==1")
 
-        data = self.axionDB.get_rows(f"{plottype}==1")
-        if projections:
-            data = data + self.axionDB.get_rows(
-                f"projection==1 AND {plottype}==0"
-            )  # get projections not already included
         for row in data:
-            pltItem = ExPltItem(row[0], row[1], row[2], **extract_kwargs(row[3]))
-            if "haloscopes" in plottype:
+            pltItem = ExPltItem(
+                row[0], row[1], row[2], **extract_kwargs(row[3])
+            )  # row[0] = name, row[1] = type, row[2] = path, row[3] = drawOptions
+            if self.plotCag:
                 RenormItem(pltItem)  # Its done in Haloscopes exclusively
             pltItem.DrawItem(self.axplot)
 
-    def PlotLabels(self, projections=False):
-        labels = self.labelsDB.get_rows(f"onoff==1 AND projection==0")
-        if projections:
-            labels = labels + self.labelsDB.get_rows(f"onoff==1 AND projection==1")
 
-        for row in labels:
-            plt.text(row[1], row[2], row[0], **extract_kwargs(row[3]))
-
-
+"""
 class AxionGaePlot:
     ListOfPlotTypes = {}  # No plottypes for Gae yet
 
@@ -294,3 +157,4 @@ class AxionGaePlot:
 
         for row in labels:
             plt.text(row[1], row[2], row[0], **extract_kwargs(row[3]))
+"""
