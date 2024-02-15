@@ -69,10 +69,32 @@ class DataBase:
     def set_commit(self, commit: bool):
         self.commit = commit
 
-    def get_rows(self, selection: str = ""):
+    def get_rows_where(self, selection: str = ""):
         instruction = f"SELECT * FROM {self.name}"
         if selection != "":
             instruction += f" WHERE {selection}"
+
+        self.cursor.execute(instruction)
+        rows = self.cursor.fetchall()
+        return rows
+
+    def get_rows(self, field: str, values: list):
+        if type(values) not in [list, tuple]:
+            values = [values]
+
+        instruction = f"SELECT * FROM {self.name}"
+        instruction += f" WHERE {field} IN ("
+        instruction += ", ".join([f"'{value}'" for value in values])
+        instruction += ")"
+
+        # order the rows in the same order as the values
+        instruction += " ORDER BY CASE "
+        order = 1
+        for value in values:
+            instruction += f" WHEN {field} = '{value}' THEN {order}"
+            order += 1
+        instruction += f" ELSE {order} END"
+        #print(instruction)
 
         self.cursor.execute(instruction)
         rows = self.cursor.fetchall()
