@@ -34,7 +34,7 @@ exclude: |
     (?x)^(
         data/.*|
         plots/.*|
-        myPlotScripts/.*|
+        myPlottingScripts/.*|
         Javat/plots/.*|
         databases/.*|
         buildDataBase.py

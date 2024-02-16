@@ -3,6 +3,7 @@
 
 # Python compilation files
 __pycache__/
+myPlottingScripts/__pycache__/
 *.py[cod]
 *$py.class
 
