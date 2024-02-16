@@ -1,4 +1,4 @@
-#SLAC 137 Axion search,
+#SLACK 137 Axion search,
 #Bjorken et al.
 #
 0.28916070E+09 0.91171729E-07

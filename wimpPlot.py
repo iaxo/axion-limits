@@ -1,5 +1,5 @@
-import matplotlib.pyplot as plt
-import matplotlib as mpl
+from __future__ import annotations
+
 from XPlotter import BasePlot, ExPltItem
 
 
