@@ -4,7 +4,7 @@ IAXO Axion Limits
 # Files description
 The main files where the code is written are
 1. XPlotter.py : the matplotlib.pyplot objects creation and configuration are handled within the two classes (BasePlot and ExPltItem) defined in this file
-2. AxionPlot.py : the creation of the BasePlot for the two cases (AxionGagPlot and AxionGaePlot), the plotting of the data and labels are handled within this classes. The plotting of the data and labes is done through the DataBase classes defined in the following file.
+2. AxionPlot.py : the creation of the BasePlot for the two cases (AxionGagPlot and AxionGaePlot), the plotting of the data and labels are handled within this classes. The plotting of the data and labes is done through the DataBase classes defined in the following file. (Currently AxionGaePlot is disabled, but you can reuse AxionGagPlot for g_ae plots anyway).
 3. DataBaseClass.py : Here the DataBase classes are defined to interface with the SQLite .db files. It has the following classes:
    - DataBase : is not intended to be used, just serve to be inherited by the other classes.
    - DataBaseGag for the database table of AxionGag experiments.
@@ -21,7 +21,7 @@ The files that are meant to be modified and used by the user are the following:
 2. data : here the .txt or .dat files with the exclusion lines of the different experiments should be stored.
 3. databases : here the .db files with the databases of the experiments data and labels should be stored. Include here any new database you build to make a new plot you may want to reproduce in the future.
 4. plots : here the saved plots should be stored. The relative path to this directory is added automatically to the plotname specified by the user.
-
+5. myPlottingScripts : this folder is meant to serve as the warehouse of the scripts used to generate a plot you may want to reproduce in the future. Here you can found some examples as large_panorama.py, panorama.py, helioscopes.py, haloscopes.py and lsw.py. As a quick solution to be able to import the modules from the parent directory, the file myPath.py is used. Please, set the variable PATH_TO_PROJECT with the absolute path of the repository in your local system (to be improved soon).
 # Basic Plot
 ---
 [<img align="right" height="250" src="Javatrain/plots/Labeled/AxionPhoton_large_panorama.svg">](https://github.com/DanielMartinezMiravete/Axion-limts/blob/main/Javatrain/plots/Labeled/AxionPhoton_large_panorama.svg)
@@ -77,8 +77,15 @@ To recreate these images, we need to execute the Python script called "generateA
 ```
 python3 generateAxionPlot.py
 ```
-This will plot the large_panorama plottype of graphs (without their projections). To generate another plottype or include the projections, we should modify the plottype variable to the desired one. Also you can add the projections by the "projections" parameter in AxionGagPlot constructor and set it to True.
+In these script, write the list of the names of the experiments to plot. The names must match the name column in the database. After calling the AxionPlotGag constructor (with the parameter `showplot=False`), add the desired labels. Finally, call the methods to show and save the plot, `axionplot.axplot.ShowPlot()` and `axionplot.axplot.SavePlot("fileName.pdf")`, respectively.
 
+You can reproduce the examples above by executing the scripts found in myPlottingScripts folder. To do so, first go to myPlottingScripts/myPath.py and change the variable PATH_TO_PROJECT with the absolute path of the repository in your local system. Now you can run any of those scripts, such as
+```
+python3 myPlottingScripts/haloscopes.py
+```
+You can add in this folder any meaningful plotting script used to make a plot you may want to reproduce in the future. If you do so, remember to add `import myPath` at the beginning of the script.
+
+## Labels web app
 To quickly add new labels to the plots in a easy way (although this would not be saved anywhere to be reproduced) you may use the labels app programmed in the Javat directory. Or just click on the following link:
 [Label's APP](https://danielmartinezmiravete.github.io/Labels-App/)
 
@@ -101,7 +108,9 @@ labels = db.DataBaseLabels("databases/Axions.db", "large_panorama") # load table
 Once loaded, you can edit the database if you want. By default, the database file will not be editted. To commit the changes to the db file, set parameter commit=True at the constructor or use the DataBase.set_commit(True) method.
 For example, you can add a new row with the following command:
 ```
+database.set_commit(True) # to commit the changes to the .db file
 database.insert_row("exp_name", "line", "path_to_datafile", "color='red', linewidth=2", 1, 0, 0, 0, 0, 0, 0)
+database.set_commit(False) # go back to default mode (not committing changes to the .db file)
 ```
 Or change the drawOptions of a row:
 ```
@@ -165,7 +174,6 @@ print(data)
 ```
 
 ## Known Issues
-- The order in which the experiments are added to the database will be the order in which they are plotted, so the last experiments added will be drawn o top of the firsts experiments added to the database. Maybe the value of the plottype column of the databases should be used to also select thhe zorder in which they are drawn ?
 - The labels application cannot interpret LaTeX.
 - At labels application, when working with multiple labels, moving a label other than the last label will replace the coordinates of the last label written.
 
