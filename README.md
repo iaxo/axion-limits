@@ -116,10 +116,6 @@ Or change the drawOptions of a row:
 ```
 database.update_row("exp_name", "drawOptions", "color='blue', linewidth=1")
 ```
-Or change if it is drawn in the large panorama plot: (1 for yes, 0 for no)
-```
-database.update_row("exp_name", "large_panorama", 1)
-```
 Or delete a row:
 ```
 database.delete_rows("name='exp_name'") # set parameter confirm=True to avoid the security check
