@@ -1,5 +1,6 @@
-from axionPlot import AxionGagPlot, AxionGaePlot
-from wimpPlot import WimpPlot
+from __future__ import annotations
+
+from axionPlot import AxionGaePlot, AxionGagPlot
 
 for plot_type in AxionGagPlot.ListOfPlotTypes:
     AxionGagPlot(plot_type, projections=True, showplot=False, saveplot=True)

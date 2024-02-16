@@ -1,9 +1,9 @@
 [build-system]
 requires = [
     "hatchling",
+    "hatch-vcs",
 ]
 build-backend = "hatchling.build"
-
 
 [project]
 name = "axion-limits"
@@ -21,12 +21,29 @@ dependencies = [
     "scipy",
 ]
 dynamic = [
-    "version",
+    "version"
 ]
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/axion_limits/_version.py"
+
+[tool.pytest.ini_options]
+addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
+filterwarnings = [
+    "error"
+]
+log_cli_level = "INFO"
+minversion = "6.0"
+testpaths = ["test"]
+xfail_strict = true
 
 [project.optional-dependencies]
 test = [
     "pytest",
+    "pre-commit",
 ]
 
 [project.urls]
@@ -34,5 +51,39 @@ test = [
 "Homepage" = "https://github.com/iaxo/axion-limits"
 "Bug Tracker" = "https://github.com/iaxo/axion-limits/issues"
 
-[tool.hatch.version]
-path = "src/caenhv/version.py"
+[tool.ruff]
+src = ["src"]
+
+[tool.ruff.lint]
+extend-select = [
+    "B", # flake8-bugbear
+    "I", # isort
+    "ARG", # flake8-unused-arguments
+    "C4", # flake8-comprehensions
+    "EM", # flake8-errmsg
+    "ICN", # flake8-import-conventions
+    "G", # flake8-logging-format
+    "PGH", # pygrep-hooks
+    "PIE", # flake8-pie
+    "PL", # pylint
+    "PT", # flake8-pytest-style
+    "PTH", # flake8-use-pathlib
+    "RET", # flake8-return
+    "RUF", # Ruff-specific
+    "SIM", # flake8-simplify
+    "T20", # flake8-print
+    "UP", # pyupgrade
+    "YTT", # flake8-2020
+    "EXE", # flake8-executable
+    "NPY", # NumPy specific rules
+    "PD"  # pandas-vet
+]
+ignore = [
+    "PLR09", # Too many X
+    "PLR2004"  # Magic comparison
+]
+
+isort.required-imports = ["from __future__ import annotations"]
+
+[tool.ruff.lint.per-file-ignores]
+"test/**" = ["T20"]
