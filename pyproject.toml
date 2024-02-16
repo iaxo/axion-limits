@@ -43,6 +43,7 @@ xfail_strict = true
 [project.optional-dependencies]
 test = [
     "pytest",
+    "pre-commit",
 ]
 
 [project.urls]
