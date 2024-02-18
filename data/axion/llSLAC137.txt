@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-#SLACK 137 Axion search,
-=======
 #SLAC 137 Axion search,
->>>>>>> dd83912 (first commit)
 #Bjorken et al.
 #
 0.28916070E+09 0.91171729E-07
