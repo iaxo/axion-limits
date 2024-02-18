@@ -64,6 +64,7 @@ class AxionGagPlot:
         # print(self.axionDB.get_rows())
 
         # Plotting Data
+        print("\n\nPlotting data:")
         self.PlotData()
 
         if showplot:

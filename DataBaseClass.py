@@ -98,6 +98,24 @@ class DataBase:
 
         self.cursor.execute(instruction)
         rows = self.cursor.fetchall()
+
+        # check if all values are in the rows
+        # only available for field = "name"
+        if field == "name":
+            rows_values = [row[0] for row in rows]
+            for value in values:
+                if value not in rows_values:
+                    print(f"WARNING: {value} not found in the database")
+                    # try to find LIKE values
+                    instruction = f"SELECT * FROM {self.name} WHERE {field} LIKE '%{value}%'"
+                    self.cursor.execute(instruction)
+                    candidates = self.cursor.fetchall()
+                    candidates = [cand[0] for cand in candidates] # extract the names
+                    if len(candidates) > 0:
+                        print(f"Did you mean any of these? {candidates}")
+                    else:
+                        print("No candidates found")
+
         return rows
 
     def update_row(self, name, field, value):
