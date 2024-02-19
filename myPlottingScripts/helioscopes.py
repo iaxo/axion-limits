@@ -1,7 +1,7 @@
-import myPath
+from __future__ import annotations
 
-from AxionPlot import *
 import DataBaseClass as db
+from AxionPlot import *
 
 # --- LOAD THE DATABASE ---
 
@@ -51,12 +51,14 @@ experimentsToPlot = [
     "HBalpbound_l",
     "solar_nu",
     "CAST",
-    
-    "SHAFT", "ABRA_2021", "BASE_2021",
-    "OSCAR2015", "PVLAS2015", "ALPSI",
-
+    "SHAFT",
+    "ABRA_2021",
+    "BASE_2021",
+    "OSCAR2015",
+    "PVLAS2015",
+    "ALPSI",
     # projections
-     "ALPSII_l",
+    "ALPSII_l",
     "BabyIAXO",
     "IAXO",
     "IAXOplus",
@@ -75,14 +77,14 @@ axionplot = AxionGagPlot(
     experiments=exps,
     plotCag=False,  # set to true to plot C_ag instead of g_ag
     showplot=False,  # set to false to add the labels later
-    figx = 8,
-    figy = 6,
-    ymin = 1e-13,
-    ymax = 1e-8,
-    xmin = 1e-11,
-    xmax = 1,
-    ticksopt_x = "normal",
-    ticksopt_y = "normal",
+    figx=8,
+    figy=6,
+    ymin=1e-13,
+    ymax=1e-8,
+    xmin=1e-11,
+    xmax=1,
+    ticksopt_x="normal",
+    ticksopt_y="normal",
 )
 
 # --- ADD THE LABELS ---
@@ -96,7 +98,14 @@ plt.text(4.7e-3, 5e-13, "Axion models", color="black", size=10, rotation=57)
 # plt.text(5,3e-13,'Telescopes',color="black",size=8,rotation=90)
 plt.text(8e-2, 7e-11, "HB", color="black", size=10)
 plt.text(1e-1, 1.3e-11, "HB hint", color="red", size=10)
-plt.text(3.5e-3, 6.0e-12, "WD \ncooling\n hint ", color="red", size=10, ha="center",)
+plt.text(
+    3.5e-3,
+    6.0e-12,
+    "WD \ncooling\n hint ",
+    color="red",
+    size=10,
+    ha="center",
+)
 # plt.text(3,1.3e-9,'Sun',color="black",size=9,ha='center')
 # plt.text(1e2,2e-9,r'{\bf Sun}',color="white",size=10)
 plt.text(7e-10, 2e-9, "ABRA\n-10cm", color="black", size=10)
@@ -106,11 +115,13 @@ plt.text(1e-8, 4e-11, "Mrk421", color="black", size=9, ha="center")
 plt.text(1.5e-11, 7e-12, "SN1987A", color="black", size=9)
 plt.text(6e-10, 7e-12, "Fermi\nNG1275", color="black", size=9)
 
-#projections
+# projections
 plt.text(1e-3, 8.5e-11, r"{\bf AMELIE}", color="gray", size=11)
 plt.text(3e-4, 2e-11, r"BabyIAXO", color="black", size=12)
 plt.text(1.75e-4, 5e-12, r"{\bf IAXO}", color="black", size=13)
-plt.text(1.4e-4,3.2e-12, r"{\bf IAXO+}", color="black", size=9, ha="center", va="center")
+plt.text(
+    1.4e-4, 3.2e-12, r"{\bf IAXO+}", color="black", size=9, ha="center", va="center"
+)
 plt.text(5e-7, 2.7e-11, r"{ ALPS-II}", color="black", size=12)
 # plt.text(5e-7,1.5e-12,r'{\bf JURA}',color="black",size=9,ha='center',va='center')
 

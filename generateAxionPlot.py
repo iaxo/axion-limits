@@ -1,5 +1,7 @@
-from AxionPlot import *
+from __future__ import annotations
+
 import DataBaseClass as db
+from AxionPlot import *
 
 # --- LOAD THE DATABASE ---
 

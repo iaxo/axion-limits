@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import sqlite3 as sql
 
 """
@@ -94,7 +96,7 @@ class DataBase:
             instruction += f" WHEN {field} = '{value}' THEN {order}"
             order += 1
         instruction += f" ELSE {order} END"
-        #print(instruction)
+        # print(instruction)
 
         self.cursor.execute(instruction)
         rows = self.cursor.fetchall()
@@ -107,10 +109,12 @@ class DataBase:
                 if value not in rows_values:
                     print(f"WARNING: {value} not found in the database")
                     # try to find LIKE values
-                    instruction = f"SELECT * FROM {self.name} WHERE {field} LIKE '%{value}%'"
+                    instruction = (
+                        f"SELECT * FROM {self.name} WHERE {field} LIKE '%{value}%'"
+                    )
                     self.cursor.execute(instruction)
                     candidates = self.cursor.fetchall()
-                    candidates = [cand[0] for cand in candidates] # extract the names
+                    candidates = [cand[0] for cand in candidates]  # extract the names
                     if len(candidates) > 0:
                         print(f"Did you mean any of these? {candidates}")
                     else:
@@ -139,8 +143,7 @@ class DataBase:
                     + ("WHERE '" + selection + "' " if selection != "" else "")
                     + "from the table"
                 )
-                ans = input("Are you sure? (y/n)\n")
-                if ans not in ["y", "yes", "Y", "YES"]:
+                if input("Are you sure? (y/n)\n") not in ["y", "yes", "Y", "YES"]:
                     print("Aborting")
                     return
 

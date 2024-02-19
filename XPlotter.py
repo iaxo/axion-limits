@@ -184,7 +184,7 @@ class ExPltItem:
         self.data = loadtxt(filename)
 
     def DrawItem(self, plot):
-        print("->",self.name, self.filename, self.drawopt)
+        print("->", self.name, self.filename, self.drawopt)
         plot.AddPlotItem(self.typeitem, self.name, self.data, **self.drawopt)
 
 

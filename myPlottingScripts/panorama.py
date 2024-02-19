@@ -1,7 +1,7 @@
-import myPath
+from __future__ import annotations
 
-from AxionPlot import *
 import DataBaseClass as db
+from AxionPlot import *
 
 # --- LOAD THE DATABASE ---
 
@@ -50,8 +50,6 @@ experimentsToPlot = [
     "HBalpbound_l",
     "solar_nu",
     "CAST",
-    
-
     # projections
     "ABRA1",
     "KLASH",
@@ -82,14 +80,14 @@ axionplot = AxionGagPlot(
     experiments=exps,
     plotCag=False,  # set to true to plot C_ag instead of g_ag
     showplot=False,  # set to false to add the labels later
-    figx = 6.5,
-    figy = 6,
-    ymin = 1e-17,
-    ymax = 1e-6,
-    xmin = 1e-9,
-    xmax = 10,
-    ticksopt_x = "normal",
-    ticksopt_y = "normal",
+    figx=6.5,
+    figy=6,
+    ymin=1e-17,
+    ymax=1e-6,
+    xmin=1e-9,
+    xmax=10,
+    ticksopt_x="normal",
+    ticksopt_y="normal",
 )
 
 # --- ADD THE LABELS ---
@@ -106,10 +104,34 @@ plt.text(3, 1.3e-9, "Sun", color="black", size=9, ha="center")
 # plt.text(1e2,2e-9,r'{\bf Sun}',color="white",size=10)
 
 # projections
-plt.text(2e-3, 2.5e-11, r"BabyIAXO", color="black", size=10, ha="center", va="center",)
-plt.text(2e-3, 7e-12, r"{\bf IAXO}", color="black", size=11, ha="center", va="center",)
+plt.text(
+    2e-3,
+    2.5e-11,
+    r"BabyIAXO",
+    color="black",
+    size=10,
+    ha="center",
+    va="center",
+)
+plt.text(
+    2e-3,
+    7e-12,
+    r"{\bf IAXO}",
+    color="black",
+    size=11,
+    ha="center",
+    va="center",
+)
 # plt.text(1e-5,1e-12,r'{\bf IAXO+}',color="black",size=9,ha='center',va='center')
-plt.text(5e-7, 3e-11, r"{\bf ALPS-II}", color="black", size=10, ha="center", va="center",)
+plt.text(
+    5e-7,
+    3e-11,
+    r"{\bf ALPS-II}",
+    color="black",
+    size=10,
+    ha="center",
+    va="center",
+)
 # plt.text(5e-7,1.5e-12,r'{\bf JURA}',color="black",size=9,ha='center',va='center')
 
 # --- SHOW AND SAVE THE PLOT ---

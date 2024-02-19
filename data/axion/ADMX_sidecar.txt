@@ -1,5 +1,5 @@
 # ADMX SIDECAR 1901.00920 [chunks separated by boundary points with g_ap = 1]
-# from "Piezoelectrically Tuned Multimode Cavity Search for Axion Dark Matter", C. Boutan et al., Phys. Rev. Lett. 121, 261302 (2018). 
+# from "Piezoelectrically Tuned Multimode Cavity Search for Axion Dark Matter", C. Boutan et al., Phys. Rev. Lett. 121, 261302 (2018).
 # assuming isothermal dark matter halo 0.45 GeV/cc
 # m_a [eV]  g_ap [GeV^-1]
 0.000017378597785977862  2.596358392987303e-13

@@ -1,7 +1,6 @@
-import matplotlib.pyplot as plt
-import matplotlib as mpl
+from __future__ import annotations
+
 from XPlotter import BasePlot, ExPltItem
-import DataBaseClass as db
 
 
 def extract_kwargs(arguments_str):

@@ -1,7 +1,7 @@
-import myPath
+from __future__ import annotations
 
-from AxionPlot import *
 import DataBaseClass as db
+from AxionPlot import *
 
 # --- LOAD THE DATABASE ---
 
