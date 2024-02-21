@@ -233,6 +233,58 @@ class DataBaseGae(DataBase):
             self.conn.commit()
 
 
+class DataBaseWimps(DataBase):
+    def __init__(
+        self, file_database="Axions.db", name: str = "Wimps", commit: bool = False
+    ):
+        DataBase.__init__(self, file_database, name, commit)
+
+        self.cursor.execute(
+            f"""CREATE TABLE IF NOT EXISTS {self.name} (
+            name TEXT,
+            type TEXT,
+            path TEXT,
+            drawOptions TEXT,
+            projection INTEGER,
+            source TEXT,
+            year TEXT,
+            label TEXT,
+            labelPosX REAL,
+            labelPosY REAL,
+            labelDrawOptions TEXT
+            )"""
+        )
+        if self.commit:
+            self.conn.commit()
+
+    def insert_row(
+        self,
+        name,
+        type,
+        path,
+        drawOptions="",
+        projection=0,
+        source="",
+        year="",
+        label="",
+        labelPosX=None,
+        labelPosY=None,
+        labelDrawOptions="",
+    ):
+        instruction = f"INSERT INTO {self.name}  VALUES ('{name}', '{type}','{path}','{drawOptions}',{projection},'{source}','{year}','{label}',{labelPosX},{labelPosY},'{labelDrawOptions}')"
+        self.cursor.execute(instruction)
+        if self.commit:
+            self.conn.commit()
+
+    def insert_rows(self, rows):
+        instruction = (
+            f"INSERT INTO {self.name} VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        )
+        self.cursor.executemany(instruction, rows)
+        if self.commit:
+            self.conn.commit()
+
+
 class DataBaseLabels(DataBase):
     def __init__(self, file_database="Axions.db", name: str = "Labels"):
         DataBase.__init__(self, file_database, name)

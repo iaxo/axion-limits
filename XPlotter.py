@@ -97,17 +97,20 @@ class BasePlot:
     # will draw a new exclusion line to the plot, no to be filled
     #
     def AddPlotItem(self, typeitem, linename, data, **kwargs):
-        y2 = self.plot.get_ylim()[1]
+        y_top = self.plot.get_ylim()[1]
+        y_bottom = self.plot.get_ylim()[0]
         kwargs["zorder"] = self.zorder
-        if typeitem not in ["band", "line", "region"]:
+        if typeitem not in ["band", "line", "region", "fog"]:
             print("ERROR: item type" + typeitem + "not known")
             exit()
         if typeitem == "band":
-            self.plot.fill_between(data[:, 0], data[:, 1], y2=y2, **kwargs)
+            self.plot.fill_between(data[:, 0], data[:, 1], y2=y_top, **kwargs)
         if typeitem == "region":
             plt.fill(data[:, 0], data[:, 1], **kwargs)
         if typeitem == "line":
             self.plot.plot(data[:, 0], data[:, 1], **kwargs)
+        if typeitem == "fog":
+            self.plot.fill_between(data[:, 0], data[:, 1], y2=y_bottom / 10, **kwargs)
         self.zorder += 1
 
     def onclick(self, event):
@@ -179,9 +182,15 @@ class ExPltItem:
         self.typeitem = typeitem
         self.filename = filename
         self.drawopt = kwargs
-        if typeitem not in ["band", "region", "line"]:
+        if typeitem not in ["band", "region", "line", "fog"]:
             print("ERROR: unknown plot item " + typeitem)
-        self.data = loadtxt(filename)
+        for delimiter in [" ", ",", ";"]:
+            try:
+                self.data = loadtxt(filename, delimiter=delimiter)
+                break
+            except ValueError:
+                pass
+        # self.data = loadtxt(filename)
 
     def DrawItem(self, plot):
         print("->", self.name, self.filename, self.drawopt)
