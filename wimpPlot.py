@@ -25,6 +25,7 @@ class WimpPlot:
         ticksopt_y="normal",
         labelx=r"WIMP mass [GeV/c$^{2}$]",
         labely=r"SI WIMP-nucleon cross section $\sigma_{\chi n}^\mathrm{SI}$ [cm$^{2}$]",
+        **excludedRegionOptions, # color, alpha, lw, zorder, etc.
     ):
         # plot the background
         self.baseplot = BasePlot(
@@ -44,20 +45,11 @@ class WimpPlot:
         # print(self.axionDB.get_rows())
 
         # Plotting Data
-        print("\n\nPlotting data:")
+        print("\n")
         self.PlotData()
         if excludedRegion:
-            (x_excluded, y_excluded) = self.getExcludedRegion()
-            if len(y_excluded) > 0:
-                self.baseplot.plot.fill_between(
-                    x_excluded,
-                    y_excluded,
-                    ymax * 10,
-                    color="#aaffc3",
-                    zorder=-101,  # behind all the data
-                    alpha=0.5,
-                    lw=0,
-                )
+            self.PlotExcludedRegion(**excludedRegionOptions)
+        print("\n")
 
         if showplot:
             self.baseplot.ShowPlot()
@@ -77,6 +69,28 @@ class WimpPlot:
             )  # row[0] = name, row[1] = type, row[2] = path, row[3] = drawOptions
             pltItem.DrawItem(self.baseplot)
             self.wimpDB.append(pltItem)
+
+    def PlotExcludedRegion(self, **kwargs):
+        # if kwargs does not contain one of the following, use the default values
+        if "color" not in kwargs:
+            kwargs["color"] = "#aaffc3"
+        if "alpha" not in kwargs:
+            kwargs["alpha"] = 0.5
+        if ("lw" not in kwargs) or ("linewidth" not in kwargs):
+            kwargs["lw"] = 0
+        if "zorder" not in kwargs:
+            kwargs["zorder"] = -101
+
+        (x_excluded, y_excluded) = self.getExcludedRegion()
+        if len(y_excluded) > 0:
+            print("Plotting excluded region.")
+            self.baseplot.plot.fill_between(
+                x_excluded,
+                y_excluded,
+                self.baseplot.plot.get_ylim()[1] * 10,
+                **kwargs,
+            )
+
 
     ## -------- CALCULATE THE EXCLUDED PARAMETER SPACE --------
     def getExcludedRegion(self):
