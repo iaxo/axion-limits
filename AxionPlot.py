@@ -63,8 +63,9 @@ class AxionGagPlot:
         # print(self.axionDB.get_rows())
 
         # Plotting Data
-        print("\n\nPlotting data:")
+        print("\n")
         self.PlotData()
+        print("\n")
 
         if showplot:
             self.axplot.ShowPlot()
@@ -76,15 +77,17 @@ class AxionGagPlot:
                 print("done")
 
     def PlotData(self):
+        print("Plotting data:")
         data = self.axionDB  # .get_rows(f"{plottype}==1")
-
+        self.axionDB = []
         for row in data:
             pltItem = ExPltItem(
                 row[0], row[1], row[2], **extract_kwargs(row[3])
             )  # row[0] = name, row[1] = type, row[2] = path, row[3] = drawOptions
             if self.plotCag:
-                RenormItem(pltItem)  # Its done in Haloscopes exclusively
+                RenormItem(pltItem)
             pltItem.DrawItem(self.axplot)
+            self.axionDB.append(pltItem)
 
 
 """

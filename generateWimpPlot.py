@@ -44,7 +44,6 @@ exps = database.get_rows(
 axionplot = WimpPlot(
     experiments=exps,
     showplot=False,  # set to false to add the labels later
-    ticksopt_x="normal",
 )
 
 # --- ADD THE LABELS ---

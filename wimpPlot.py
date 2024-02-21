@@ -21,7 +21,7 @@ class WimpPlot:
         xmax=20,
         ymin=1e-46,
         ymax=1e-34,
-        ticksopt_x="dense",
+        ticksopt_x="normal",
         ticksopt_y="normal",
         labelx=r"WIMP mass [GeV/c$^{2}$]",
         labely=r"SI WIMP-nucleon cross section $\sigma_{\chi n}^\mathrm{SI}$ [cm$^{2}$]",
@@ -61,6 +61,7 @@ class WimpPlot:
                 print("done")
 
     def PlotData(self):
+        print("Plotting data:")
         data = self.wimpDB
         self.wimpDB = []
         for row in data:
