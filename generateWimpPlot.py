@@ -1,4 +1,4 @@
-from wimpPlot import *
+from WimpPlot import *
 import DataBaseClass as db
 
 # --- LOAD THE DATABASE ---
