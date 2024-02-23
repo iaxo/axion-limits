@@ -69,7 +69,7 @@ class WimpPlot:
             elif type(row[3]) == dict:
                 kwargs = row[3]
             pltItem = ExPltItem(
-                row[0], row[1], row[2], **extract_kwargs(row[3])
+                row[0], row[1], row[2], **kwargs
             )  # row[0] = name, row[1] = type, row[2] = path, row[3] = drawOptions
             pltItem.DrawItem(self.baseplot)
             self.wimpDB.append(pltItem)
