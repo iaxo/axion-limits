@@ -184,12 +184,20 @@ class ExPltItem:
         self.drawopt = kwargs
         if typeitem not in ["band", "region", "line", "fog"]:
             print("ERROR: unknown plot item " + typeitem)
-        for delimiter in [" ", ",", ";"]:
-            try:
-                self.data = loadtxt(filename, delimiter=delimiter)
-                break
-            except ValueError:
-                pass
+        self.data = []
+        try:
+            self.data = loadtxt(filename)
+        except ValueError:
+            delimiters = [" ", ",", ";"]
+            for dlmt in delimiters:
+                try:
+                    self.data = loadtxt(filename, delimiter=dlmt)
+                    break
+                except ValueError:
+                    pass
+            if len(self.data) == 0:
+                print("ERROR: could not load data from file " + filename+". Check the delimiter is within:", delimiters)
+                exit()
         # self.data = loadtxt(filename)
 
     def DrawItem(self, plot):
