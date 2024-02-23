@@ -212,5 +212,5 @@ plt.text(
 plt.text(7e-9, 4e-15, '"DM-\n Radios"', color="black", size=6, ha="center", va="center")
 
 # --- SHOW AND SAVE THE PLOT ---
-axionplot.axplot.ShowPlot()
-axionplot.axplot.SavePlot("large_panorama.pdf")
+axionplot.baseplot.ShowPlot()
+axionplot.baseplot.SavePlot("large_panorama.pdf")

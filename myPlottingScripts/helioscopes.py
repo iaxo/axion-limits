@@ -126,5 +126,5 @@ plt.text(5e-7, 2.7e-11, r"{ ALPS-II}", color="black", size=12)
 # plt.text(5e-7,1.5e-12,r'{\bf JURA}',color="black",size=9,ha='center',va='center')
 
 # --- SHOW AND SAVE THE PLOT ---
-axionplot.axplot.ShowPlot()
-axionplot.axplot.SavePlot("helioscopes.pdf")
+axionplot.baseplot.ShowPlot()
+axionplot.baseplot.SavePlot("helioscopes.pdf")

@@ -29,7 +29,7 @@ def RenormItem(item):
 class AxionGagPlot:
     def __init__(
         self,
-        experiments,
+        experiments=[],
         plotCag=False,
         showplot=True,
         saveplotname=None,
@@ -45,7 +45,7 @@ class AxionGagPlot:
         labely=r"$|g_{a\gamma}|$ (GeV$^{-1}$)",
     ):
         # plot the background
-        self.axplot = BasePlot(
+        self.baseplot = BasePlot(
             xlab=labelx,
             ylab=labely,
             figsizex=figx,
@@ -58,37 +58,55 @@ class AxionGagPlot:
             ticksopt_y=ticksopt_y,
         )
 
-        self.axionDB = experiments
+        self.axionDB = []
         self.plotCag = plotCag
         # print(self.axionDB.get_rows())
 
         # Plotting Data
         print("\n")
-        self.PlotData()
+        self.PlotData(experiments)
         print("\n")
 
         if showplot:
-            self.axplot.ShowPlot()
+            self.baseplot.ShowPlot()
 
         if type(saveplotname) == str:
             if len(saveplotname) > 0:
                 print("saving...")
-                self.axplot.SavePlot(saveplotname)
+                self.baseplot.SavePlot(saveplotname)
                 print("done")
 
-    def PlotData(self):
+    def PlotData(self, data):
         print("Plotting data:")
-        data = self.axionDB  # .get_rows(f"{plottype}==1")
-        self.axionDB = []
         for row in data:
+            kwargs = {}
+            if type(row[3]) == str:
+                kwargs = extract_kwargs(row[3])
+            elif type(row[3]) == dict:
+                kwargs = row[3]
             pltItem = ExPltItem(
-                row[0], row[1], row[2], **extract_kwargs(row[3])
+                row[0], row[1], row[2], **kwargs
             )  # row[0] = name, row[1] = type, row[2] = path, row[3] = drawOptions
             if self.plotCag:
                 RenormItem(pltItem)
-            pltItem.DrawItem(self.axplot)
+            pltItem.DrawItem(self.baseplot)
             self.axionDB.append(pltItem)
 
+    def PlotLabels(self, labels: list):
+        print("Plotting labels:")
+        for label in labels:
+            kwargs = {}
+            if type(label[3]) == str:
+                kwargs = extract_kwargs(label[3])
+            elif type(label[3]) == dict:
+                kwargs = label[3]
+            # if "picker" not in kwargs:
+                # kwargs["picker"] = True
+            print("->", label[0], label[1], label[2], kwargs)
+
+            self.baseplot.plot.text(
+                x=label[1], y=label[2], s=label[0], **kwargs
+            )
 
 """
 class AxionGaePlot:
@@ -112,7 +130,7 @@ class AxionGaePlot:
         labelx="$m_a$ (eV)",
         labely=r"$|g_{ae}g_{a\gamma}|^{1/2}$ (GeV$^{-1/2}$)",
     ):
-        self.axplot = BasePlot(
+        self.baseplot = BasePlot(
             xlab=labelx,
             ylab=labely,
             figsizex=figx,
@@ -131,12 +149,12 @@ class AxionGaePlot:
         self.PlotData(plottype, projections)
         self.PlotLabels(projections)
         if showplot:
-            self.axplot.ShowPlot()
+            self.baseplot.ShowPlot()
 
         if type(saveplotname) == str:
             if len(saveplotname) > 0:
                 print("saving...")
-                self.axplot.SavePlot(saveplotname)
+                self.baseplot.SavePlot(saveplotname)
                 print("done")
 
     def PlotData(self, plottype, projections=False):
@@ -151,7 +169,7 @@ class AxionGaePlot:
             )  # get projections not already included
         for row in data:
             pltItem = ExPltItem(row[0], row[1], row[2], **extract_kwargs(row[3]))
-            pltItem.DrawItem(self.axplot)
+            pltItem.DrawItem(self.baseplot)
 
     def PlotLabels(self, projections=False):
         labels = self.labelsDB.get_rows(f"onoff==1 AND projection==0")

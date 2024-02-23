@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import DataBaseClass as db
 from AxionPlot import *
+import matplotlib.pyplot as plt
 
 # --- LOAD THE DATABASE ---
 
@@ -212,5 +213,5 @@ plt.text(
 plt.text(7e-9, 4e-15, '"DM-\n Radios"', color="black", size=6, ha="center", va="center")
 
 # --- SHOW AND SAVE THE PLOT ---
-axionplot.axplot.ShowPlot()
-axionplot.axplot.SavePlot("testing.pdf")
+axionplot.baseplot.ShowPlot()
+axionplot.baseplot.SavePlot("testing.pdf")

@@ -89,5 +89,5 @@ plt.text(
 plt.text(2e-5, 1.3e-12, r"{\bf JURA}", color="black", size=9, ha="center", va="center")
 
 # --- SHOW AND SAVE THE PLOT ---
-axionplot.axplot.ShowPlot()
-axionplot.axplot.SavePlot("testing.pdf")
+axionplot.baseplot.ShowPlot()
+axionplot.baseplot.SavePlot("testing.pdf")

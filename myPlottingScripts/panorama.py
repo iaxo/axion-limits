@@ -135,5 +135,5 @@ plt.text(
 # plt.text(5e-7,1.5e-12,r'{\bf JURA}',color="black",size=9,ha='center',va='center')
 
 # --- SHOW AND SAVE THE PLOT ---
-axionplot.axplot.ShowPlot()
-axionplot.axplot.SavePlot("panorama.pdf")
+axionplot.baseplot.ShowPlot()
+axionplot.baseplot.SavePlot("panorama.pdf")
