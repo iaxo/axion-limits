@@ -11,7 +11,7 @@ class WimpPlot:
 
     def __init__(
         self,
-        experiments,
+        experiments=[],
         excludedRegion=True,
         showplot=True,
         saveplotname=None,
@@ -41,12 +41,12 @@ class WimpPlot:
             ticksopt_y=ticksopt_y,
         )
 
-        self.wimpDB = experiments
+        self.wimpDB = []
         # print(self.axionDB.get_rows())
 
         # Plotting Data
         print("\n")
-        self.PlotData()
+        self.PlotData(experiments)
         if excludedRegion:
             self.PlotExcludedRegion(**excludedRegionOptions)
         print("\n")
@@ -60,16 +60,35 @@ class WimpPlot:
                 self.baseplot.SavePlot(saveplotname)
                 print("done")
 
-    def PlotData(self):
+    def PlotData(self, data: list):
         print("Plotting data:")
-        data = self.wimpDB
-        self.wimpDB = []
         for row in data:
+            kwargs = {}
+            if type(row[3]) == str:
+                kwargs = extract_kwargs(row[3])
+            elif type(row[3]) == dict:
+                kwargs = row[3]
             pltItem = ExPltItem(
                 row[0], row[1], row[2], **extract_kwargs(row[3])
             )  # row[0] = name, row[1] = type, row[2] = path, row[3] = drawOptions
             pltItem.DrawItem(self.baseplot)
             self.wimpDB.append(pltItem)
+
+    def PlotLabels(self, labels: list):
+        print("Plotting labels:")
+        for label in labels:
+            kwargs = {}
+            if type(label[3]) == str:
+                kwargs = extract_kwargs(label[3])
+            elif type(label[3]) == dict:
+                kwargs = label[3]
+            # if "picker" not in kwargs:
+                # kwargs["picker"] = True
+            print("->", label[0], label[1], label[2], kwargs)
+
+            self.baseplot.plot.text(
+                x=label[1], y=label[2], s=label[0], **kwargs
+            )
 
     def PlotExcludedRegion(self, **kwargs):
         # if kwargs does not contain one of the following, use the default values
@@ -77,7 +96,7 @@ class WimpPlot:
             kwargs["color"] = "#aaffc3"
         if "alpha" not in kwargs:
             kwargs["alpha"] = 0.5
-        if ("lw" not in kwargs) or ("linewidth" not in kwargs):
+        if ("lw" not in kwargs) and ("linewidth" not in kwargs):
             kwargs["lw"] = 0
         if "zorder" not in kwargs:
             kwargs["zorder"] = -101

@@ -44,9 +44,21 @@ exps = database.get_rows(
 axionplot = WimpPlot(
     experiments=exps,
     showplot=False,  # set to false to add the labels later
+    figx=9,
+    figy=7,
 )
 
 # --- ADD THE LABELS ---
+labels = database.get_rows("name", experimentsToPlot)
+# get the 7th (label text), 8th (x), 9th (y) and 10th (draw opts) columns
+labels = [row[7:11] for row in labels]
+
+extralabels=[
+    ("New Label", 1, 6e-45, dict(size=10, color="red", rotation=-45)),
+]
+labels.extend(extralabels) # use extend instead of append to add the elements of the list, not the list itself
+
+axionplot.PlotLabels(labels)
 
 # --- SHOW AND SAVE THE PLOT ---
 axionplot.baseplot.ShowPlot()
