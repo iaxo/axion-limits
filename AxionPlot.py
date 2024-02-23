@@ -18,7 +18,7 @@ def extract_kwargs(arguments_str):
 # ==============================================================================#
 # renormalize data, to plot C_ag instead of g_ag
 #
-def RenormItem(item):
+def RenormItem(item: ExPltItem):
     for i in range(len(item.data)):
         # print(item.name)
         item.data[i, 1] = item.data[i, 1] / item.data[i, 0] * 5.172e9
@@ -101,12 +101,11 @@ class AxionGagPlot:
             elif type(label[3]) == dict:
                 kwargs = label[3]
             # if "picker" not in kwargs:
-                # kwargs["picker"] = True
+            #   kwargs["picker"] = True
             print("->", label[0], label[1], label[2], kwargs)
 
-            self.baseplot.plot.text(
-                x=label[1], y=label[2], s=label[0], **kwargs
-            )
+            self.baseplot.plot.text(x=label[1], y=label[2], s=label[0], **kwargs)
+
 
 """
 class AxionGaePlot:

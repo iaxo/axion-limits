@@ -63,30 +63,19 @@ axionplot = AxionGagPlot(
 )
 
 # --- ADD THE LABELS ---
-plt.text(1e-3, 1e-10, r"CAST", color="black", size=10)
-plt.text(1e-4, 1.4e-7, r"{ ALPS-I}", color="white", size=10, ha="center", va="center")
-plt.text(1e-7, 1.5e-7, r"{ CROWS}", color="white", size=10, ha="center", va="center")
-plt.text(
-    3e-3,
-    1e-7,
-    r"{ PVLAS}",
-    color="black",
-    size=10,
-    ha="center",
-    va="center",
-    rotation=45,
-)
-plt.text(1e-4, 2e-8, r"{ OSQAR}", color="black", size=10, ha="center", va="center")
+plt.text(1e-3, 1e-10, r'CAST', color="black", size=10)
+plt.text(1e-4, 1.4e-7, r'{ ALPS-I}', color="white", size=10, ha='center', va='center')
+plt.text(1e-7, 1.5e-7, r'{ CROWS}', color="white", size=10, ha='center', va='center')
+plt.text(3e-3, 1e-7, r'{ PVLAS}', color="black", size=10, ha='center', va='center', rotation=45)
+plt.text(1e-4, 2e-8, r'{ OSQAR}', color="black", size=10, ha='center', va='center')
 plt.text(2e-9, 6e-12, r"T-hints", color="black", size=10)
 
-# projections
-plt.text(3e-6, 1e-10, "STAX1", color="black", size=10, ha="center", va="center")
-plt.text(2e-6, 5e-12, "STAX2", color="black", size=10, ha="center", va="center")
+#projections
+plt.text(3e-6, 1e-10, 'STAX1', color="black", size=10, ha='center', va='center')
+plt.text(2e-6, 5e-12, 'STAX2', color="black", size=10, ha='center', va='center')
 # plt.text(1e-5,1e-12,r'{\bf IAXO+}',color="black",size=9,ha='center',va='center')
-plt.text(
-    1e-6, 3e-11, r"{\bf ALPS-II}", color="black", size=10, ha="center", va="center"
-)
-plt.text(2e-5, 1.3e-12, r"{\bf JURA}", color="black", size=9, ha="center", va="center")
+plt.text(1e-6, 3e-11, r'{\bf ALPS-II}', color="black", size=10, ha='center', va='center')
+plt.text(2e-5, 1.3e-12, r'{\bf JURA}', color="black", size=9, ha='center', va='center')
 
 # --- SHOW AND SAVE THE PLOT ---
 axionplot.baseplot.ShowPlot()

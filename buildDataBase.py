@@ -1,11 +1,12 @@
+from __future__ import annotations
+
 import DataBaseClass as db
 
 FILE_DATABASE = "databases/Axions.db"
 
 print("File database: " + FILE_DATABASE)
 print("If it already exists, the table will be appended. Note this can cause to have duplicated rows.")
-ans = input("Are you sure you want to continue? (y/n)\n")
-if ans not in ["y", "yes", "Y", "YES"]:
+if input("Are you sure you want to continue? (y/n)\n") not in ["y", "yes", "Y", "YES"]:
     print("Aborting")
     exit()
 

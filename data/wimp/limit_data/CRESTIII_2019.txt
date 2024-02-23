@@ -1,4 +1,4 @@
-# source: 1904.00498 
+# source: 1904.00498
 # label: CRESST-III
 # color: #4363d8
 # label_xpos: 0.228

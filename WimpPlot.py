@@ -25,7 +25,7 @@ class WimpPlot:
         ticksopt_y="normal",
         labelx=r"WIMP mass [GeV/c$^{2}$]",
         labely=r"SI WIMP-nucleon cross section $\sigma_{\chi n}^\mathrm{SI}$ [cm$^{2}$]",
-        **excludedRegionOptions, # color, alpha, lw, zorder, etc.
+        **excludedRegionOptions,  # color, alpha, lw, zorder, etc.
     ):
         # plot the background
         self.baseplot = BasePlot(
@@ -83,12 +83,10 @@ class WimpPlot:
             elif type(label[3]) == dict:
                 kwargs = label[3]
             # if "picker" not in kwargs:
-                # kwargs["picker"] = True
+            #   kwargs["picker"] = True
             print("->", label[0], label[1], label[2], kwargs)
 
-            self.baseplot.plot.text(
-                x=label[1], y=label[2], s=label[0], **kwargs
-            )
+            self.baseplot.plot.text(x=label[1], y=label[2], s=label[0], **kwargs)
 
     def PlotExcludedRegion(self, **kwargs):
         # if kwargs does not contain one of the following, use the default values
@@ -110,7 +108,6 @@ class WimpPlot:
                 self.baseplot.plot.get_ylim()[1] * 10,
                 **kwargs,
             )
-
 
     ## -------- CALCULATE THE EXCLUDED PARAMETER SPACE --------
     def getExcludedRegion(self):

@@ -1,5 +1,7 @@
-from WimpPlot import *
+from __future__ import annotations
+
 import DataBaseClass as db
+from WimpPlot import *
 
 # --- LOAD THE DATABASE ---
 
@@ -30,10 +32,8 @@ experimentsToPlot = [
     "XENON1T_2018",
     "XENON1T_2021",
     "DAMA_I",
-
     # Neutrino fog
     "NuFloorXe",
-
     # projections
 ]
 exps = database.get_rows(
@@ -53,10 +53,12 @@ labels = database.get_rows("name", experimentsToPlot)
 # get the 7th (label text), 8th (x), 9th (y) and 10th (draw opts) columns
 labels = [row[7:11] for row in labels]
 
-extralabels=[
+extralabels = [
     ("New Label", 1, 6e-45, dict(size=10, color="red", rotation=-45)),
 ]
-labels.extend(extralabels) # use extend instead of append to add the elements of the list, not the list itself
+labels.extend(
+    extralabels
+)  # use extend instead of append to add the elements of the list, not the list itself
 
 axionplot.PlotLabels(labels)
 

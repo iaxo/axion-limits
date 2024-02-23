@@ -196,7 +196,12 @@ class ExPltItem:
                 except ValueError:
                     pass
             if len(self.data) == 0:
-                print("ERROR: could not load data from file " + filename+". Check the delimiter is within:", delimiters)
+                print(
+                    "ERROR: could not load data from file "
+                    + filename
+                    + ". Check the delimiter is within:",
+                    delimiters,
+                )
                 exit()
         # self.data = loadtxt(filename)
 

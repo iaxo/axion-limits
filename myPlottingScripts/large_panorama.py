@@ -85,131 +85,31 @@ axionplot = AxionGagPlot(
     showplot=False,  # set to false to add the labels later
 )
 
-# --- ADD THE LABELS ---
 plt.text(1e-8, 2e-10, r"{\bf Helioscopes (CAST)}", color="black", size=10)
 plt.text(1e-7, 2e-7, r"{\bf Laboratory}", color="white", size=10)
 plt.text(1e-9, 5e-12, r"$\gamma \textrm{-rays}$", color="black", size=10, ha="center")
-# plt.text(1e-8,1e-13,'Haloscopes',color="black",size=9)
-plt.text(
-    5e7, 4e-8, "SN1987A", color="black", size=6, rotation=-90, ha="center", va="center"
-)
+plt.text(5e7, 4e-8, "SN1987A", color="black", size=6, rotation=-90, ha="center", va="center")
 plt.text(3e-4, 21e-14, "KSVZ", color="black", size=6, rotation=47)
 plt.text(5, 1e-13, "Telescopes", color="black", size=6, rotation=90)
-plt.text(
-    2e2,
-    1.6e-10,
-    "Horizontal \n Branch Stars",
-    color="black",
-    size=7,
-    va="center",
-    ha="center",
-)
+plt.text(2e2, 1.6e-10, "Horizontal \n Branch Stars", color="black", size=7, va="center", ha="center")
 plt.text(1e2, 2e-9, r"{\bf Sun}", color="white", size=10)
-plt.text(
-    1.5e7,
-    5e-6,
-    r"{\bf Beam dump}",
-    color="white",
-    size=8,
-    rotation=-45,
-    ha="center",
-    va="center",
-)
-plt.text(
-    1e4, 3e-17, "X rays", color="white", size=10, rotation=-57, ha="center", va="center"
-)
-# plt.text(1e5,1e-14,r'{\bf EBL}',color="black",size=10,rotation=-57,ha='center',va='center')
-plt.text(
-    1e5,
-    1e-14,
-    "Extra-galactic \n Background Light",
-    color="black",
-    size=9,
-    rotation=-57,
-    ha="center",
-    va="center",
-)
-plt.text(
-    2e8,
-    1e-14,
-    r"{\bf CMB}",
-    color="white",
-    size=9,
-    rotation=-57,
-    ha="center",
-    va="center",
-)
-plt.text(
-    3e7,
-    1e-10,
-    "Big-Bang \n Nucleosynthesis",
-    color="black",
-    size=10,
-    rotation=-57,
-    ha="center",
-    va="center",
-)
-plt.text(
-    1e2,
-    1e-13,
-    "H$_2$ ionization \n fraction",
-    color="black",
-    size=8,
-    ha="center",
-    va="center",
-    rotation=90,
-)
-
-# added for Gaia's plot
-plt.text(
-    2.9e-6, 3e-13, "ADMX", color="black", size=6, ha="center", va="center", rotation=90
-)
-plt.text(
-    8.3e-6,
-    3.5e-12,
-    "BNL\n+UF",
-    color="black",
-    size=5,
-    ha="center",
-    va="center",
-    rotation=90,
-)
-plt.text(
-    1.3e-5,
-    2.5e-14,
-    "HAYSTAC",
-    color="black",
-    size=4,
-    ha="center",
-    va="center",
-    rotation=90,
-)
-# plt.text(1.1e-5,2.5e-14,'KLASH',color="black",size=5,ha='center',va='center',rotation=90)
-
-
+plt.text(1.5e7, 5e-6, r"{\bf Beam dump}", color="white", size=8, rotation=-45, ha="center", va="center")
+plt.text(1e4, 3e-17, "X rays", color="white", size=10, rotation=-57, ha="center", va="center")
+plt.text(1e5, 1e-14, "Extra-galactic \n Background Light", color="black", size=9, rotation=-57, ha="center", va="center")
+plt.text(2e8, 1e-14, r"{\bf CMB}", color="white", size=9, rotation=-57, ha="center", va="center")
+plt.text(3e7, 1e-10, "Big-Bang \n Nucleosynthesis", color="black", size=10, rotation=-57, ha="center", va="center")
+plt.text(1e2, 1e-13, "H$_2$ ionization \n fraction", color="black", size=8, ha="center", va="center", rotation=90)
+plt.text(2.9e-6, 3e-13, "ADMX", color="black", size=6, ha="center", va="center", rotation=90)
+plt.text(8.3e-6, 3.5e-12, "BNL\n+UF", color="black", size=5, ha="center", va="center", rotation=90)
+plt.text(1.3e-5, 2.5e-14, "HAYSTAC", color="black", size=4, ha="center", va="center", rotation=90)
 plt.text(1e-3, 3e-11, r"{ BabyIAXO}", color="black", size=8, ha="center", va="center")
 plt.text(1e-3, 5e-12, r"{ IAXO}", color="black", size=8, ha="center", va="center")
 plt.text(1e-6, 3e-11, r"{ ALPS-II}", color="black", size=8, ha="center", va="center")
-# plt.text(1e-6,5e-12,r'{\bf JURA}',color="black",size=8,ha='center',va='center')
-
-# added for Gaia's plot
-plt.text(
-    8e-6,
-    2e-16,
-    "ADMX+CAPP",
-    color="black",
-    size=5,
-    ha="center",
-    va="center",
-    rotation=47,
-)
-plt.text(
-    2e-4, 8e-15, "MADMAX", color="black", size=5, ha="center", va="center", rotation=47
-)
-plt.text(
-    1.2e-4, 6e-13, "ORGAN", color="black", size=5, ha="center", va="center", rotation=90
-)
+plt.text(8e-6, 2e-16, "ADMX+CAPP", color="black", size=5, ha="center", va="center", rotation=47)
+plt.text(2e-4, 8e-15, "MADMAX", color="black", size=5, ha="center", va="center", rotation=47)
+plt.text(1.2e-4, 6e-13, "ORGAN", color="black", size=5, ha="center", va="center", rotation=90)
 plt.text(7e-9, 4e-15, '"DM-\n Radios"', color="black", size=6, ha="center", va="center")
+
 
 # --- SHOW AND SAVE THE PLOT ---
 axionplot.baseplot.ShowPlot()

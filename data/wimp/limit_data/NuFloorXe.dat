@@ -1,7 +1,7 @@
 # source:#  https://github.com/cajohare/AtmNuFloor/blob/master/data/WIMPLimits/SI/nufloor-Xe.txt
 # label: Neutrino Floor Xe
 # year: 2020
-# fillcolor: #ffe119 
+# fillcolor: #ffe119
 # linecolor: orange
 # label_xpos: 1.5e0
 # label_ypos: 7e-46

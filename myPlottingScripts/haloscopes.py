@@ -23,7 +23,8 @@ database.delete_rows("name='exp_name'", confirm=True)
 experimentsToPlot = [
     "qcdband",
     "ksvz",
-    "old_haloscopes" "ADMX2018",
+    "old_haloscopes"
+    "ADMX2018",
     "ADMX2019",
     "ADMX2021",
     "ADMX_sidecar",  # 'ADMX2019_2',
@@ -39,6 +40,7 @@ experimentsToPlot = [
     "RADES2021",
     "admx",
     "CAST",
+
     # projections
     "ABRA1",
     "ABRA2",
@@ -54,6 +56,7 @@ experimentsToPlot = [
     "MADMAX_l",
     "ORGANprosp",
     "BRASS",
+
     "BabyIAXO",
     "BabyIAXO_l",
     "IAXO",
@@ -83,69 +86,25 @@ axionplot = AxionGagPlot(
 )
 
 # --- ADD THE LABELS ---
-plt.text(2.5e-3, 110, r"{\bf CAST}", color="black", size=12, ha="center", rotation=-57)
-plt.text(1e-8, 3, "ABRA/DM-Radio", color="black", size=12, ha="center", rotation=-57)
-plt.text(
-    3.3e-7, 70, "KLASH", color="black", size=11, ha="center", va="center", rotation=90
-)
-plt.text(1e-3, 2.5, "KSVZ", color="green", size=9, va="center", ha="center")
-plt.text(1e-3, 0.32, "Axion models", color="green", size=9, ha="center")
-plt.text(
-    2.9e-6,
-    70,
-    r"{\bf ADMX}",
-    color="black",
-    size=12,
-    ha="center",
-    va="center",
-    rotation=90,
-)
-plt.text(
-    9.5e-7,
-    70,
-    "ACTION/IAXO-DM",
-    color="black",
-    size=10,
-    ha="center",
-    va="center",
-    rotation=90,
-)
-plt.text(8.3e-6, 650, "BNL\n+UF", color="black", size=8, ha="center", va="center")
-plt.text(7e-6, 0.86, "ADMX", color="black", size=10, ha="center", va="center")
-plt.text(1.9e-5, 2.24, "CAPP", color="black", size=10, ha="center", va="center")
-plt.text(
-    1.46e-5, 25, "HAYSTAC", color="black", size=8, ha="center", va="center", rotation=90
-)
-plt.text(1.2e-4, 1.15, "MADMAX", color="black", size=8, ha="center", va="center")
-plt.text(1.2e-4, 30, "ORGAN", color="black", size=8, ha="center", va="center")
-plt.text(
-    3e-5, 25, "RADES", color="black", size=8, ha="center", va="center", rotation=90
-)
+plt.text(2.5e-3, 110, r'{\bf CAST}', color="black", size=12, ha='center', rotation=-57)
+plt.text(1e-8, 3, 'ABRA/DM-Radio', color="black", size=12, ha='center', rotation=-57)
+plt.text(3.3e-7, 70, 'KLASH', color="black", size=11, ha='center', va='center', rotation=90)
+plt.text(1e-3, 2.5, 'KSVZ', color="green", size=9, va='center', ha='center')
+plt.text(1e-3, 0.32, 'Axion models', color="green", size=9, ha='center')
+plt.text(2.9e-6, 70, r'{\bf ADMX}', color="black", size=12, ha='center', va='center', rotation=90)
+plt.text(9.5e-7, 70, 'ACTION/IAXO-DM', color="black", size=10, ha='center', va='center', rotation=90)
+plt.text(8.3e-6, 650, 'BNL\n+UF', color="black", size=8, ha='center', va='center')
+plt.text(7e-6, 0.86, 'ADMX', color="black", size=10, ha='center', va='center')
+plt.text(1.9e-5, 2.24, 'CAPP', color="black", size=10, ha='center', va='center')
+plt.text(1.46e-5, 25, 'HAYSTAC', color="black", size=8, ha='center', va='center', rotation=90)
+plt.text(1.2e-4, 1.15, 'MADMAX', color="black", size=8, ha='center', va='center')
+plt.text(1.2e-4, 30, 'ORGAN', color="black", size=8, ha='center', va='center')
+plt.text(3e-5, 25, 'RADES', color="black", size=8, ha='center', va='center', rotation=90)
 
-# projections
-plt.text(
-    1.8e-3,
-    83,
-    r"BabyIAXO",
-    color="black",
-    size=10,
-    ha="center",
-    va="center",
-    rotation=-57,
-)
-plt.text(
-    1e-3,
-    36,
-    r"{\bf IAXO}",
-    color="black",
-    size=11,
-    ha="center",
-    va="center",
-    rotation=-57,
-)
-plt.text(
-    0.01, 12, "TOORAD", color="black", size=8, ha="center", va="center", rotation=90
-)
+#projections
+plt.text(1.8e-3, 83, r'BabyIAXO', color="black", size=10, ha='center', va='center', rotation=-57)
+plt.text(1e-3, 36, r'{\bf IAXO}', color="black", size=11, ha='center', va='center', rotation=-57)
+plt.text(0.01, 12, 'TOORAD', color="black", size=8, ha='center', va='center', rotation=90)
 # plt.text(1e-5,1e-12,r'{\bf IAXO+}',color="black",size=9,ha='center',va='center')
 # plt.text(5e-7,3e-11,r'{\bf ALPS-II}',color="black",size=10,ha='center',va='center')
 # plt.text(5e-7,1.5e-12,r'{\bf JURA}',color="black",size=9,ha='center',va='center')
