@@ -69,11 +69,26 @@ class WimpPlot:
                 kwargs = extract_kwargs(row[3])
             elif type(row[3]) == dict:
                 kwargs = row[3]
+
+            if "projection" in kwargs:
+                isProjection = kwargs["projection"]  # not use for excluding region
+                del kwargs["projection"]
+            elif len(row) >= 4:
+                isProjection = row[4] == 1
+            else:
+                isProjection = False
+
+            if isProjection:
+                # use '--' as default linestyle for projections
+                if ("linestyle" not in kwargs) and ("ls" not in kwargs):
+                    kwargs["ls"] = "--"
+
             pltItem = ExPltItem(
                 row[0], row[1], row[2], **kwargs
             )  # row[0] = name, row[1] = type, row[2] = path, row[3] = drawOptions
             pltItem.DrawItem(self.baseplot)
-            self.wimpDB.append(pltItem)
+            if not isProjection:
+                self.wimpDB.append(pltItem)
 
     def PlotLabels(self, labels: list):
         print("Plotting labels:")
@@ -129,14 +144,11 @@ class WimpPlot:
         for item in self.wimpDB:
             if item.typeitem != "line":  # use only curves
                 continue
-            if (
-                item.name == 1
-            ):  # exclude projections # TODO CHANGE THIS TO AVOID PROJECTIONS
-                continue
             interpolator = interp1d(
                 item.data[:, 0], item.data[:, 1], bounds_error=False, fill_value=1e-10
             )
             interp_array.append(interpolator(np.power(x_val_arr, 1)))
+
         if len(interp_array) <= 0:
             print(
                 "Warning: no available lines (not projection) for computing excluded region."
@@ -144,5 +156,5 @@ class WimpPlot:
             return (x_val_arr, [])
         exp_upper_lim = np.min(
             interp_array, axis=0
-        )  # minimum value of cross section across all above included curves for each mass
+        )  # minimum value of all curves for each mass
         return (x_val_arr, exp_upper_lim)

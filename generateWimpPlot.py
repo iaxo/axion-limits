@@ -39,13 +39,8 @@ experimentsToPlot = [
 exps = database.get_rows(
     "name", experimentsToPlot
 )  # Get the data of the experiments to plot from the database
-
-# --- BUILD THE PLOT ---
-axionplot = WimpPlot(
-    experiments=exps,
-    showplot=False,  # set to false to add the labels later
-    figx=9,
-    figy=7,
+exps.append(
+    ["TREX-DM_projection", "line", "data/wimp/Ar_iso1/C_2y.dat", dict(projection=True, color="red"), True]
 )
 
 # --- ADD THE LABELS ---
@@ -54,14 +49,19 @@ labels = database.get_rows("name", experimentsToPlot)
 labels = [row[7:11] for row in labels]
 
 extralabels = [
-    ("New Label", 1, 6e-45, dict(size=10, color="red", rotation=-45)),
+    ("TREX-DM", 0.21, 1.4e-37, dict(size=10, color="red")),
 ]
 labels.extend(
     extralabels
 )  # use extend instead of append to add the elements of the list, not the list itself
 
-axionplot.PlotLabels(labels)
+# --- BUILD THE PLOT ---
+axionplot = WimpPlot(
+    experiments=exps,
+    labels=labels,
+    showplot=True,  # set to false to add the labels later
+    saveplotname="WIMPs_SI.pdf",
+    figx=9,
+    figy=7,
+)
 
-# --- SHOW AND SAVE THE PLOT ---
-axionplot.baseplot.ShowPlot()
-axionplot.baseplot.SavePlot("testing.pdf")
