@@ -9,24 +9,32 @@
 # ==============================================================================#
 from __future__ import annotations
 
-import os
 import pickle
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from numpy import *
-from numpy.random import *
+import numpy as np
 
-plotpdfdir = "./plots/"
-plotpngdir = plotpdfdir + "pngs/"
+PATH_FIGURE_FOLDER = "./plots/"
+
+
+def custom_formatter(x, pos):
+    """Custom formatter for the x and y axis
+    It will format the axis in scientific notation,
+    except for the values 0.1, 1 and 10.
+    """
+    # Check if x is one of the values you want to format differently
+    if x in [0.1, 1, 10]:
+        return f"{x:g}"
+    else:
+        # For other values, use scientific notation
+        return rf"$10^{{{np.log10(x):.0f}}}$"
 
 
 # ==============================================================================#
 # == class representing a generic sensitivity plot
 # ==============================================================================#
 # ==============================================================================#
-
-
 class BasePlot:
     """Base class to host a generic sensitivity plot"""
 
@@ -73,22 +81,28 @@ class BasePlot:
         self.plot.set_ylim([y_min, y_max])
         locmaj = mpl.ticker.LogLocator(base=10.0, subs=(1.0,), numticks=100)
         locmin = mpl.ticker.LogLocator(
-            base=10.0, subs=arange(2, 10) * 0.1, numticks=100
+            base=10.0, subs=np.arange(2, 10) * 0.1, numticks=100
         )
         if ticksopt_x == "dense":
             locmaj = mpl.ticker.LogLocator(base=100.0, subs=(1.0,), numticks=100)
             locmin = mpl.ticker.LogLocator(base=10.0, subs=(1.0,), numticks=100)
         self.plot.xaxis.set_major_locator(locmaj)
         self.plot.xaxis.set_minor_locator(locmin)
-        self.plot.xaxis.set_minor_formatter(mpl.ticker.NullFormatter())
+
         locmaj = mpl.ticker.LogLocator(base=10.0, subs=(1.0,), numticks=100)
         locmin = mpl.ticker.LogLocator(
-            base=10.0, subs=arange(2, 10) * 0.1, numticks=100
+            base=10.0, subs=np.arange(2, 10) * 0.1, numticks=100
         )
-        if ticksopt_x == "dense":
+        if ticksopt_y == "dense":
+            locmaj = mpl.ticker.LogLocator(base=100.0, subs=(1.0,), numticks=100)
             locmin = mpl.ticker.LogLocator(base=10.0, subs=(1.0,), numticks=100)
         self.plot.yaxis.set_major_locator(locmaj)
         self.plot.yaxis.set_minor_locator(locmin)
+
+        self.plot.xaxis.set_major_formatter(mpl.ticker.FuncFormatter(custom_formatter))
+        self.plot.xaxis.set_minor_formatter(mpl.ticker.NullFormatter())
+
+        self.plot.yaxis.set_major_formatter(mpl.ticker.FuncFormatter(custom_formatter))
         self.plot.yaxis.set_minor_formatter(mpl.ticker.NullFormatter())
 
         self.zorder = -100
@@ -132,39 +146,35 @@ class BasePlot:
     def ShowPlot(self):
         cid = self.fig.canvas.mpl_connect("button_press_event", self.onclick)
         plt.ioff()
+        print("Showing plot... Close the figure window to continue.")
         plt.show()
         self.fig.canvas.mpl_disconnect(cid)
 
     # ==============================================================================#
     # saves the plot on a file
     #
-    def SavePlot(
-        self, plotname, pngsave=False, svgsave=False, openpdf=False, picklesave=False
-    ):
-        if not plotname.startswith("plots/"):
-            filename = "plots/" + plotname
-        else:
-            filename = plotname
+    def SavePlot(self, plotname):
+        filename = PATH_FIGURE_FOLDER + plotname
 
-        self.fig.savefig(filename, bbox_inches="tight")
-        print(filename + " saved.")
+        extensions = [".pdf", ".png", ".svg", ".pickle"]
+        # if it does not end with any of this extensions add .pdf as default extension
+        if not any(plotname.endswith(ext) for ext in extensions):
+            filename = filename + ".pdf"
 
-        if pngsave:
-            self.fig.savefig(plotname + ".png", bbox_inches="tight")
-            print(filename.replace(".pdf", ".png") + ".png saved.")
-
-        if svgsave:
-            self.fig.savefig(plotpngdir + plotname + ".svg", bbox_inches="tight")
-            print(filename + ".svg saved.")
-
-        if openpdf:
-            os.startfile(filename)
-            print(filename)
-
-        if picklesave:
-            fil = open(plotpdfdir + plotname + ".pickle", "wb")
+        if filename.endswith(".pickle"):
+            fil = open(filename, "wb")
             pickle.dump(self.fig, fil)
-            print(plotpdfdir + plotname + ".pickle saved.")
+            print("Saving figure as " + filename)
+            return
+
+        try:
+            self.fig.savefig(filename, bbox_inches="tight")
+        except FileNotFoundError:
+            # if PATH_FIGURE_FOLDER was already added to plotname
+            # or plotname included the path to another folder
+            filename = filename.replace(PATH_FIGURE_FOLDER, "")
+            self.fig.savefig(filename, bbox_inches="tight")
+        print("Saving figure as " + filename)
 
 
 # ==============================================================================#
@@ -186,12 +196,12 @@ class ExPltItem:
             print("ERROR: unknown plot item " + typeitem)
         self.data = []
         try:
-            self.data = loadtxt(filename)
+            self.data = np.loadtxt(filename)
         except ValueError:
             delimiters = [" ", ",", ";"]
             for dlmt in delimiters:
                 try:
-                    self.data = loadtxt(filename, delimiter=dlmt)
+                    self.data = np.loadtxt(filename, delimiter=dlmt)
                     break
                 except ValueError:
                     pass
