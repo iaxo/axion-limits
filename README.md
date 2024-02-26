@@ -5,11 +5,11 @@ Some examples of this generated plots can be found in the plots folder.
 
 In the case of axions:
 
-<img align="center" height="250" src="plots/large_panorama.pdf">
+![large_panorama](plots/large_panorama.pdf)
 
 In the case of WIMPs:
 
-<img align="center" height="250" src="plots/WIMPs_SI.pdf">
+![large_panorama](plots/WIMPs_SI.pdf)
 
 ## Getting Started
 The files generateAxionPlot.py and generateWimpPlot.py are given as examples on how to generate this sensitivity plots. You can do this by executing any of this scripts (let´s take the axion case)
