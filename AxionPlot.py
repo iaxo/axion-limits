@@ -30,6 +30,7 @@ class AxionGagPlot:
     def __init__(
         self,
         experiments=[],
+        labels=[],
         plotCag=False,
         showplot=True,
         saveplotname=None,
@@ -66,15 +67,15 @@ class AxionGagPlot:
         print("\n")
         self.PlotData(experiments)
         print("\n")
+        self.PlotLabels(labels)
+        print("\n")
 
         if showplot:
             self.baseplot.ShowPlot()
 
         if type(saveplotname) == str:
             if len(saveplotname) > 0:
-                print("saving...")
                 self.baseplot.SavePlot(saveplotname)
-                print("done")
 
     def PlotData(self, data):
         print("Plotting data:")

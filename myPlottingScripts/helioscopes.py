@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import myPath # add the path to the project
 import DataBaseClass as db
 from AxionPlot import *
 
@@ -70,11 +71,43 @@ exps = database.get_rows(
     "name", experimentsToPlot
 )  # Get the data of the experiments to plot from the database
 
+labels=[
+    (r"{\bf CAST}", 3e-6, 8.5e-11, dict(color="blue", size=13)),
+    # (r'{\bf Laboratory}', 1e-7, 2e-7, dict(color="white",size=12)),
+    (r"T-hints", 1e-8, 6e-12, dict(color="red", size=11)),
+    # (r"HE $\gamma \textrm{-rays}$", 2e-9, 6e-12, dict(color="black",size=10)),
+    (r"{\bf Haloscopes}", 1e-6, 1e-12, dict(color="black", size=13)),
+    ("KSVZ", 1.15e-3, 0.75e-12, dict(color="black", size=10, rotation=57)),
+    ("Axion models", 4.7e-3, 5e-13, dict(color="black", size=10, rotation=57)),
+    # ('Telescopes', 5, 3e-13, dict(color="black",size=8,rotation=90)),
+    ("HB", 8e-2, 7e-11, dict(color="black", size=10)),
+    ("HB hint", 1e-1, 1.3e-11, dict(color="red", size=10)),
+    ("WD \ncooling\n hint ", 3.5e-3, 6.0e-12, dict(color="red", size=10, ha="center",)),
+    # ('Sun', 3, 1.3e-9, dict(color="black",size=9,ha='center')),
+    # (r'{\bf Sun}', 1e2, 2e-9, dict(color="white",size=10)),
+    ("ABRA\n-10cm", 7e-10, 2e-9, dict(color="black", size=10)),
+    ("SHAFT", 2e-11, 4e-10, dict(color="black", size=10)),
+    ("HESS", 3e-8, 2e-11, dict(color="black", size=9, ha="center")),
+    ("Mrk421", 1e-8, 4e-11, dict(color="black", size=9, ha="center")),
+    ("SN1987A", 1.5e-11, 7e-12, dict(color="black", size=9)),
+    ("Fermi\nNG1275", 6e-10, 7e-12, dict(color="black", size=9)),
+
+    #projections
+    (r"{\bf AMELIE}", 1e-3, 8.5e-11, dict(color="gray", size=11)),
+    (r"BabyIAXO", 3e-4, 2e-11, dict(color="black", size=12)),
+    (r"{\bf IAXO}", 1.75e-4, 5e-12, dict(color="black", size=13)),
+    (r"{\bf IAXO+}", 1.4e-4, 3.2e-12, dict(color="black", size=9, ha="center", va="center")),
+    (r"{ ALPS-II}", 5e-7, 2.7e-11, dict(color="black", size=12)),
+    # (r'{\bf JURA}', 5e-7, 1.5e-12, dict(color="black",size=9,ha='center',va='center')),
+]
+
 # --- BUILD THE PLOT ---
 axionplot = AxionGagPlot(
     experiments=exps,
+    labels=labels,
     plotCag=False,  # set to true to plot C_ag instead of g_ag
-    showplot=False,  # set to false to add the labels later
+    showplot=True,  # set to false to add the labels later
+    saveplotname="helioscopes.pdf",
     figx = 8,
     figy = 6,
     ymin = 1e-13,
@@ -84,36 +117,3 @@ axionplot = AxionGagPlot(
     ticksopt_x = "normal",
     ticksopt_y = "normal",
 )
-
-# --- ADD THE LABELS ---
-plt.text(3e-6, 8.5e-11, r"{\bf CAST}", color="blue", size=13)
-# plt.text(1e-7,2e-7,r'{\bf Laboratory}',color="white",size=12)
-plt.text(1e-8, 6e-12, r"T-hints", color="red", size=11)
-# plt.text(2e-9,6e-12,r"HE $\gamma \textrm{-rays}$",color="black",size=10)
-plt.text(1e-6, 1e-12, r"{\bf Haloscopes}", color="black", size=13)
-plt.text(1.15e-3, 0.75e-12, "KSVZ", color="black", size=10, rotation=57)
-plt.text(4.7e-3, 5e-13, "Axion models", color="black", size=10, rotation=57)
-# plt.text(5,3e-13,'Telescopes',color="black",size=8,rotation=90)
-plt.text(8e-2, 7e-11, "HB", color="black", size=10)
-plt.text(1e-1, 1.3e-11, "HB hint", color="red", size=10)
-plt.text(3.5e-3, 6.0e-12, "WD \ncooling\n hint ", color="red", size=10, ha="center",)
-# plt.text(3,1.3e-9,'Sun',color="black",size=9,ha='center')
-# plt.text(1e2,2e-9,r'{\bf Sun}',color="white",size=10)
-plt.text(7e-10, 2e-9, "ABRA\n-10cm", color="black", size=10)
-plt.text(2e-11, 4e-10, "SHAFT", color="black", size=10)
-plt.text(3e-8, 2e-11, "HESS", color="black", size=9, ha="center")
-plt.text(1e-8, 4e-11, "Mrk421", color="black", size=9, ha="center")
-plt.text(1.5e-11, 7e-12, "SN1987A", color="black", size=9)
-plt.text(6e-10, 7e-12, "Fermi\nNG1275", color="black", size=9)
-
-#projections
-plt.text(1e-3, 8.5e-11, r"{\bf AMELIE}", color="gray", size=11)
-plt.text(3e-4, 2e-11, r"BabyIAXO", color="black", size=12)
-plt.text(1.75e-4, 5e-12, r"{\bf IAXO}", color="black", size=13)
-plt.text(1.4e-4,3.2e-12, r"{\bf IAXO+}", color="black", size=9, ha="center", va="center")
-plt.text(5e-7, 2.7e-11, r"{ ALPS-II}", color="black", size=12)
-# plt.text(5e-7,1.5e-12,r'{\bf JURA}',color="black",size=9,ha='center',va='center')
-
-# --- SHOW AND SAVE THE PLOT ---
-axionplot.baseplot.ShowPlot()
-axionplot.baseplot.SavePlot("helioscopes.pdf")

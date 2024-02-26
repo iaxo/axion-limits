@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import myPath  # add the path to the project
 import DataBaseClass as db
 from AxionPlot import *
 
@@ -23,7 +24,7 @@ database.delete_rows("name='exp_name'", confirm=True)
 experimentsToPlot = [
     "qcdband",
     "ksvz",
-    "old_haloscopes"
+    "old_haloscopes",
     "ADMX2018",
     "ADMX2019",
     "ADMX2021",
@@ -69,11 +70,38 @@ exps = database.get_rows(
     "name", experimentsToPlot
 )  # Get the data of the experiments to plot from the database
 
+labels=[
+    (r'{\bf CAST}', 2.5e-3, 110, dict(color="black", size=12, ha='center', rotation=-57)),
+    ('ABRA/DM-Radio', 1e-8, 3, dict(color="black", size=12, ha='center', rotation=-57)),
+    ('KLASH', 3.3e-7, 70, dict(color="black", size=11, ha='center', va='center', rotation=90)),
+    ('KSVZ', 1e-3, 2.5, dict(color="green", size=9, va='center', ha='center')),
+    ('Axion models', 1e-3, 0.32, dict(color="green", size=9, ha='center')),
+    (r'{\bf ADMX}', 2.9e-6, 70, dict(color="black", size=12, ha='center', va='center', rotation=90)),
+    ('ACTION/IAXO-DM', 9.5e-7, 70, dict(color="black", size=10, ha='center', va='center', rotation=90)),
+    ('BNL\n+UF', 8.3e-6, 650, dict(color="black", size=8, ha='center', va='center')),
+    ('ADMX', 7e-6, 0.86, dict(color="black", size=10, ha='center', va='center')),
+    ('CAPP', 1.9e-5, 2.24, dict(color="black", size=10, ha='center', va='center')),
+    ('HAYSTAC', 1.46e-5, 25, dict(color="black", size=8, ha='center', va='center', rotation=90)),
+    ('MADMAX', 1.2e-4, 1.15, dict(color="black", size=8, ha='center', va='center')),
+    ('ORGAN', 1.2e-4, 30, dict(color="black", size=8, ha='center', va='center')),
+    ('RADES', 3e-5, 25, dict(color="black", size=8, ha='center', va='center', rotation=90)),
+
+    #projections
+    (r'BabyIAXO', 1.8e-3, 83, dict(color="black", size=10, ha='center', va='center', rotation=-57)),
+    (r'{\bf IAXO}', 1e-3, 36, dict(color="black", size=11, ha='center', va='center', rotation=-57)),
+    ('TOORAD', 0.01, 12, dict(color="black", size=8, ha='center', va='center', rotation=90)),
+    # (r'{\bf IAXO+}', 1e-5, 1e-12, dict(color="black",size=9,ha='center',va='center')),
+    # (r'{\bf ALPS-II}', 5e-7, 3e-11, dict(color="black",size=10,ha='center',va='center')),
+    # (r'{\bf JURA}', 5e-7, 1.5e-12, dict(color="black",size=9,ha='center',va='center')),
+]
+
 # --- BUILD THE PLOT ---
 axionplot = AxionGagPlot(
     experiments=exps,
-    showplot=False,  # set to false to add the labels later
+    labels=labels,
     plotCag=True,  # set to true to plot C_ag instead of g_ag
+    showplot=True,  # set to false to add the labels later
+    saveplotname="haloscopes.pdf",
     labely=r"$|C_{a\gamma}|\tilde{\rho}_a^{1/2}$",
     figx=8,
     figy=5,
@@ -85,30 +113,3 @@ axionplot = AxionGagPlot(
     ticksopt_y="normal",
 )
 
-# --- ADD THE LABELS ---
-plt.text(2.5e-3, 110, r'{\bf CAST}', color="black", size=12, ha='center', rotation=-57)
-plt.text(1e-8, 3, 'ABRA/DM-Radio', color="black", size=12, ha='center', rotation=-57)
-plt.text(3.3e-7, 70, 'KLASH', color="black", size=11, ha='center', va='center', rotation=90)
-plt.text(1e-3, 2.5, 'KSVZ', color="green", size=9, va='center', ha='center')
-plt.text(1e-3, 0.32, 'Axion models', color="green", size=9, ha='center')
-plt.text(2.9e-6, 70, r'{\bf ADMX}', color="black", size=12, ha='center', va='center', rotation=90)
-plt.text(9.5e-7, 70, 'ACTION/IAXO-DM', color="black", size=10, ha='center', va='center', rotation=90)
-plt.text(8.3e-6, 650, 'BNL\n+UF', color="black", size=8, ha='center', va='center')
-plt.text(7e-6, 0.86, 'ADMX', color="black", size=10, ha='center', va='center')
-plt.text(1.9e-5, 2.24, 'CAPP', color="black", size=10, ha='center', va='center')
-plt.text(1.46e-5, 25, 'HAYSTAC', color="black", size=8, ha='center', va='center', rotation=90)
-plt.text(1.2e-4, 1.15, 'MADMAX', color="black", size=8, ha='center', va='center')
-plt.text(1.2e-4, 30, 'ORGAN', color="black", size=8, ha='center', va='center')
-plt.text(3e-5, 25, 'RADES', color="black", size=8, ha='center', va='center', rotation=90)
-
-#projections
-plt.text(1.8e-3, 83, r'BabyIAXO', color="black", size=10, ha='center', va='center', rotation=-57)
-plt.text(1e-3, 36, r'{\bf IAXO}', color="black", size=11, ha='center', va='center', rotation=-57)
-plt.text(0.01, 12, 'TOORAD', color="black", size=8, ha='center', va='center', rotation=90)
-# plt.text(1e-5,1e-12,r'{\bf IAXO+}',color="black",size=9,ha='center',va='center')
-# plt.text(5e-7,3e-11,r'{\bf ALPS-II}',color="black",size=10,ha='center',va='center')
-# plt.text(5e-7,1.5e-12,r'{\bf JURA}',color="black",size=9,ha='center',va='center')
-
-# --- SHOW AND SAVE THE PLOT ---
-axionplot.baseplot.ShowPlot()
-axionplot.baseplot.SavePlot("haloscopes.pdf")

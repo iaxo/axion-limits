@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import myPath  # add the path to the project
 import DataBaseClass as db
 from AxionPlot import *
 
@@ -78,39 +79,38 @@ exps = database.get_rows(
     "name", experimentsToPlot
 )  # Get the data of the experiments to plot from the database
 
+labels = [
+    (r"{\bf Helioscopes (CAST)}", 1e-8, 2e-10, dict( color="black", size=10)),
+    (r"{\bf Laboratory}", 1e-7, 2e-7, dict( color="white", size=10)),
+    (r"$\gamma \textrm{-rays}$", 1e-9, 5e-12, dict( color="black", size=10, ha="center")),
+    ("SN1987A", 5e7, 4e-8, dict( color="black", size=6, rotation=-90, ha="center", va="center")),
+    ("KSVZ", 3e-4, 21e-14, dict( color="black", size=6, rotation=47)),
+    ("Telescopes", 5, 1e-13, dict( color="black", size=6, rotation=90)),
+    ("Horizontal \n Branch Stars", 2e2, 1.6e-10, dict( color="black", size=7, va="center", ha="center")),
+    (r"{\bf Sun}", 1e2, 2e-9, dict( color="white", size=10)),
+    (r"{\bf Beam dump}", 1.5e7, 5e-6, dict( color="white", size=8, rotation=-45, ha="center", va="center")),
+    ("X rays", 1e4, 3e-17, dict( color="white", size=10, rotation=-57, ha="center", va="center")),
+    ("Extra-galactic \n Background Light", 1e5, 1e-14, dict( color="black", size=9, rotation=-57, ha="center", va="center")),
+    (r"{\bf CMB}", 2e8, 1e-14, dict( color="white", size=9, rotation=-57, ha="center", va="center")),
+    ("Big-Bang \n Nucleosynthesis", 3e7, 1e-10, dict( color="black", size=10, rotation=-57, ha="center", va="center")),
+    ("H$_2$ ionization \n fraction", 1e2, 1e-13, dict( color="black", size=8, ha="center", va="center", rotation=90)),
+    ("ADMX", 2.9e-6, 3e-13, dict( color="black", size=6, ha="center", va="center", rotation=90)),
+    ("BNL\n+UF", 8.3e-6, 3.5e-12, dict( color="black", size=5, ha="center", va="center", rotation=90)),
+    ("HAYSTAC", 1.3e-5, 2.5e-14, dict( color="black", size=4, ha="center", va="center", rotation=90)),
+    (r"{ BabyIAXO}", 1e-3, 3e-11, dict( color="black", size=8, ha="center", va="center")),
+    (r"{ IAXO}", 1e-3, 5e-12, dict( color="black", size=8, ha="center", va="center")),
+    (r"{ ALPS-II}", 1e-6, 3e-11, dict( color="black", size=8, ha="center", va="center")),
+    ("ADMX+CAPP", 8e-6, 2e-16, dict( color="black", size=5, ha="center", va="center", rotation=47)),
+    ("MADMAX", 2e-4, 8e-15, dict( color="black", size=5, ha="center", va="center", rotation=47)),
+    ("ORGAN", 1.2e-4, 6e-13, dict( color="black", size=5, ha="center", va="center", rotation=90)),
+    ('"DM-\n Radios"', 7e-9, 4e-15, dict( color="black", size=6, ha="center", va="center")),
+]
+
 # --- BUILD THE PLOT ---
 axionplot = AxionGagPlot(
     experiments=exps,
+    labels=labels,
     plotCag=False,  # set to true to plot C_ag instead of g_ag
-    showplot=False,  # set to false to add the labels later
+    showplot=True,  # set to false to add the labels later
+    saveplotname="large_panorama.pdf",
 )
-
-plt.text(1e-8, 2e-10, r"{\bf Helioscopes (CAST)}", color="black", size=10)
-plt.text(1e-7, 2e-7, r"{\bf Laboratory}", color="white", size=10)
-plt.text(1e-9, 5e-12, r"$\gamma \textrm{-rays}$", color="black", size=10, ha="center")
-plt.text(5e7, 4e-8, "SN1987A", color="black", size=6, rotation=-90, ha="center", va="center")
-plt.text(3e-4, 21e-14, "KSVZ", color="black", size=6, rotation=47)
-plt.text(5, 1e-13, "Telescopes", color="black", size=6, rotation=90)
-plt.text(2e2, 1.6e-10, "Horizontal \n Branch Stars", color="black", size=7, va="center", ha="center")
-plt.text(1e2, 2e-9, r"{\bf Sun}", color="white", size=10)
-plt.text(1.5e7, 5e-6, r"{\bf Beam dump}", color="white", size=8, rotation=-45, ha="center", va="center")
-plt.text(1e4, 3e-17, "X rays", color="white", size=10, rotation=-57, ha="center", va="center")
-plt.text(1e5, 1e-14, "Extra-galactic \n Background Light", color="black", size=9, rotation=-57, ha="center", va="center")
-plt.text(2e8, 1e-14, r"{\bf CMB}", color="white", size=9, rotation=-57, ha="center", va="center")
-plt.text(3e7, 1e-10, "Big-Bang \n Nucleosynthesis", color="black", size=10, rotation=-57, ha="center", va="center")
-plt.text(1e2, 1e-13, "H$_2$ ionization \n fraction", color="black", size=8, ha="center", va="center", rotation=90)
-plt.text(2.9e-6, 3e-13, "ADMX", color="black", size=6, ha="center", va="center", rotation=90)
-plt.text(8.3e-6, 3.5e-12, "BNL\n+UF", color="black", size=5, ha="center", va="center", rotation=90)
-plt.text(1.3e-5, 2.5e-14, "HAYSTAC", color="black", size=4, ha="center", va="center", rotation=90)
-plt.text(1e-3, 3e-11, r"{ BabyIAXO}", color="black", size=8, ha="center", va="center")
-plt.text(1e-3, 5e-12, r"{ IAXO}", color="black", size=8, ha="center", va="center")
-plt.text(1e-6, 3e-11, r"{ ALPS-II}", color="black", size=8, ha="center", va="center")
-plt.text(8e-6, 2e-16, "ADMX+CAPP", color="black", size=5, ha="center", va="center", rotation=47)
-plt.text(2e-4, 8e-15, "MADMAX", color="black", size=5, ha="center", va="center", rotation=47)
-plt.text(1.2e-4, 6e-13, "ORGAN", color="black", size=5, ha="center", va="center", rotation=90)
-plt.text(7e-9, 4e-15, '"DM-\n Radios"', color="black", size=6, ha="center", va="center")
-
-
-# --- SHOW AND SAVE THE PLOT ---
-axionplot.baseplot.ShowPlot()
-axionplot.baseplot.SavePlot("large_panorama.pdf")

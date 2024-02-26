@@ -12,6 +12,7 @@ class WimpPlot:
     def __init__(
         self,
         experiments=[],
+        labels=[],
         excludedRegion=True,
         showplot=True,
         saveplotname=None,
@@ -50,15 +51,15 @@ class WimpPlot:
         if excludedRegion:
             self.PlotExcludedRegion(**excludedRegionOptions)
         print("\n")
+        self.PlotLabels(labels)
+        print("\n")
 
         if showplot:
             self.baseplot.ShowPlot()
 
         if type(saveplotname) == str:
             if len(saveplotname) > 0:
-                print("saving...")
                 self.baseplot.SavePlot(saveplotname)
-                print("done")
 
     def PlotData(self, data: list):
         print("Plotting data:")
@@ -85,7 +86,6 @@ class WimpPlot:
             # if "picker" not in kwargs:
             #   kwargs["picker"] = True
             print("->", label[0], label[1], label[2], kwargs)
-
             self.baseplot.plot.text(x=label[1], y=label[2], s=label[0], **kwargs)
 
     def PlotExcludedRegion(self, **kwargs):
