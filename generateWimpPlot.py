@@ -13,8 +13,6 @@ database = db.DataBaseGag(
 # Here you can edit the database if you want.
 # For example, change the drawOptions of a row:
 database.update_row("exp_name", "drawOptions", "color='blue', linewidth=1")
-# Or delete a row:
-database.delete_rows("name='exp_name'", confirm=True)
 """
 
 # List of the names of the experiments to plot. The names must match the name column in the database
