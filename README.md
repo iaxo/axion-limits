@@ -6,6 +6,7 @@ Some examples of this generated plots can be found in the plots folder.
 In the case of axions:
 
 ![](../blob/main/plots/large_panorama.pdf)
+![](../blob/main/plots/AxionPhoton_haloscopes.pdf)
 
 In the case of WIMPs:
 
@@ -21,6 +22,7 @@ python3 generateAxionPlot.py
 Inside this script you can find how to use this package. The different dark matter detection experiment are organize in SQL databases. For now, we have one database for [axion](databases/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](databases/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). In order to load the desired database you may use the correspondent DataBase class defined in [DataBaseClass.py](DataBaseClass.py). In this case,
 
 ```
+from AxionPlot import *
 import DataBaseClass as db
 
 # The first parameter is the path to the .db file and second parameter is the name of the database table inside that .db file.
@@ -118,7 +120,19 @@ The files that are meant to be modified and used by the user are the following:
    repository in your local system (to be improved soon).
 
 ## Handling the databases
-The different dark matter detection experiment are organize in SQL databases. For now, we have one database for [axion](databases/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](databases/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). In order to load the desired database you may use the correspondent DataBase class defined in [DataBaseClass.py](DataBaseClass.py).
+The different dark matter detection experiment are organize in SQL databases. For now, we have one database for [axion](databases/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](databases/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). Any of this table databases contain at least this 4 first columns:
+1. **_name_** : string used to identify the experiment. It should be unique (although it is not forbidden) to the data that would load, so is recommended to add some other identificative tag to the experiment name itself. For example, instead of just _ABRA_ you may use _ABRA2018_ .
+2. **_type_** : string used to specify the type of exclusion data it is. It can hold this valid values:
+   - _line_ : it will be plotted as a line. In WimpPlot, it will be included by default to get the exclusion region.
+   - _region_ : it will be plotted as an enclosed surface on the plot.
+   - _band_ : it will be plotted as an open surfarce from the line defined in the data up to the top of the figure.
+   - _fog_ : it will be plotted as an open surfarce from the line defined in the data down to the bottom of the figure. For example, it is used for neutrino fog (or floor) representation on WimpPlot.
+
+   Each of this will use a different matplotlib.pyplot method (see [XPlotter](XPlotter.py)).
+3. **_path_** : string containing the relative path to the data file (.txt or .dat) where the data of that experiment is contained. This file should be inside the directory data/axion/ or data/wimp/
+4. **_drawOptions_** : string containing the customization options for the plotting method of matplotlib.pyplot used (dependent on the _type_). For example: _"color='red', lw=3"_.
+
+Furthermore, the different DM candidates databases have more specific additional columns. In order to load the desired database you may use the correspondent DataBase class defined in [DataBaseClass.py](DataBaseClass.py) (although for just loading and getting data but not editing it, any of the DataBase classes would work).
 ### Loading a database
 
 To load the desired database use the constructor of the classes DataBaseGag (for
@@ -130,7 +144,7 @@ import DataBaseClass as db
 # Load the desired database. The first parameter is the path to the .db file and second parameter is the name of the database table inside that .db file.
 database = db.DataBaseGag("databases/Axions.db", "AxionsGag") # load table AxionsGag of Gag experiments from the database file databases/Axions.db
 ```
-
+### Adding new data to the database
 Once loaded, you can edit the database if you want. By default, the database
 file will not be edited. To commit the changes to the db file, set parameter
 commit=True at the constructor or use the DataBase.set_commit(True) method. For
@@ -217,7 +231,7 @@ The database is used to manage information about various experiments related to
 axion research. Below, you'll find instructions on how to use the provided
 functions to work with the database.
 
-## Known Issues
+### Known Issues
 
 - The labels application cannot interpret LaTeX.
 - At labels application, when working with multiple labels, moving a label other
