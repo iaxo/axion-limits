@@ -1,16 +1,12 @@
 # IAXO axion-limits
 Project to generate the sensitivity plots of different experiments of dark matter searches. For now, it includes axion (coupling to photon and electrons) and WIMPs (spin independent interaction only) experiments although its called 'axion-limits'.
 
-Some examples of this generated plots can be found in the plots folder.
+Some examples of this generated plots can be found in the plots folder:
 
-In the case of axions:
+[<img align="center" height="275" src="plots/large_panorama.png">](plots/large_panorama.png)
+[<img align="center" height="275" src="plots/haloscopes.png">](plots/haloscopes)
 
-![](../blob/main/plots/large_panorama.pdf)
-![](../blob/main/plots/AxionPhoton_haloscopes.pdf)
-
-In the case of WIMPs:
-
-![](../blob/main/plots/WIMPs_SI.pdf)
+[<img align="center" height="350" src="plots/wimps_lowmass.png">](plots/wimps_lowmass.png)
 
 ## Getting Started
 The files generateAxionPlot.py and generateWimpPlot.py are given as examples on how to generate this sensitivity plots. You can do this by executing any of this scripts (let´s take the axion case)
