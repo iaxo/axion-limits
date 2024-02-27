@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from XPlotter import BasePlot, ExPltItem
+from XPlotter import *
 
 
 def extract_kwargs(arguments_str):
@@ -42,6 +42,8 @@ class AxionGagPlot:
         ymax=1e-4,
         ticksopt_x="dense",
         ticksopt_y="normal",
+        tickformatter_x=custom_formatter,
+        tickformatter_y=custom_formatter,
         labelx="$m_a$ (eV)",
         labely=r"$|g_{a\gamma}|$ (GeV$^{-1}$)",
     ):
@@ -57,6 +59,8 @@ class AxionGagPlot:
             x_max=xmax,
             ticksopt_x=ticksopt_x,
             ticksopt_y=ticksopt_y,
+            tickformatter_x=tickformatter_x,
+            tickformatter_y=tickformatter_y,
         )
 
         self.axionDB = []

@@ -53,6 +53,8 @@ class BasePlot:
         ticksopt_x="normal",
         ticksopt_y="normal",
         labelfontsize=14,
+        tickformatter_x=custom_formatter,
+        tickformatter_y=custom_formatter,
     ):
         plt.rc("text", usetex=True)
         plt.rc("font", family="times", size=labelfontsize)
@@ -99,10 +101,11 @@ class BasePlot:
         self.plot.yaxis.set_major_locator(locmaj)
         self.plot.yaxis.set_minor_locator(locmin)
 
-        self.plot.xaxis.set_major_formatter(mpl.ticker.FuncFormatter(custom_formatter))
+        if tickformatter_x is not None:
+            self.plot.xaxis.set_major_formatter(tickformatter_x)
+        if tickformatter_y is not None:
+            self.plot.yaxis.set_major_formatter(tickformatter_y)
         self.plot.xaxis.set_minor_formatter(mpl.ticker.NullFormatter())
-
-        self.plot.yaxis.set_major_formatter(mpl.ticker.FuncFormatter(custom_formatter))
         self.plot.yaxis.set_minor_formatter(mpl.ticker.NullFormatter())
 
         self.zorder = -100

@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 from AxionPlot import extract_kwargs
 from scipy.interpolate import interp1d
-from XPlotter import BasePlot, ExPltItem
+from XPlotter import *
 
 
 # ==============================================================================#
@@ -24,6 +24,8 @@ class WimpPlot:
         ymax=1e-34,
         ticksopt_x="normal",
         ticksopt_y="normal",
+        tickformatter_x=custom_formatter,
+        tickformatter_y=custom_formatter,
         labelx=r"WIMP mass [GeV/c$^{2}$]",
         labely=r"SI WIMP-nucleon cross section $\sigma_{\chi n}^\mathrm{SI}$ [cm$^{2}$]",
         **excludedRegionOptions,  # color, alpha, lw, zorder, etc.
@@ -40,6 +42,8 @@ class WimpPlot:
             x_max=xmax,
             ticksopt_x=ticksopt_x,
             ticksopt_y=ticksopt_y,
+            tickformatter_x=tickformatter_x,
+            tickformatter_y=tickformatter_y,
         )
 
         self.wimpDB = []
