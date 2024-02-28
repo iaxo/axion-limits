@@ -131,12 +131,7 @@ class WimpPlot:
     ## -------- CALCULATE THE EXCLUDED PARAMETER SPACE --------
     def getExcludedRegion(self):
         if len(self.wimpDB) <= 0:
-            print("Error: no available data for computing excluded region.")
-            return ([], [])
-        if type(self.wimpDB[0]) != ExPltItem:
-            print(
-                "Error: the data is not in the correct format. Make sure to call first PlotData()"
-            )
+            print("Error: no available data for computing the excluded region.")
             return ([], [])
 
         xlim = self.baseplot.plot.get_xlim()
