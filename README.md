@@ -1,14 +1,14 @@
 # IAXO axion-limits
-Project to generate the sensitivity plots of different experiments of dark matter searches. For now, it includes axion (coupling to photon and electrons) and WIMPs (spin independent interaction only) experiments although its called 'axion-limits'.
+Project to generate the sensitivity plots of different experiments of dark matter searches. For now, it includes axion (coupling to photon and electrons) and WIMPs (spin independent interaction only) experiments, although its called 'axion-limits'.
 
-Some examples of this generated plots can be found in the plots folder:
+Some examples of this generated [plots](plots) can be found in the plots folder:
 
 [<img align="center" height="275" src="plots/large_panorama.png">](plots/large_panorama.png)
 [<img align="center" height="275" src="plots/haloscopes.png">](plots/haloscopes)
 
 [<img align="center" height="350" src="plots/wimps_lowmass.png">](plots/wimps_lowmass.png)
 
-## Getting Started
+# Getting Started
 The files generateAxionPlot.py and generateWimpPlot.py are given as examples on how to generate this sensitivity plots. You can do this by executing any of this scripts (let´s take the axion case)
 
 ```
@@ -24,7 +24,7 @@ import DataBaseClass as db
 # The first parameter is the path to the .db file and second parameter is the name of the database table inside that .db file.
 database = db.DataBaseGag("databases/Axions.db", "AxionsGag")
 ```
-Then, write a list with the experiments name (matching the name column of the database) you want to include in the plot.
+Then, write a list with the experiments name (matching the name column of the database) you want to include in the plot. Note that the order of this list is the order in which they will be plotted.
 ```
 experimentsToPlot = [
     "qcdband",
@@ -55,7 +55,7 @@ axionplot = AxionGagPlot(
 ```
 Use the parameter `experiments` and `labels` to pass the previously defined data and labels. If a string is given to the `saveplotname`, it will save the plot in a file with that name (default extension will be pdf if none is given within the filename). You can check other useful customization arguments at [AxionPlot.py](AxionPlot.py).
 
-### More complex examples
+## More complex examples
 Inside [myPlottingScripts](myPlottingScripts) folder you can find real examples of scripts used to generate the figure inside [plots](plots) folder.
 
 To be able to reproduce them (without moving them to the parent directory), first go to [myPath](myPlottingScripts/myPath.py) file and change the variable PATH_TO_PROJECT with the absolute path of the repository in your local system. This is needed to be able to load the modules defined in the parent directory of this project (TODO: wrap all this code into a proper python package). Now you can run any of those scripts, such as
@@ -67,7 +67,7 @@ python3 myPlottingScripts/haloscopes.py
 You can add in this folder any meaningful plotting script used to make a plot you may want to reproduce in the future. If you do so, remember to add
 `import myPath` at the beginning of the script.
 
-## Project contents
+# Project contents
 ### Files description
 The main files where the code is written are
 
@@ -97,9 +97,9 @@ The files that are meant to be modified and used by the user are the following:
    make the desired plot. Here load (and edit if you want) the database tables
    and call the corresponding AxionPlot constructor to make the plot.
 3. generateWimpPlot.py : same for WIMPs.
-### Subdirectories description
+## Subdirectories description
 
-1. Javat : all needed files (html and java) for the labels app.
+1. labeler : all needed files (html and java) for the labels app.
 2. data : here the .txt or .dat files with the exclusion lines of the different
    experiments should be stored.
 3. databases : here the .db files with the databases of the experiments data and
@@ -115,7 +115,7 @@ The files that are meant to be modified and used by the user are the following:
    Please, set the variable PATH_TO_PROJECT with the absolute path of the
    repository in your local system (to be improved soon).
 
-## Handling the databases
+# Handling the databases
 The different dark matter detection experiment are organize in SQL databases. For now, we have one database for [axion](databases/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](databases/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). Any of this table databases contain at least this 4 first columns:
 1. **_name_** : string used to identify the experiment. It should be unique (although it is not forbidden) to the data that would load, so is recommended to add some other identificative tag to the experiment name itself. For example, instead of just _ABRA_ you may use _ABRA2018_ .
 2. **_type_** : string used to specify the type of exclusion data it is. It can hold this valid values:
@@ -125,11 +125,11 @@ The different dark matter detection experiment are organize in SQL databases. Fo
    - _fog_ : it will be plotted as an open surfarce from the line defined in the data down to the bottom of the figure. For example, it is used for neutrino fog (or floor) representation on WimpPlot.
 
    Each of this will use a different matplotlib.pyplot method (see [XPlotter](XPlotter.py)).
-3. **_path_** : string containing the relative path to the data file (.txt or .dat) where the data of that experiment is contained. This file should be inside the directory data/axion/ or data/wimp/
-4. **_drawOptions_** : string containing the customization options for the plotting method of matplotlib.pyplot used (dependent on the _type_). For example: _"color='red', lw=3"_.
+3. **_path_** : string containing the relative path to the data file (.txt or .dat) where the data of that experiment is contained. This file should be inside the data/axion/ or data/wimp/ directory. For example: _data/axion/ADMX2018.txt_
+4. **_drawOptions_** : string containing the customization options for the plotting method of matplotlib.pyplot used (dependent on the _type_). For example: _facecolor='limegreen', edgecolor='darkgreen', lw=0.2_
 
 Furthermore, the different DM candidates databases have more specific additional columns. In order to load the desired database you may use the correspondent DataBase class defined in [DataBaseClass.py](DataBaseClass.py) (although for just loading and getting data but not editing it, any of the DataBase classes would work).
-### Loading a database
+## Loading a database
 
 To load the desired database use the constructor of the classes DataBaseGag (for
 AxionGag experiments), DataBaseGae (for AxionGae experiments) or DataBaseWimps as follows:
@@ -140,7 +140,7 @@ import DataBaseClass as db
 # Load the desired database. The first parameter is the path to the .db file and second parameter is the name of the database table inside that .db file.
 database = db.DataBaseGag("databases/Axions.db", "AxionsGag") # load table AxionsGag of Gag experiments from the database file databases/Axions.db
 ```
-### Adding new data to the database
+## Adding new data to the database
 Once loaded, you can edit the database if you want. By default, the database
 file will not be edited. To commit the changes to the db file, set parameter
 commit=True at the constructor or use the DataBase.set_commit(True) method. For
@@ -152,7 +152,10 @@ database.insert_row("exp_name", "line", "path_to_datafile", "color='red', linewi
 database.set_commit(False) # go back to default mode (not committing changes to the .db file)
 ```
 
-Or change the drawOptions of a row:
+If you do so, please consider adding this experiment in the python script [buildDataBase.py](buildDataBase.py) as this file serves as backup for generating the databases in case they are unintentionally changed or deleted.
+
+## Editing existing row of the database
+You may want to change temporary the column value of an existing row. In that case you can load the database with the default parameter commit=False. Then, you can change the drawOptions of a row as follows:
 
 ```
 database.update_row("exp_name", "drawOptions", "color='blue', linewidth=1")
@@ -164,7 +167,9 @@ Or delete a row:
 database.delete_rows("name='exp_name'") # set parameter confirm=True to avoid the security check
 ```
 
-### Creating a new database
+To commit this changes to the database file is not recommended as it could make previous plots not reproducible in the future even with their original plotting script.
+
+## Creating a new database
 
 To create a new database for a new plot you may follow this examples. Keep in
 mind that the order in which the experiments are added to the database will be
@@ -209,36 +214,26 @@ data = database.read_rows()
 print(data)
 ```
 
-## Labels web app
+# Labels web app
 
 To quickly add new labels to the plots in a easy way (although this would not be
 saved anywhere to be reproduced) you may use the labels app programmed in the
-Javat directory. Or just click on the following link:
+labeler directory. Or just click on the following link:
 [Label's APP](https://danielmartinezmiravete.github.io/Labels-App/)
 
 You can start the app by opening the HTML script called 'index.html'. This
 application is only capable of modifying SVG files. Instructions for the webpage
 are provided within the webpage itself.
 
-As additional information, to interact with the database, you need to use
-different functions implemented in the script called 'DataBaseGag.py'. This
-repository contains Python scripts for interacting with the AxionsGag database.
-The database is used to manage information about various experiments related to
-axion research. Below, you'll find instructions on how to use the provided
-functions to work with the database.
-
-### Known Issues
+## Known Issues
 
 - The labels application cannot interpret LaTeX.
 - At labels application, when working with multiple labels, moving a label other
   than the last label will replace the coordinates of the last label written.
 
-## Acknowledgement
+# Acknowledgements
+External contributors:
 
-The original code is https://github.com/iaxo/axion-limits/
-
-Modified by Daniel Martínez Miravete in his summer internship
-(https://github.com/DanielMartinezMiravete/Axion_Limits_Memory) for the Physics
-Bachelor within the IAXO group of GIFNA (Unizar). Internship supervised by Juan
-Antonio García Pascual and Álvaro Ezquerro Sastre. Also, very helpful insight
-was given by David Díez Ibáñez and Luis Obis Aparicio.
+- Daniel Martínez Miravete contribution for an internship within the IAXO group of University of Zaragoza on summer 2023
+(https://github.com/DanielMartinezMiravete/Axion_Limits_Memory) for his Bachelor in Physics. Internship supervised by [Juan Antonio García](https://github.com/juanangp) and [Álvaro Ezquerro](https://github.com/AlvaroEzq). Also, very helpful insight
+was given by [David Díez](https://github.com/DavidDiezIb) and [Luis Antonio Obis](https://github.com/lobis).
