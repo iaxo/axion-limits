@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import myPath  # add the path to the project
 import DataBaseClass as db
 from AxionPlot import *
 
@@ -50,6 +51,8 @@ experimentsToPlot = [
     "HBalpbound_l",
     "solar_nu",
     "CAST",
+
+
     # projections
     "ABRA1",
     "KLASH",
@@ -75,65 +78,41 @@ exps = database.get_rows(
     "name", experimentsToPlot
 )  # Get the data of the experiments to plot from the database
 
+labels = [
+    (r"{\bf Helioscopes (CAST)}", 1e-5, 2e-10, dict( color="black", size=11)),
+    (r"{\bf Laboratory}", 1e-7, 2e-7, dict( color="white", size=11)),
+    (r"HE $\gamma \textrm{-rays}$", 2e-9, 6e-12, dict( color="black", size=10)),
+    (r"{\bf Haloscopes}", 5e-6, 1e-13, dict( color="black", size=11, ha="center")),
+    ("KSVZ", 3e-4, 2e-13, dict( color="green", size=9, rotation=40)),
+    # ('Axion models', 0.5e-3, 4e-14, dict(color="black",size=9,rotation=40)),
+    ("DSFZ", 0.5e-3, 1e-13, dict( color="green", size=9, rotation=40)),
+    ("Telescopes", 5, 3e-13, dict( color="black", size=8, rotation=90)),
+    ("HB", 1, 0.9e-10, dict( color="black", size=9)),
+    ("Sun", 3, 1.3e-9, dict( color="black", size=9, ha="center")),
+    # (r'{\bf Sun}', 1e2, 2e-9, dict(color="white",size=10)),
+
+    # projections
+    (r"BabyIAXO", 2e-3, 2.5e-11, dict( color="black", size=10, ha="center", va="center",)),
+    (r"{\bf IAXO}", 2e-3, 7e-12, dict( color="black", size=11, ha="center", va="center",)),
+    # (r'{\bf IAXO+}', 1e-5, 1e-12, dict(color="black",size=9,ha='center',va='center')),
+    (r"{\bf ALPS-II}", 5e-7, 3e-11, dict( color="black", size=10, ha="center", va="center",)),
+    # (r'{\bf JURA}', 5e-7, 1.5e-12, dict(color="black",size=9,ha='center',va='center')),
+]
+
 # --- BUILD THE PLOT ---
 axionplot = AxionGagPlot(
     experiments=exps,
+    labels=labels,
     plotCag=False,  # set to true to plot C_ag instead of g_ag
-    showplot=False,  # set to false to add the labels later
-    figx=6.5,
-    figy=6,
-    ymin=1e-17,
-    ymax=1e-6,
-    xmin=1e-9,
-    xmax=10,
-    ticksopt_x="normal",
-    ticksopt_y="normal",
+    showplot=True,  # set to false to add the labels later
+    saveplotname="panorama",
+    figx = 6.5,
+    figy = 6,
+    ymin = 1e-17,
+    ymax = 1e-6,
+    xmin = 1e-9,
+    xmax = 10,
+    ticksopt_x = "normal",
+    ticksopt_y = "normal",
 )
 
-# --- ADD THE LABELS ---
-plt.text(1e-5, 2e-10, r"{\bf Helioscopes (CAST)}", color="black", size=11)
-plt.text(1e-7, 2e-7, r"{\bf Laboratory}", color="white", size=11)
-plt.text(2e-9, 6e-12, r"HE $\gamma \textrm{-rays}$", color="black", size=10)
-plt.text(5e-6, 1e-13, r"{\bf Haloscopes}", color="black", size=11, ha="center")
-plt.text(3e-4, 2e-13, "KSVZ", color="green", size=9, rotation=40)
-# plt.text(0.5e-3,4e-14,'Axion models',color="black",size=9,rotation=40)
-plt.text(0.5e-3, 1e-13, "DSFZ", color="green", size=9, rotation=40)
-plt.text(5, 3e-13, "Telescopes", color="black", size=8, rotation=90)
-plt.text(1, 0.9e-10, "HB", color="black", size=9)
-plt.text(3, 1.3e-9, "Sun", color="black", size=9, ha="center")
-# plt.text(1e2,2e-9,r'{\bf Sun}',color="white",size=10)
-
-# projections
-plt.text(
-    2e-3,
-    2.5e-11,
-    r"BabyIAXO",
-    color="black",
-    size=10,
-    ha="center",
-    va="center",
-)
-plt.text(
-    2e-3,
-    7e-12,
-    r"{\bf IAXO}",
-    color="black",
-    size=11,
-    ha="center",
-    va="center",
-)
-# plt.text(1e-5,1e-12,r'{\bf IAXO+}',color="black",size=9,ha='center',va='center')
-plt.text(
-    5e-7,
-    3e-11,
-    r"{\bf ALPS-II}",
-    color="black",
-    size=10,
-    ha="center",
-    va="center",
-)
-# plt.text(5e-7,1.5e-12,r'{\bf JURA}',color="black",size=9,ha='center',va='center')
-
-# --- SHOW AND SAVE THE PLOT ---
-axionplot.axplot.ShowPlot()
-axionplot.axplot.SavePlot("panorama.pdf")
