@@ -6,7 +6,7 @@ requires = [
 build-backend = "hatchling.build"
 
 [project]
-name = "axion-limits"
+name = "axionlimits"
 description = "A Python library for generating axion sensitivity plots."
 readme = "README.md"
 requires-python = ">=3.8"
@@ -28,7 +28,7 @@ dynamic = [
 source = "vcs"
 
 [tool.hatch.build.hooks.vcs]
-version-file = "src/axion_limits/_version.py"
+version-file = "src/axionlimits/_version.py"
 
 [tool.pytest.ini_options]
 addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]

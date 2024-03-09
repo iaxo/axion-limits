@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-from XPlotter import *
-
+from .XPlotter import *
 
 def extract_kwargs(arguments_str):
     """Extracts kwargs from a string of arguments.

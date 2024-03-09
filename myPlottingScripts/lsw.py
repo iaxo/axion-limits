@@ -1,8 +1,5 @@
-from __future__ import annotations
-
-import myPath # add the path to the project
-import DataBaseClass as db
-from AxionPlot import *
+import axionlimits.Database as db
+from axionlimits.AxionPlot import AxionGagPlot
 
 # --- LOAD THE DATABASE ---
 

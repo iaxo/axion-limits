@@ -1,7 +1,5 @@
-from __future__ import annotations
-
-import DataBaseClass as db
-from WimpPlot import *
+import axionlimits.Database as db
+from axionlimits.WimpPlot import WimpPlot
 
 # --- LOAD THE DATABASE ---
 

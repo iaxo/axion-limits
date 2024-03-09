@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import numpy as np
-from AxionPlot import extract_kwargs
 from scipy.interpolate import interp1d
-from XPlotter import *
+from .AxionPlot import extract_kwargs
+from .XPlotter import *
 
 
 # ==============================================================================#
