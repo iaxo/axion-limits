@@ -1,6 +1,4 @@
-from __future__ import annotations
-
-import DataBaseClass as db
+import axionlimits.Database as db
 
 FILE_DATABASE = "databases/Axions.db"
 
