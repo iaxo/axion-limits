@@ -4,7 +4,7 @@ from axionlimits.WimpPlot import WimpPlot
 # --- LOAD THE DATABASE ---
 
 database = db.DataBaseWimps(
-    "databases/Wimps.db", "Wimps_SI"
+    "data/Wimps.db", "Wimps_SI"
 )  # the second parameter is the table name inside the database, see DataBaseClass.py for more info
 
 """

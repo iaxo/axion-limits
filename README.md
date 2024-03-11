@@ -31,14 +31,14 @@ The files generateAxionPlot.py and generateWimpPlot.py are given as examples on 
 python3 generateAxionPlot.py
 ```
 
-Inside this script you can find how to use this package. The different dark matter detection experiment are organize in SQL databases. For now, we have one database for [axion](databases/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](databases/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). In order to load the desired database you may use the correspondent DataBase class defined in [Database.py](src/axionlimits/Database.py). In this case,
+Inside this script you can find how to use this package. The different dark matter detection experiment are organize in SQL databases. For now, we have one database for [axion](data/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](data/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). In order to load the desired database you may use the correspondent DataBase class defined in [Database.py](src/axionlimits/Database.py). In this case,
 
 ```
 import axionlimits.Database as db
 from axionlimits.AxionPlot import AxionGagPlot
 
 # The first parameter is the path to the .db file and second parameter is the name of the database table inside that .db file.
-database = db.DataBaseGag("databases/Axions.db", "AxionsGag")
+database = db.DataBaseGag("data/Axions.db", "AxionsGag")
 ```
 Then, write a list with the experiments name (matching the name column of the database) you want to include in the plot. **Note that the order in which the experiments are added to this list will be the order in which they are plotted**, so the last experiments added will be drawn on top of the firsts experiments added to the database.
 ```
@@ -127,7 +127,7 @@ The files that are meant to be modified and used by the user are the following:
    helioscopes.py, haloscopes.py and lsw.py .
 
 # Handling the databases
-The different dark matter detection experiment are organize in SQL databases. For now, we have one database for [axion](databases/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](databases/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). Any of this table databases contain at least this first columns:
+The different dark matter detection experiment are organize in SQL databases. For now, we have one database for [axion](data/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](data/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). Any of this table databases contain at least this first columns:
 1. **_name_** : string used to identify the experiment. It should be unique (although it is not forbidden) to the data that would load, so is recommended to add some other identificative tag to the experiment name itself. For example, instead of just _ADMX_ you may use _ADMX2021_ .
 2. **_type_** : string used to specify the type of exclusion data it is. It can hold this valid values:
    - _line_ : it will be plotted as a line. In WimpPlot, it will be included by default to get the exclusion region.
@@ -153,7 +153,7 @@ AxionGag experiments), DataBaseGae (for AxionGae experiments) or DataBaseWimps a
 import axionlimits.Database as db
 
 # Load the desired database. The first parameter is the path to the .db file and second parameter is the name of the database table inside that .db file.
-database = db.DataBaseGag("databases/Axions.db", "AxionsGag") # load table AxionsGag of Gag experiments from the database file databases/Axions.db
+database = db.DataBaseGag("data/Axions.db", "AxionsGag") # load table AxionsGag of Gag experiments from the database file data/Axions.db
 ```
 ## Adding new data to the database
 Once loaded, you can edit the database if you want. By default, the database
@@ -192,7 +192,7 @@ file. For a Gag exclusion plot:
 
 ```
 import axionlimits.Database as db
-database = db.DataBaseGag("databases/NewAxions.db", commit=True) # this will create (if it doesn't already exists) a table named AxionsGag (default) at databases/NewAxions.db
+database = db.DataBaseGag("data/NewAxions.db", commit=True) # this will create (if it doesn't already exists) a table named AxionsGag (default) at data/NewAxions.db
 path = "data/axion/"
 AxionsGag = [
     ['qcdband', 'band', path + 'QCD_band.dat', "facecolor='yellow'", 0, '', '', 1, 1, 0, 0, 0, 0, 0, 0],
@@ -212,9 +212,10 @@ For a Gae exclusion plot:
 
 ```
 import axionlimits.Database as db
-database = db.DataBaseGae("databases/NewAxions.db", commit=True)  # this will create (if it doesn't already exists) a table named AxionsGae (default) at databases/NewAxions.db
+database = db.DataBaseGae("data/NewAxions.db", commit=True)  # this will create (if it doesn't already exists) a table named AxionsGae (default) at data/NewAxions.db
 path1 = 'data/axion/hints/'
 path2 = 'data/axion/gaegag/'
+
 AxionsGae= [
     ["DFSZ1_starhint", "region", path1 + "DFSZ1_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='springgreen', edgecolor='darkgreen', alpha=0.2", 0, '', ''],
     ["AJ83_starhint", "region", path1 + "AJ83_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='red', edgecolor='red', alpha=0.2", 0, '', ''],
