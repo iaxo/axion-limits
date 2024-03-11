@@ -38,21 +38,8 @@ data = database.read_rows()
 print(data)
 """
 
-"""
-# Example of usage:
-import DataBaseClass as db
-database = db.DataBaseLabels("Axions.db")
-labels = [
-    ["CAST", 1.0e-6, 1.0e-6, "color='blue', fontsize=10", 1, 0],
-    ["IAXO", 1.0e-6, 1.0e-6, "color='blue', fontsize=10", 1, 1],
-]
-database.insert_rows(labels)
-data = database.read_rows()
-print(data)
-"""
 
-
-# DataBase class is not intended to be used directly, but to be inherited by DataBaseGag and DataBaseGae
+# DataBase class is the generic database class that can be used to load an already existing database.
 class DataBase:
     def __init__(
         self, file_database="Axions.db", name: str = "Axions", commit: bool = False
@@ -295,41 +282,6 @@ class DataBaseWimps(DataBase):
         instruction = (
             f"INSERT INTO {self.name} VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         )
-        self.cursor.executemany(instruction, rows)
-        if self.commit:
-            self.conn.commit()
-
-
-class DataBaseLabels(DataBase):
-    def __init__(
-        self, file_database="Axions.db", name: str = "Labels", commit: bool = False
-    ):
-        DataBase.__init__(self, file_database, name, commit)
-
-        self.cursor.execute(
-            f"""CREATE TABLE IF NOT EXISTS {self.name} (
-            label TEXT,
-            x_position REAL,
-            y_position REAL,
-            drawOptions TEXT,
-            onoff INTEGER,
-            projection INTEGER
-            )"""
-        )
-        if self.commit:
-            self.conn.commit()
-
-    def insert_row(
-        self, label, x_position, y_position, drawOptions="", on=1, projection=0
-    ):
-        instruction = f"INSERT INTO {self.name}  VALUES ('{label}', '{x_position}', '{y_position}', '{drawOptions}', {on}, {projection})"
-        self.cursor.execute(instruction)
-        if self.commit:
-            self.conn.commit()
-
-    def insert_rows(self, rows):
-        instruction = f"INSERT INTO {self.name} VALUES (?, ?, ?, ?, ?, ?)"
-
         self.cursor.executemany(instruction, rows)
         if self.commit:
             self.conn.commit()
