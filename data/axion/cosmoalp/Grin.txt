@@ -1,5 +1,5 @@
-Relic ALP decay photons galactic spectral search,
-Grin et al
+#Relic ALP decay photons galactic spectral search,
+#10.1103/PhysRevD.75.105018 Grin et al
 
 0.44913043E+01 0.34411816E-10
 0.45086956E+01 0.15029351E-10
