@@ -79,12 +79,10 @@ The main files where the code is written are
 3. WimpPlot.py : the creation of the BasePlot, the plotting of the data and labels are handled within this class.
 4. DataBaseClass.py : Here the DataBase classes are defined to interface with
    the SQLite .db files. It has the following classes:
-   - DataBase : is not intended to be used, just serve to be inherited by the
-     other classes.
-   - DataBaseGag for the database table of AxionGag experiments.
-   - DataBaseGae for the database table of AxionGae experiments.
-   - DataBaseWimps for the database table of WIMps experiments.
-   - DataBaseLabels for the database table of labels (to be deprecated...).
+   - DataBase is the generic database class that can be used to load an already existing database.
+   - DataBaseGag to create the database table of AxionGag experiments.
+   - DataBaseGae to create the  database table of AxionGae experiments.
+   - DataBaseWimps to create the database table of WIMps experiments.
 
 All these files are not intended to be modified by the user.
 
@@ -116,8 +114,8 @@ The files that are meant to be modified and used by the user are the following:
    repository in your local system (to be improved soon).
 
 # Handling the databases
-The different dark matter detection experiment are organize in SQL databases. For now, we have one database for [axion](databases/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](databases/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). Any of this table databases contain at least this 4 first columns:
-1. **_name_** : string used to identify the experiment. It should be unique (although it is not forbidden) to the data that would load, so is recommended to add some other identificative tag to the experiment name itself. For example, instead of just _ABRA_ you may use _ABRA2018_ .
+The different dark matter detection experiment are organize in SQL databases. For now, we have one database for [axion](databases/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](databases/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). Any of this table databases contain at least this first columns:
+1. **_name_** : string used to identify the experiment. It should be unique (although it is not forbidden) to the data that would load, so is recommended to add some other identificative tag to the experiment name itself. For example, instead of just _ADMX_ you may use _ADMX2021_ .
 2. **_type_** : string used to specify the type of exclusion data it is. It can hold this valid values:
    - _line_ : it will be plotted as a line. In WimpPlot, it will be included by default to get the exclusion region.
    - _region_ : it will be plotted as an enclosed surface on the plot.
@@ -125,8 +123,12 @@ The different dark matter detection experiment are organize in SQL databases. Fo
    - _fog_ : it will be plotted as an open surfarce from the line defined in the data down to the bottom of the figure. For example, it is used for neutrino fog (or floor) representation on WimpPlot.
 
    Each of this will use a different matplotlib.pyplot method (see [XPlotter](XPlotter.py)).
-3. **_path_** : string containing the relative path to the data file (.txt or .dat) where the data of that experiment is contained. This file should be inside the data/axion/ or data/wimp/ directory. For example: _data/axion/ADMX2018.txt_
+3. **_path_** : string containing the relative path (from the database file directory) to the data file (.txt or .dat) where the data of that experiment is contained. This file should be inside the data/axion/ or data/wimp/ directory. For example: _axion/ADMX2018.txt_
 4. **_drawOptions_** : string containing the customization options for the plotting method of matplotlib.pyplot used (dependent on the _type_). For example: _facecolor='limegreen', edgecolor='darkgreen', lw=0.2_
+5. **_projection_** : integer (_0_ or _1_) that indicates if the data is just a prospect or projection for future results (_1_) or if it is a reported result (_0_).
+6. **_source_** : string containing the origin of the data. It can be the DOI of the publication, the arXiV identifier or any other way of tracing the origin of the data. This information should be included inside the data file as the header (starting with the comment character # ). For example: _2110.06096_
+7. **_year_** : string containing the year of release of the data. For example: _2019_
+
 
 Furthermore, the different DM candidates databases have more specific additional columns. In order to load the desired database you may use the correspondent DataBase class defined in [DataBaseClass.py](DataBaseClass.py) (although for just loading and getting data but not editing it, any of the DataBase classes would work).
 ## Loading a database
@@ -148,7 +150,7 @@ example, you can add a new row with the following command:
 
 ```
 database.set_commit(True) # to commit the changes to the .db file
-database.insert_row("exp_name", "line", "path_to_datafile", "color='red', linewidth=2", 1, 0, 0, 0, 0, 0, 0)
+database.insert_row("exp_name", "line", "path_to_datafile", "color='red', linewidth=2", 0, 'source?', 'year?', 0, 0, 0, 0, 0, 0, 0, 0)
 database.set_commit(False) # go back to default mode (not committing changes to the .db file)
 ```
 
@@ -182,13 +184,13 @@ file. For a Gag exclusion plot:
 import DataBaseClass as db
 database = db.DataBaseGag("databases/NewAxions.db", commit=True) # this will create (if it doesn't already exists) a table named AxionsGag (default) at databases/NewAxions.db
 AxionsGag = [
-    ['qcdband', 'band', PATH_DATA + 'QCD_band.dat', "facecolor='yellow'", 1, 0, 0, 0, 0, 0, 0],
-    ['old_haloscopes', 'band', PATH_DATA + 'MicrowaveCavities.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 1, 0, 0, 0, 0, 0, 0],
-    ['ABRA3', 'line', PATH_DATA + 'ABRAres_3.dat', "color='green', linewidth=0.1, linestyle='-'", 1, 0, 0, 0, 0, 0, 0],
-    ['ADMX2018', 'band', PATH_DATA + 'ADMX2018.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 1, 0, 0, 0, 0, 0, 0],
-    ['BabyIAXO', 'band', PATH_DATA + 'miniIAXO.dat', "facecolor='deepskyblue', linewidth=0.5, alpha=0.1, linestyle='-'", 1, 0, 0, 0, 0, 0, 0],
-    ['IAXO', 'band', PATH_DATA + 'IAXO_nominal.txt', "facecolor='deepskyblue', linewidth=0.5, alpha=0.1, linestyle='-'", 1, 0, 0, 0, 0, 0, 0],
-    ['CAST', 'band', PATH_DATA + 'cast_env_2016.dat', "facecolor='deepskyblue', edgecolor='blue', linewidth=0.5", 1, 0, 0, 0, 0, 0, 0],
+    ['qcdband', 'band', path + 'QCD_band.dat', "facecolor='yellow'", 0, '', '', 1, 1, 0, 0, 0, 0, 0, 0],
+    ['CMB_DEsuE', 'band', path + 'cosmoalp/CMB_DEsuE.txt', "facecolor='forestgreen', edgecolor='darkgreen', linewidth=0.5", 0, '1110.2895', '2011', 0, 0, 1, 0, 0, 0, 0, 0],
+    ['old_haloscopes', 'band', path + 'MicrowaveCavities.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '', '', 0, 0, 1, 1, 0, 0, 0, 0],
+    ['RADES2021', 'band', path + 'RADES2021.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '2104.13798', '2021', 0, 0, 1, 1, 0, 0, 0, 0],
+    ['CAST', 'band', path + 'cast_env_2016.dat', "facecolor='deepskyblue', edgecolor='blue', linewidth=0.5", 0, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
+    ['BabyIAXO', 'band', path + 'miniIAXO.dat', "facecolor='deepskyblue', linewidth=0.5, alpha=0.1, linestyle='-'", 1, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
+    ['IAXO', 'band', path + 'IAXO_nominal.txt', "facecolor='deepskyblue', linewidth=0.5, alpha=0.1, linestyle='-'", 1, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
 ]
 database.insert_rows(AxionsGag)
 data = database.read_rows()
@@ -201,13 +203,13 @@ For a Gae exclusion plot:
 import DataBaseClass as db
 database = db.DataBaseGae("databases/NewAxions.db", commit=True)  # this will create (if it doesn't already exists) a table named AxionsGae (default) at databases/NewAxions.db
 AxionsGae= [
-    ["DFSZ1_starhint", "region", path1 + "DFSZ1_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='springgreen', edgecolor='darkgreen', alpha=0.2", 1, 0],
-    ["AJ83_starhint", "region", path1 + "AJ83_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='red', edgecolor='red', alpha=0.2", 1, 0],
-    ["QCDband", "band", path2 + "DFSZband_gaegag.dat", "facecolor='lemonchiffon', edgecolor='none', linewidth=1", 1, 0],
-    ["CAST_gae", "band", path2 + "CAST_gae_gagg.dat", "facecolor='steelblue', edgecolor='darkblue', linewidth=0.5", 1, 0],
+    ["DFSZ1_starhint", "region", path1 + "DFSZ1_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='springgreen', edgecolor='darkgreen', alpha=0.2", 0, '', ''],
+    ["AJ83_starhint", "region", path1 + "AJ83_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='red', edgecolor='red', alpha=0.2", 0, '', ''],
+    ["QCDband", "band", path2 + "DFSZband_gaegag.dat", "facecolor='lemonchiffon', edgecolor='none', linewidth=1", 0, '', ''],
+    ["CAST_gae", "band", path2 + "CAST_gae_gagg.dat", "facecolor='steelblue', edgecolor='darkblue', linewidth=0.5", 0, '', ''],
 
-    ["IAXO_gae", "band", path2 + "sqrtgaagae_sc2.dat", "facecolor='skyblue', edgecolor='black', linewidth=0.5, alpha=0.3", 0, 1],
-    ["IAXOplus_gae", "band", path2 + "sqrtgaagae_sc3.dat", "facecolor='skyblue', edgecolor='black', linewidth=0.5, alpha=0.3", 0, 1],
+    ["IAXO_gae", "band", path2 + "sqrtgaagae_sc2.dat", "facecolor='skyblue', edgecolor='black', linewidth=0.5, alpha=0.3", 1, '', ''],
+    ["IAXO_gae_l", "line", path2 + "sqrtgaagae_sc2.dat", "color='black', linewidth=0.5, linestyle='--'", 1, '', ''],
 ]
 database.insert_rows(AxionsGae)
 data = database.read_rows()
