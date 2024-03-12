@@ -180,6 +180,7 @@ file. For a Gag exclusion plot:
 ```
 import DataBaseClass as db
 database = db.DataBaseGag("databases/NewAxions.db", commit=True) # this will create (if it doesn't already exists) a table named AxionsGag (default) at databases/NewAxions.db
+path = "data/axion/"
 AxionsGag = [
     ['qcdband', 'band', path + 'QCD_band.dat', "facecolor='yellow'", 0, '', '', 1, 1, 0, 0, 0, 0, 0, 0],
     ['CMB_DEsuE', 'band', path + 'cosmoalp/CMB_DEsuE.txt', "facecolor='forestgreen', edgecolor='darkgreen', linewidth=0.5", 0, '1110.2895', '2011', 0, 0, 1, 0, 0, 0, 0, 0],
@@ -199,6 +200,8 @@ For a Gae exclusion plot:
 ```
 import DataBaseClass as db
 database = db.DataBaseGae("databases/NewAxions.db", commit=True)  # this will create (if it doesn't already exists) a table named AxionsGae (default) at databases/NewAxions.db
+path1 = 'data/axion/hints/'
+path2 = 'data/axion/gaegag/'
 AxionsGae= [
     ["DFSZ1_starhint", "region", path1 + "DFSZ1_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='springgreen', edgecolor='darkgreen', alpha=0.2", 0, '', ''],
     ["AJ83_starhint", "region", path1 + "AJ83_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='red', edgecolor='red', alpha=0.2", 0, '', ''],
