@@ -38,21 +38,8 @@ data = database.read_rows()
 print(data)
 """
 
-"""
-# Example of usage:
-import DataBaseClass as db
-database = db.DataBaseLabels("Axions.db")
-labels = [
-    ["CAST", 1.0e-6, 1.0e-6, "color='blue', fontsize=10", 1, 0],
-    ["IAXO", 1.0e-6, 1.0e-6, "color='blue', fontsize=10", 1, 1],
-]
-database.insert_rows(labels)
-data = database.read_rows()
-print(data)
-"""
 
-
-# DataBase class is not intended to be used directly, but to be inherited by DataBaseGag and DataBaseGae
+# DataBase class is the generic database class that can be used to load an already existing database.
 class DataBase:
     def __init__(
         self, file_database="Axions.db", name: str = "Axions", commit: bool = False
@@ -156,8 +143,10 @@ class DataBase:
 
 
 class DataBaseGag(DataBase):
-    def __init__(self, file_database="Axions.db", name: str = "AxionsGag"):
-        DataBase.__init__(self, file_database, name)
+    def __init__(
+        self, file_database="Axions.db", name: str = "AxionsGag", commit: bool = False
+    ):
+        DataBase.__init__(self, file_database, name, commit)
 
         self.cursor.execute(
             f"""CREATE TABLE IF NOT EXISTS {self.name} (
@@ -165,13 +154,17 @@ class DataBaseGag(DataBase):
             type TEXT,
             path TEXT,
             drawOptions TEXT,
-            wildType INTEGER,
-            large_panorama INTEGER,
-            panorama INTEGER,
-            helioscopes INTEGER,
-            haloscopes INTEGER,
-            lswexps INTEGER,
-            projection INTEGER
+            projection INTEGER,
+            source TEXT,
+            year TEXT,
+            hint INTEGER,
+            model INTEGER,
+            cosmology INTEGER,
+            haloscope INTEGER,
+            stellar INTEGER,
+            helioscope INTEGER,
+            laboratory INTEGER,
+            LSW INTEGER
             )"""
         )
         if self.commit:
@@ -183,29 +176,35 @@ class DataBaseGag(DataBase):
         type,
         path,
         drawOptions="",
-        noPT=1,
-        LP=0,
-        P=0,
-        Helios=0,
-        Halos=0,
-        LSW=0,
         projection=0,
+        source="",
+        year="",
+        hint=0,
+        model=0,
+        cosmology=0,
+        haloscope=0,
+        stellar=0,
+        helioscope=0,
+        laboratory=0,
+        LSW=0,
     ):
-        instruction = f"INSERT INTO {self.name}  VALUES ('{name}', '{type}','{path}','{drawOptions}','{noPT}','{LP}','{P}','{Helios}','{Halos}',{LSW},{projection})"
+        instruction = f"INSERT INTO {self.name}  VALUES ('{name}', '{type}','{path}','{drawOptions}',{projection},'{source}','{year}',{hint},{model},{cosmology},{haloscope},{stellar},{helioscope},{laboratory},{LSW})"
         self.cursor.execute(instruction)
         if self.commit:
             self.conn.commit()
 
     def insert_rows(self, rows):
-        instruction = f"INSERT INTO {self.name} VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+        instruction = f"INSERT INTO {self.name} VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         self.cursor.executemany(instruction, rows)
         if self.commit:
             self.conn.commit()
 
 
 class DataBaseGae(DataBase):
-    def __init__(self, file_database="Axions.db", name: str = "AxionsGae"):
-        DataBase.__init__(self, file_database, name)
+    def __init__(
+        self, file_database="Axions.db", name: str = "AxionsGae", commit: bool = False
+    ):
+        DataBase.__init__(self, file_database, name, commit)
 
         self.cursor.execute(
             f"""CREATE TABLE IF NOT EXISTS {self.name} (
@@ -213,21 +212,24 @@ class DataBaseGae(DataBase):
             type TEXT,
             path TEXT,
             drawOptions TEXT,
-            wildType INTEGER,
-            projection INTEGER
+            projection INTEGER,
+            source TEXT,
+            year TEXT
             )"""
         )
         if self.commit:
             self.conn.commit()
 
-    def insert_row(self, name, type, path, drawOptions="", noPT=1, projection=0):
-        instruction = f"INSERT INTO {self.name}  VALUES ('{name}', '{type}','{path}','{drawOptions}',{noPT},{projection})"
+    def insert_row(
+        self, name, type, path, drawOptions="", projection=0, source="", year=""
+    ):
+        instruction = f"INSERT INTO {self.name}  VALUES ('{name}', '{type}','{path}','{drawOptions}',{projection},'{source}','{year}')"
         self.cursor.execute(instruction)
         if self.commit:
             self.conn.commit()
 
     def insert_rows(self, rows):
-        instruction = f"INSERT INTO {self.name} VALUES (?, ?, ?, ?, ?, ?)"
+        instruction = f"INSERT INTO {self.name} VALUES (?, ?, ?, ?, ?, ?, ?)"
         self.cursor.executemany(instruction, rows)
         if self.commit:
             self.conn.commit()
@@ -280,39 +282,6 @@ class DataBaseWimps(DataBase):
         instruction = (
             f"INSERT INTO {self.name} VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         )
-        self.cursor.executemany(instruction, rows)
-        if self.commit:
-            self.conn.commit()
-
-
-class DataBaseLabels(DataBase):
-    def __init__(self, file_database="Axions.db", name: str = "Labels"):
-        DataBase.__init__(self, file_database, name)
-
-        self.cursor.execute(
-            f"""CREATE TABLE IF NOT EXISTS {self.name} (
-            label TEXT,
-            x_position REAL,
-            y_position REAL,
-            drawOptions TEXT,
-            onoff INTEGER,
-            projection INTEGER
-            )"""
-        )
-        if self.commit:
-            self.conn.commit()
-
-    def insert_row(
-        self, label, x_position, y_position, drawOptions="", on=1, projection=0
-    ):
-        instruction = f"INSERT INTO {self.name}  VALUES ('{label}', '{x_position}', '{y_position}', '{drawOptions}', {on}, {projection})"
-        self.cursor.execute(instruction)
-        if self.commit:
-            self.conn.commit()
-
-    def insert_rows(self, rows):
-        instruction = f"INSERT INTO {self.name} VALUES (?, ?, ?, ?, ?, ?)"
-
         self.cursor.executemany(instruction, rows)
         if self.commit:
             self.conn.commit()
