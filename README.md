@@ -24,7 +24,7 @@ import DataBaseClass as db
 # The first parameter is the path to the .db file and second parameter is the name of the database table inside that .db file.
 database = db.DataBaseGag("databases/Axions.db", "AxionsGag")
 ```
-Then, write a list with the experiments name (matching the name column of the database) you want to include in the plot. Note that the order of this list is the order in which they will be plotted.
+Then, write a list with the experiments name (matching the name column of the database) you want to include in the plot. **Note that the order in which the experiments are added to this list will be the order in which they are plotted**, so the last experiments added will be drawn on top of the firsts experiments added to the database.
 ```
 experimentsToPlot = [
     "qcdband",
@@ -32,11 +32,11 @@ experimentsToPlot = [
     "CAST",
 ]
 ```
-Now, extract this rows from the database as follows:
+Now, extract this rows (the _get_rows(field, values)_ method return the rows in the same order in which they are given in the values argument) from the database as follows:
 ```
 exps = database.get_rows("name", experimentsToPlot)
 ```
-You may now include some labels. In order to do that, you could build a list where each element will be a label to plot. Each os these elements (labels) should be a tuple (or list) containing at least a string with the text of the label (LaTeX formatting is available), the x position and y position. Optionally a 4th element can be given containing a dictionary with the matplotlib.pyplot.text() keyword arguments to customize the text label as you want. For example,
+You may now include some labels. In order to do that, you could build a list where each element will be a label to plot. Each os these elements (labels) should be a tuple (or list) containing at least a string with the text of the label (LaTeX formatting is available), the x position and y position. Optionally, a 4th element can be given containing a dictionary with the matplotlib.pyplot.text() keyword arguments to customize the text label as you want. For example,
 ```
 labels = [
     (r"{\bf Helioscopes (CAST)}", 1e-8, 2e-10, dict(color="black", size=10)),
@@ -56,7 +56,7 @@ axionplot = AxionGagPlot(
 Use the parameter `experiments` and `labels` to pass the previously defined data and labels. If a string is given to the `saveplotname`, it will save the plot in a file with that name (default extension will be pdf if none is given within the filename). You can check other useful customization arguments at [AxionPlot.py](AxionPlot.py).
 
 ## More complex examples
-Inside [myPlottingScripts](myPlottingScripts) folder you can find real examples of scripts used to generate the figure inside [plots](plots) folder.
+Inside [myPlottingScripts](myPlottingScripts) folder you can find real examples of scripts used to generate the figures inside [plots](plots) folder.
 
 To be able to reproduce them (without moving them to the parent directory), first go to [myPath](myPlottingScripts/myPath.py) file and change the variable PATH_TO_PROJECT with the absolute path of the repository in your local system. This is needed to be able to load the modules defined in the parent directory of this project (TODO: wrap all this code into a proper python package). Now you can run any of those scripts, such as
 
@@ -125,12 +125,12 @@ The different dark matter detection experiment are organize in SQL databases. Fo
    Each of this will use a different matplotlib.pyplot method (see [XPlotter](XPlotter.py)).
 3. **_path_** : string containing the relative path (from the database file directory) to the data file (.txt or .dat) where the data of that experiment is contained. This file should be inside the data/axion/ or data/wimp/ directory. For example: _axion/ADMX2018.txt_
 4. **_drawOptions_** : string containing the customization options for the plotting method of matplotlib.pyplot used (dependent on the _type_). For example: _facecolor='limegreen', edgecolor='darkgreen', lw=0.2_
-5. **_projection_** : integer (_0_ or _1_) that indicates if the data is just a prospect or projection for future results (_1_) or if it is a reported result (_0_).
-6. **_source_** : string containing the origin of the data. It can be the DOI of the publication, the arXiV identifier or any other way of tracing the origin of the data. This information should be included inside the data file as the header (starting with the comment character # ). For example: _2110.06096_
+5. **_projection_** : integer (_0_ or _1_) that indicates if the data is just a prospect/projection for future results (_1_) or if it is a reported result (_0_).
+6. **_source_** : string containing the origin of the data. It can be the DOI of the publication, the arXiV identifier or any other way of tracing the origin of the data. This information should also be included inside the data file as a header (starting with the comment character # ). For example: _2110.06096_
 7. **_year_** : string containing the year of release of the data. For example: _2019_
 
 
-Furthermore, the different DM candidates databases have more specific additional columns. In order to load the desired database you may use the correspondent DataBase class defined in [DataBaseClass.py](DataBaseClass.py) (although for just loading and getting data but not editing it, any of the DataBase classes would work).
+Furthermore, the different DM candidates databases have more specific additional columns. In order to create the desired database you may use the correspondent database class defined in [DataBaseClass.py](DataBaseClass.py). If the database file (.db) is already built and you don't want to add any new row, you may just use the base class DataBase.
 ## Loading a database
 
 To load the desired database use the constructor of the classes DataBaseGag (for
@@ -173,10 +173,7 @@ To commit this changes to the database file is not recommended as it could make 
 
 ## Creating a new database
 
-To create a new database for a new plot you may follow this examples. Keep in
-mind that the order in which the experiments are added to the database will be
-the order in which they are plotted, so the last experiments added will be drawn
-o top of the firsts experiments added to the database. Note the parameter
+To create a new database for a new plot you may follow this examples. Note the parameter
 commit=True at the constructor of the databases to commit the changes to the db
 file. For a Gag exclusion plot:
 
