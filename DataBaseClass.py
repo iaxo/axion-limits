@@ -5,36 +5,39 @@ import sqlite3 as sql
 """
 # Example of usage:
 import DataBaseClass as db
-database = db.DataBaseGag("Axions.db")
+database = db.DataBaseGag("databases/NewAxions.db", commit=True) # this will create (if it doesn't already exists) a table named AxionsGag (default) at databases/NewAxions.db
+path = "data/axion/"
 AxionsGag = [
-    ['qcdband', 'band', PATH_DATA + 'QCD_band.dat', "facecolor='yellow'", 1, 1, 1, 1, 1, 1, 0],
-    ['old_haloscopes', 'band', PATH_DATA + 'MicrowaveCavities.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 1, 1, 1, 1, 1, 0, 0],
-    ['ABRA3', 'line', PATH_DATA + 'ABRAres_3.dat', "color='green', linewidth=0.1, linestyle='-'", 1, 1, 1, 1, 1, 1, 0],
-    ['ADMX2018', 'band', PATH_DATA + 'ADMX2018.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, 0, 0, 0, 0, 0, 0],
-    ['BabyIAXO', 'band', PATH_DATA + 'miniIAXO.dat', "facecolor='deepskyblue', linewidth=0.5, alpha=0.1, linestyle='-'", 1, 1, 1, 0, 1, 0, 1],
-    ['IAXO', 'band', PATH_DATA + 'IAXO_nominal.txt', "facecolor='deepskyblue', linewidth=0.5, alpha=0.1, linestyle='-'", 1, 1, 1, 0, 1, 0, 1],
-    ['CAST', 'band', PATH_DATA + 'cast_env_2016.dat', "facecolor='deepskyblue', edgecolor='blue', linewidth=0.5", 1, 1, 1, 0, 1, 0, 1],
+    ['qcdband', 'band', path + 'QCD_band.dat', "facecolor='yellow'", 0, '', '', 1, 1, 0, 0, 0, 0, 0, 0],
+    ['CMB_DEsuE', 'band', path + 'cosmoalp/CMB_DEsuE.txt', "facecolor='forestgreen', edgecolor='darkgreen', linewidth=0.5", 0, '1110.2895', '2011', 0, 0, 1, 0, 0, 0, 0, 0],
+    ['old_haloscopes', 'band', path + 'MicrowaveCavities.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '', '', 0, 0, 1, 1, 0, 0, 0, 0],
+    ['RADES2021', 'band', path + 'RADES2021.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '2104.13798', '2021', 0, 0, 1, 1, 0, 0, 0, 0],
+    ['CAST', 'band', path + 'cast_env_2016.dat', "facecolor='deepskyblue', edgecolor='blue', linewidth=0.5", 0, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
+    ['BabyIAXO', 'band', path + 'miniIAXO.dat', "facecolor='deepskyblue', linewidth=0.5, alpha=0.1, linestyle='-'", 1, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
+    ['IAXO', 'band', path + 'IAXO_nominal.txt', "facecolor='deepskyblue', linewidth=0.5, alpha=0.1, linestyle='-'", 1, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
 ]
 database.insert_rows(AxionsGag)
-data = database.read_rows()
+data = database.get_rows_where("1")
 print(data)
 """
 
 """
 # Example of usage:
 import DataBaseClass as db
-database = db.DataBaseGae("Axions.db")
+database = db.DataBaseGae("databases/NewAxions.db", commit=True)  # this will create (if it doesn't already exists) a table named AxionsGae (default) at databases/NewAxions.db
+path1 = 'data/axion/hints/'
+path2 = 'data/axion/gaegag/'
 AxionsGae= [
-    ["DFSZ1_starhint", "region", path1 + "DFSZ1_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='springgreen', edgecolor='darkgreen', alpha=0.2", 1, 0],
-    ["AJ83_starhint", "region", path1 + "AJ83_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='red', edgecolor='red', alpha=0.2", 1, 0],
-    ["QCDband", "band", path2 + "DFSZband_gaegag.dat", "facecolor='lemonchiffon', edgecolor='none', linewidth=1", 1, 0],
-    ["CAST_gae", "band", path2 + "CAST_gae_gagg.dat", "facecolor='steelblue', edgecolor='darkblue', linewidth=0.5", 1, 0],
+    ["DFSZ1_starhint", "region", path1 + "DFSZ1_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='springgreen', edgecolor='darkgreen', alpha=0.2", 0, '', ''],
+    ["AJ83_starhint", "region", path1 + "AJ83_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='red', edgecolor='red', alpha=0.2", 0, '', ''],
+    ["QCDband", "band", path2 + "DFSZband_gaegag.dat", "facecolor='lemonchiffon', edgecolor='none', linewidth=1", 0, '', ''],
+    ["CAST_gae", "band", path2 + "CAST_gae_gagg.dat", "facecolor='steelblue', edgecolor='darkblue', linewidth=0.5", 0, '', ''],
 
-    ["IAXO_gae", "band", path2 + "sqrtgaagae_sc2.dat", "facecolor='skyblue', edgecolor='black', linewidth=0.5, alpha=0.3", 0, 1],
-    ["IAXOplus_gae", "band", path2 + "sqrtgaagae_sc3.dat", "facecolor='skyblue', edgecolor='black', linewidth=0.5, alpha=0.3", 0, 1],
+    ["IAXO_gae", "band", path2 + "sqrtgaagae_sc2.dat", "facecolor='skyblue', edgecolor='black', linewidth=0.5, alpha=0.3", 1, '', ''],
+    ["IAXO_gae_l", "line", path2 + "sqrtgaagae_sc2.dat", "color='black', linewidth=0.5, linestyle='--'", 1, '', ''],
 ]
 database.insert_rows(AxionsGae)
-data = database.read_rows()
+data = database.get_rows_where("1")
 print(data)
 """
 
@@ -173,7 +176,7 @@ class DataBaseGag(DataBase):
     def insert_row(
         self,
         name,
-        type,
+        type_,
         path,
         drawOptions="",
         projection=0,
@@ -188,12 +191,42 @@ class DataBaseGag(DataBase):
         laboratory=0,
         LSW=0,
     ):
-        instruction = f"INSERT INTO {self.name}  VALUES ('{name}', '{type}','{path}','{drawOptions}',{projection},'{source}','{year}',{hint},{model},{cosmology},{haloscope},{stellar},{helioscope},{laboratory},{LSW})"
-        self.cursor.execute(instruction)
-        if self.commit:
-            self.conn.commit()
+        lst = [
+            name,
+            type_,
+            path,
+            drawOptions,
+            projection,
+            source,
+            year,
+            hint,
+            model,
+            cosmology,
+            haloscope,
+            stellar,
+            helioscope,
+            laboratory,
+            LSW,
+        ]
+        self.insert_rows([lst])
 
-    def insert_rows(self, rows):
+    def insert_rows(self, rows: list):
+        # convert tuple to list
+        if type(rows) == tuple:
+            rows = [row for row in rows]
+        # check if rows is a list
+        if type(rows) != list:
+            print("ERROR: rows must be a list. Aborting.")
+            return
+        if len(rows) == 0:
+            print("Warning: list of rows to insert is empty.")
+            return
+
+        # for a single row, make it a list of list
+        if type(rows[0]) not in [list, tuple]:
+            if len(rows) == 15:
+                rows = [rows]
+
         instruction = f"INSERT INTO {self.name} VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         self.cursor.executemany(instruction, rows)
         if self.commit:
@@ -221,14 +254,28 @@ class DataBaseGae(DataBase):
             self.conn.commit()
 
     def insert_row(
-        self, name, type, path, drawOptions="", projection=0, source="", year=""
+        self, name, type_, path, drawOptions="", projection=0, source="", year=""
     ):
-        instruction = f"INSERT INTO {self.name}  VALUES ('{name}', '{type}','{path}','{drawOptions}',{projection},'{source}','{year}')"
-        self.cursor.execute(instruction)
-        if self.commit:
-            self.conn.commit()
+        lst = [name, type_, path, drawOptions, projection, source, year]
+        self.insert_rows([lst])
 
     def insert_rows(self, rows):
+        # convert tuple to list
+        if type(rows) == tuple:
+            rows = [row for row in rows]
+        # check if rows is a list
+        if type(rows) != list:
+            print("ERROR: rows must be a list. Aborting.")
+            return
+        if len(rows) == 0:
+            print("Warning: list of rows to insert is empty.")
+            return
+
+        # for a single row, make it a list of list
+        if type(rows[0]) not in [list, tuple]:
+            if len(rows) == 15:
+                rows = [rows]
+
         instruction = f"INSERT INTO {self.name} VALUES (?, ?, ?, ?, ?, ?, ?)"
         self.cursor.executemany(instruction, rows)
         if self.commit:
@@ -262,7 +309,7 @@ class DataBaseWimps(DataBase):
     def insert_row(
         self,
         name,
-        type,
+        type_,
         path,
         drawOptions="",
         projection=0,
@@ -273,12 +320,38 @@ class DataBaseWimps(DataBase):
         labelPosY=None,
         labelDrawOptions="",
     ):
-        instruction = f"INSERT INTO {self.name}  VALUES ('{name}', '{type}','{path}','{drawOptions}',{projection},'{source}','{year}','{label}',{labelPosX},{labelPosY},'{labelDrawOptions}')"
-        self.cursor.execute(instruction)
-        if self.commit:
-            self.conn.commit()
+        lst = [
+            name,
+            type_,
+            path,
+            drawOptions,
+            projection,
+            source,
+            year,
+            label,
+            labelPosX,
+            labelPosY,
+            labelDrawOptions,
+        ]
+        self.insert_rows([lst])
 
     def insert_rows(self, rows):
+        # convert tuple to list
+        if type(rows) == tuple:
+            rows = [row for row in rows]
+        # check if rows is a list
+        if type(rows) != list:
+            print("ERROR: rows must be a list. Aborting.")
+            return
+        if len(rows) == 0:
+            print("Warning: list of rows to insert is empty.")
+            return
+
+        # for a single row, make it a list of list
+        if type(rows[0]) not in [list, tuple]:
+            if len(rows) == 15:
+                rows = [rows]
+
         instruction = (
             f"INSERT INTO {self.name} VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         )

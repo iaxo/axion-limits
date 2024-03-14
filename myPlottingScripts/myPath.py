@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 
 # Add the absolute path to the project
-PATH_TO_PROJECT = "/home/aezquerro/git/axion-limits_wimps"
+PATH_TO_PROJECT = ""
 try:
     import DataBaseClass as db
     from AxionPlot import *
