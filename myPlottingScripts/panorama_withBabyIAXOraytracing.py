@@ -73,11 +73,11 @@ experimentsToPlot = [
     "BabyIAXO_l",
     "IAXO_l",
     "IAXOplus_l",
+    "BabyIAXO_raytracing_l",
 ]
 exps = database.get_rows(
     "name", experimentsToPlot
 )  # Get the data of the experiments to plot from the database
-exps.append(["BabyIAXO_raytracing", 'line', "data/axion/BabyIAXO/BabyIAXO_raytracing.txt", dict(color='black', linewidth=0.6, alpha=1, linestyle='--')])
 
 labels = [
     (r"{\bf Helioscopes (CAST)}", 1e-5, 2e-10, dict( color="black", size=11)),

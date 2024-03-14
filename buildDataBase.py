@@ -103,6 +103,7 @@ AxionsGag = [
     ['BabyIAXO_l', 'line', path + 'miniIAXO.dat', "color='black', linewidth=0.6, alpha=1, linestyle='--'", 1, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
     ['IAXO_l', 'line', path + 'IAXO_nominal.txt', "color='black', linewidth=0.6, alpha=1, linestyle='--'", 1, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
     ['IAXOplus_l', 'line', path + 'IAXO_plus.txt', "color='black', linewidth=0.6, alpha=1, linestyle='--'", 1, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
+    ['BabyIAXO_raytracing_l', 'line', path + 'BabyIAXO/BabyIAXO_raytracing.txt', "color='black', linewidth=0.6, alpha=1, linestyle='--'",  1, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
     ['AMELIE', 'line', path + 'amelie_1m3_arXiv_1508.03006.txt', "color='gray', linewidth=0.6, alpha=1, linestyle='--'", 1, '1508.03006', '2015', 0, 0, 0, 0, 1, 1, 0, 0],
 
     # LABORATORY

@@ -148,9 +148,12 @@ file will not be edited. To commit the changes to the db file, set parameter
 commit=True at the constructor or use the DataBase.set_commit(True) method. For
 example, you can add a new row with the following command:
 
+**Note: method _DataBaseGag.insert_row(...)_ that is used in the documentation of this part in the main branch does not work properly if any of the string arguments have commas (which usually happens with drawOptions column) (TBR.). Use _DataBaseGag.insert_row([[...]])_ as follows:**
 ```
 database.set_commit(True) # to commit the changes to the .db file
-database.insert_row("exp_name", "line", "path_to_datafile", "color='red', linewidth=2", 0, 'source?', 'year?', 0, 0, 0, 0, 0, 0, 0, 0)
+database.insert_rows([
+   ["BabyIAXO_raytracing_l", "line", "data/axion/BabyIAXO/BabyIAXO_raytracing.txt", "color='black', linewidth=0.6, alpha=1, linestyle='--'",  1, '', '', 0, 0, 0, 0, 1, 1, 0, 0]
+])
 database.set_commit(False) # go back to default mode (not committing changes to the .db file)
 ```
 
