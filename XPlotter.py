@@ -57,22 +57,23 @@ class BasePlot:
         tickformatter_y=custom_formatter,
     ):
         plt.rc("text", usetex=True)
-        plt.rc("font", family="times", size=labelfontsize)
+        #plt.rc("font", family="times", size=labelfontsize)
+        plt.rc("font", family="serif", serif="cm", size=labelfontsize)
         self.fig = plt.figure(figsize=(figsizex, figsizey))
         self.plot = self.fig.add_subplot(111)
 
         # axis and labels
         self.plot.set_xlabel(
-            xlab, fontsize=labelfontsize, horizontalalignment="right", x=1
+            xlab, fontsize=labelfontsize, horizontalalignment="right", x=1,
         )
         self.plot.set_ylabel(
-            ylab, fontsize=labelfontsize, horizontalalignment="right", y=1
+            ylab, fontsize=labelfontsize, horizontalalignment="right", y=1,
         )
         self.plot.tick_params(
-            which="major", direction="in", right=True, top=True, width=0.8, length=5
+            which="major", direction="in", right=True, top=True, width=0.8, length=5, pad=6
         )
         self.plot.tick_params(
-            which="minor", direction="in", right=True, top=True, width=0.4, length=3
+            which="minor", direction="in", right=True, top=True, width=0.4, length=3, pad=6
         )
         # ,right=TrueopAndRightTicks,top=TopAndRightTicks,pad=7)
         # self.plot.tick_params(which='minor',direction='in',width=1,length=10)
@@ -92,9 +93,7 @@ class BasePlot:
         self.plot.xaxis.set_minor_locator(locmin)
 
         locmaj = mpl.ticker.LogLocator(base=10.0, subs=(1.0,), numticks=100)
-        locmin = mpl.ticker.LogLocator(
-            base=10.0, subs=np.arange(2, 10) * 0.1, numticks=100
-        )
+        locmin = mpl.ticker.LogLocator(base=10.0, subs=np.arange(2, 10) * 0.1, numticks=100)
         if ticksopt_y == "dense":
             locmaj = mpl.ticker.LogLocator(base=100.0, subs=(1.0,), numticks=100)
             locmin = mpl.ticker.LogLocator(base=10.0, subs=(1.0,), numticks=100)
@@ -181,7 +180,7 @@ class BasePlot:
 
 
 # ==============================================================================#
-# class representing an physics item (i.e. excluded region)
+# class representing a physics item (i.e. excluded region)
 # to be drawn on plot
 # useful to create the object but decide later if to be plotted or not
 # ==============================================================================#
