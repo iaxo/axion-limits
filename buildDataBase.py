@@ -69,6 +69,18 @@ AxionsGag = [
     ['ADMX_SLIC', 'band', path + 'ADMX_SLIC.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.5, alpha=1", 0, '1911.05772', '2019', 0, 0, 1, 1, 0, 0, 0, 0],
     ['SHAFT', 'band', path + 'SHAFT.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.5, alpha=0.5", 0, '', '', 0, 0, 1, 1, 0, 0, 0, 0],
     ['TransmonMW_PC', 'band', path + 'TransmonMWphotoncounter_2024.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.5", 0, '2403.02321', '2024', 0, 0, 1, 1, 0, 0, 0, 0],
+    
+    ['TASEH_2022','band', path+'TASEH_2022.txt',"facecolor='limegreen',edgecolor='darkgreen',linewidth=0.2",0,'2205.05574','2022',0, 0, 1, 1, 0, 0, 0, 0],
+    ['GraHal_2022','band', path+'GraHal_2022.txt',"facecolor='limegreen',edgecolor='darkgreen',linewidth=0.2",0,'2110.14406','2022',0, 0, 1, 1, 0, 0, 0, 0],
+    ['NeutronStars','band', path+'NeutronStars.txt',"facecolor='limegreen',edgecolor='darkgreen',linewidth=0.2",0,'2202.08274','2022',0, 0, 1, 1, 0, 0, 0, 0],
+    ['ORGAN1a_2022','band', path+'ORGAN1a_2022.txt',"facecolor='limegreen',edgecolor='darkgreen',linewidth=0.2",0,'2203.12152','2022',0, 0, 1, 1, 0, 0, 0, 0],
+    ['CAPP12T_2022','band', path+'CAPP12T_2022.txt',"facecolor='limegreen',edgecolor='darkgreen',linewidth=0.2",0,'2210.10961','2022',0, 0, 1, 1, 0, 0, 0, 0],
+    ['CAPP-PACE_2022','band', path+'CAPP-PACE_2022.txt',"facecolor='limegreen',edgecolor='darkgreen',linewidth=0.2",0,'2207.13597','2022',0, 0, 1, 1, 0, 0, 0, 0],
+    ['CAPP18T_2022','band', path+'CAPP18T_2022.txt',"facecolor='limegreen',edgecolor='darkgreen',linewidth=0.2",0,'2206.08845','2022',0, 0, 1, 1, 0, 0, 0, 0],
+    ['CAST-CAPP','band', path+'CAST-CAPP.txt',"facecolor='limegreen',edgecolor='darkgreen',linewidth=0.2",0,'https://doi.org/10.1038/s41467-022-33913-6','2022',0, 0, 1, 1, 0, 0, 0, 0],
+    
+    
+    
     # COSMOLOGY - HALOSCOPES - PROJECTIONS
     ['ORGANprosp', 'line', path + 'ORGAN2.dat', "color='darkgreen', linewidth=0.1, linestyle='-'", 1, '', '', 0, 0, 1, 1, 0, 0, 0, 0],
     ['castcapp2', 'band', path + 'CASTCAPP2.dat', "facecolor='limegreen', edgecolor='black', linewidth=0.1, alpha=0.1, linestyle='-'", 1, '', '', 0, 0, 1, 1, 0, 0, 0, 0],
