@@ -62,7 +62,7 @@ class AxionGagPlot:
             tickformatter_x=tickformatter_x,
             tickformatter_y=tickformatter_y,
         )
-
+        self.saveplotname = saveplotname
         self.axionDB = []
         self.plotCag = plotCag
         # print(self.axionDB.get_rows())
@@ -79,8 +79,14 @@ class AxionGagPlot:
 
         if type(saveplotname) == str:
             if len(saveplotname) > 0:
-                self.baseplot.SavePlot(saveplotname)
+                self.SavePlot()
 
+    def SavePlot(self):
+        self.baseplot.SavePlot(self.saveplotname)
+
+    def ShowPlot(self):
+        self.baseplot.ShowPlot()
+        
     def PlotData(self, data):
         print("Plotting data:")
         for row in data:

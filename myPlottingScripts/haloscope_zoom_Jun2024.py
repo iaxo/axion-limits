@@ -121,7 +121,7 @@ axionplot = AxionGagPlot(
     labels=labels,
     plotCag=True,  # set to true to plot C_ag instead of g_ag
     showplot=False,  # set to false to add the labels later
-    saveplotname="haloscopes.pdf",
+    saveplotname="haloscopes_zoom_Jun2024.pdf",
     labely=r"$|C_{a\gamma}|\tilde{\rho}_a^{1/2}$",
     figx=8,
     figy=5,
@@ -139,8 +139,8 @@ plt.plot([8.3e-6,6.79e-6],[0.4,1.64],color='black',linewidth=0.5)
 plt.plot([8.3e-6,1.07e-5],[0.4,1.68],color='black',linewidth=0.5)
 plt.plot([8.3e-6,1.33e-5],[0.4,1.64],color='black',linewidth=0.5)
 plt.plot([8.3e-6,1.98e-5],[0.4,1.64],color='black',linewidth=0.5)
-plt.plot([8.3e-6,0.457e-5],[0.4,0.6],color='black',linewidth=0.5) #capp12t
-plt.plot([8.3e-6,0.457e-5],[0.4,0.6],color='black',linewidth=0.5) #capp-pace
+plt.plot([8.3e-6,0.5e-5],[0.4,0.6],color='black',linewidth=0.5) #capp12t
+plt.plot([8.3e-6,0.5e-5],[0.4,0.6],color='black',linewidth=0.5) #capp-pace
 plt.plot([15e-6,19.35e-6],[6,9],color='black',linewidth=0.5) #taseh  xdata=1.3252e-05, ydata=6.15306f
 plt.plot([2e-5,1.65e-5],[43,30],color='black',linewidth=0.5) #castcapp
 plt.plot([2e-5,1.71e-5],[1.12,1.8],color='black',linewidth=0.5)
@@ -152,6 +152,8 @@ plt.plot([8.3e-5,6.6e-5],[61,83],color='black',linewidth=0.5)
 plt.text(4.1e-5,3.6,'QUAX',color="black",size=8,ha='center',va='center',rotation=90)
 plt.text(0.84e-4,35,'ORGAN',color="black",size=8,ha='center',va='center',rotation=90) #xdata=8.48019e-05, ydata=61.4904f
 
-# we finish by plotting (because we set the flag to false above
-axionplot.baseplot.ShowPlot()
+# we finish by plotting and saving (because we set the flag to false above)
+axionplot.ShowPlot()
+axionplot.SavePlot()
+
 # ---  end of customization
