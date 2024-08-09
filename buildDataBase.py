@@ -59,6 +59,7 @@ AxionsGag = [
     ['HAYSTAC', 'band', path + 'HAYSTAC.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '', '', 0, 0, 1, 1, 0, 0, 0, 0],
     ['HAYSTAC2020', 'band', path + 'haystac2020.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '2008.01853', '2020', 0, 0, 1, 1, 0, 0, 0, 0],
     ['ORGAN', 'band', path + 'ORGAN.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '', '', 0, 0, 1, 1, 0, 0, 0, 0],
+    ['ORGAN-Q2024', 'band', path + 'ORGAN-Q2024.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '2407.18586', '2024', 0, 0, 1, 1, 0, 0, 0, 0],
     ['QUAX', 'band', path + 'QUAX.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '', '', 0, 0, 1, 1, 0, 0, 0, 0],
     ['QUAX2021', 'band', path + 'QUAX2021.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '2012.09498', '2021', 0, 0, 1, 1, 0, 0, 0, 0],
     ['QUAX2024', 'band', path + 'QUAX2024.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '2402.19063', '2024', 0, 0, 1, 1, 0, 0, 0, 0],
