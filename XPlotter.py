@@ -131,6 +131,18 @@ class BasePlot:
             self.plot.fill_between(data[:, 0], data[:, 1], y2=y_bottom / 10, **kwargs)
         self.zorder += 1
 
+    def on_click(self, event):
+        if event.button == 3: # right click
+            print(
+                "Right click: x=%d, y=%d, xdata=%.3g, ydata=%.3g"
+                % (
+                    event.x if event.x is not None else -1,
+                    event.y if event.y is not None else -1,
+                    event.xdata if event.xdata is not None else -1,
+                    event.ydata if event.ydata is not None else -1,
+                )
+            )
+
     def on_pick(self, event):
         "Store which text object was picked and were the pick event occurs."
 
@@ -201,6 +213,7 @@ class BasePlot:
     # switch to interactive mode and shows the plot on screen
     #
     def ShowPlot(self):
+        cid_rclick = self.fig.canvas.mpl_connect("button_press_event", self.on_click)
         cid_pick = self.fig.canvas.mpl_connect("pick_event", self.on_pick)
         cid_release = self.fig.canvas.mpl_connect(
             "button_release_event", self.on_release
@@ -210,6 +223,7 @@ class BasePlot:
         plt.ioff()
         print("Showing plot... Close the figure window to continue.")
         plt.show()
+        self.fig.canvas.mpl_disconnect(cid_rclick)
         self.fig.canvas.mpl_disconnect(cid_pick)
         self.fig.canvas.mpl_disconnect(cid_release)
         self.fig.canvas.mpl_disconnect(cid_scroll)
