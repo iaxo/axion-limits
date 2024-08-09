@@ -109,6 +109,8 @@ class BasePlot:
 
         self.zorder = -100
 
+        self.dragged = None  # store the dragged text object
+
     # ==============================================================================#
     # will draw a new exclusion line to the plot, no to be filled
     #
@@ -129,28 +131,89 @@ class BasePlot:
             self.plot.fill_between(data[:, 0], data[:, 1], y2=y_bottom / 10, **kwargs)
         self.zorder += 1
 
-    def onclick(self, event):
-        print(
-            "%s click: button=%d, x=%d, y=%d, xdata=%g, ydata=%gf"
-            % (
-                "double" if event.dblclick else "single",
-                event.button,
-                event.x,
-                event.y,
-                event.xdata,
-                event.ydata,
+    def on_pick(self, event):
+        "Store which text object was picked and were the pick event occurs."
+
+        if isinstance(event.artist, mpl.text.Text):
+            self.dragged = event.artist
+        return True
+
+    def on_release(self, event):
+        "Update text position and redraw"
+
+        if self.dragged is not None:
+            old_pos = self.dragged.get_position()
+            new_pos = (event.xdata, event.ydata)
+            if new_pos[0] is None or new_pos[1] is None:
+                print("WARNING: new position is out of limits, not moving text.")
+                self.dragged = None
+                return False
+
+            self.dragged.set_position(new_pos)
+            print(
+                "%s, %.3g, %.3g, size=%d, rotation=%d"
+                % (
+                    self.dragged.get_text().replace("\n", "\\n"),
+                    self.dragged.get_position()[0],
+                    self.dragged.get_position()[1],
+                    self.dragged.get_fontsize(),
+                    self.dragged.get_rotation(),
+                )
             )
-        )
+            self.dragged = None
+            plt.draw()
+        return True
+
+    def on_scroll(self, event):
+        "Increase or decrease text size"
+
+        if self.dragged is not None:
+            old_size = self.dragged.get_fontsize()
+            new_size = old_size + event.step
+            if new_size < 1:
+                new_size = 1
+            if new_size == old_size:
+                return False
+            self.dragged.set_fontsize(new_size)
+            # print("Changed text %s size to %.3g" % (self.dragged.get_text(), new_size))
+            plt.draw()
+
+    def on_key(self, event):
+        "Rotate text"
+
+        if self.dragged is not None:
+            old_rotation = self.dragged.get_rotation()
+            rot = 0
+            if event.key == "+":
+                rot = 5
+            elif event.key == "*":
+                rot = 30
+            elif event.key == "-":
+                rot = -5
+            elif event.key == "/":
+                rot = -30
+            new_rotation = old_rotation + rot
+            self.dragged.set_rotation(new_rotation)
+            # print("Rotated text %s to %.3g" % (self.dragged.get_text(), new_rotation))
+            plt.draw()
 
     # ==============================================================================#
     # switch to interactive mode and shows the plot on screen
     #
     def ShowPlot(self):
-        cid = self.fig.canvas.mpl_connect("button_press_event", self.onclick)
+        cid_pick = self.fig.canvas.mpl_connect("pick_event", self.on_pick)
+        cid_release = self.fig.canvas.mpl_connect(
+            "button_release_event", self.on_release
+        )
+        cid_scroll = self.fig.canvas.mpl_connect("scroll_event", self.on_scroll)
+        cid_key = self.fig.canvas.mpl_connect("key_press_event", self.on_key)
         plt.ioff()
         print("Showing plot... Close the figure window to continue.")
         plt.show()
-        self.fig.canvas.mpl_disconnect(cid)
+        self.fig.canvas.mpl_disconnect(cid_pick)
+        self.fig.canvas.mpl_disconnect(cid_release)
+        self.fig.canvas.mpl_disconnect(cid_scroll)
+        self.fig.canvas.mpl_disconnect(cid_key)
 
     # ==============================================================================#
     # saves the plot on a file
