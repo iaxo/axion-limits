@@ -197,13 +197,13 @@ class BasePlot:
             old_rotation = self.dragged.get_rotation()
             rot = 0
             if event.key == "+":
-                rot = 5
+                rot = 1
             elif event.key == "*":
-                rot = 30
+                rot = 10
             elif event.key == "-":
-                rot = -5
+                rot = -1
             elif event.key == "/":
-                rot = -30
+                rot = -10
             new_rotation = old_rotation + rot
             self.dragged.set_rotation(new_rotation)
             # print("Rotated text %s to %.3g" % (self.dragged.get_text(), new_rotation))
