@@ -44,11 +44,11 @@ labels = [
 ]
 ```
 The text labels with the parameter `picker`set to true (see "Helioscopes (CAST)" label in the example above) can be modified interactively within the pyplot figure. There are three options:
-* Move to a different position by clicking on the label and dragging it. The label will change the position when the click is released. _Note that the point of the text box that matches the mouse pointer varies depending on the centering and rotation of the text label._
+* Move to a different position by clicking on the label and dragging it. The label will change the position when the click is released. _Note that the anchor point varies depending on the [text alignment](https://matplotlib.org/stable/gallery/text_labels_and_annotations/text_alignment.html)._
 * Increase or decrease the font size by scrolling the mouse roulette while holding the click on the text label or while keeping pressed the `ctrl` key.
 * Rotate the label by pressing the keys `+` (anticlockwise) or `-` (clockwise) while holding the click on the text label.
 
-Note that these changes on the text labels will be printed in the final graph image but it will not be recorded in the script, so the graph will not be reproducible. For that purpose, the values of the label position, fontsize and rotation will be printed in the output terminal so you can copy these values and change them manually on the script.
+Note that these changes on the text labels will be printed in the final graph image but it will not be recorded in the script, so the graph will not be reproducible. For that purpose, the values of the label position, fontsize and rotation (and rotation mode) will be printed in the output terminal so you can copy these values and change them manually on the script.
 
 Finally, call the AxionPlot constructor to generate the plot.
 ```

@@ -148,6 +148,8 @@ class BasePlot:
 
         if isinstance(event.artist, mpl.text.Text):
             self.dragged = event.artist
+            # self.dragged.set_bbox(dict(facecolor="None", edgecolor="black", alpha=0.5, boxstyle="square,pad=0.01"))
+            self.dragged.set_rotation_mode("anchor")
         return True
 
     def on_release(self, event):
@@ -170,7 +172,8 @@ class BasePlot:
                     self.dragged.get_position()[1],
                     self.dragged.get_fontsize(),
                     self.dragged.get_rotation(),
-                )
+                ),
+                ", rotation_mode=" + self.dragged.get_rotation_mode() if self.dragged.get_rotation() != 0 else ""
             )
             self.dragged = None
             plt.draw()
