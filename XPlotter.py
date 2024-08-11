@@ -110,6 +110,7 @@ class BasePlot:
         self.zorder = -100
 
         self.dragged = None  # store the dragged text object
+        self.anchor_point = None  # store the anchor point of the dragged text object
 
     # ==============================================================================#
     # will draw a new exclusion line to the plot, no to be filled
@@ -142,10 +143,16 @@ class BasePlot:
                     event.ydata if event.ydata is not None else -1,
                 )
             )
+            # remove anchor point if it exists
+            if self.anchor_point is not None:
+                self.anchor_point.remove()
+                self.anchor_point = None
+                plt.draw()
 
     def on_pick(self, event):
         "Store which text object was picked and were the pick event occurs."
-
+        if event.mouseevent.button != 1:
+            return False
         if isinstance(event.artist, mpl.text.Text):
             self.dragged = event.artist
             # self.dragged.set_bbox(dict(facecolor="None", edgecolor="black", alpha=0.5, boxstyle="square,pad=0.01"))
@@ -164,6 +171,9 @@ class BasePlot:
                 return False
 
             self.dragged.set_position(new_pos)
+            if self.anchor_point is not None:
+                self.anchor_point.remove()
+            self.anchor_point = self.plot.scatter(self.dragged.get_position()[0], self.dragged.get_position()[1], s=5, color="red", alpha=0.5)
             print(
                 "%s, %.3g, %.3g, size=%d, rotation=%d"
                 % (
@@ -236,6 +246,10 @@ class BasePlot:
     # saves the plot on a file
     #
     def SavePlot(self, plotname):
+        if self.anchor_point is not None:
+            self.anchor_point.remove()
+            self.anchor_point = None
+
         filename = PATH_FIGURE_FOLDER + plotname
 
         extensions = [".pdf", ".png", ".svg", ".pickle"]
