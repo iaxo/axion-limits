@@ -57,23 +57,41 @@ class BasePlot:
         tickformatter_y=custom_formatter,
     ):
         plt.rc("text", usetex=True)
-        #plt.rc("font", family="times", size=labelfontsize)
+        # plt.rc("font", family="times", size=labelfontsize)
         plt.rc("font", family="serif", serif="cm", size=labelfontsize)
         self.fig = plt.figure(figsize=(figsizex, figsizey))
         self.plot = self.fig.add_subplot(111)
 
         # axis and labels
         self.plot.set_xlabel(
-            xlab, fontsize=labelfontsize, horizontalalignment="right", x=1,
+            xlab,
+            fontsize=labelfontsize,
+            horizontalalignment="right",
+            x=1,
         )
         self.plot.set_ylabel(
-            ylab, fontsize=labelfontsize, horizontalalignment="right", y=1,
+            ylab,
+            fontsize=labelfontsize,
+            horizontalalignment="right",
+            y=1,
         )
         self.plot.tick_params(
-            which="major", direction="in", right=True, top=True, width=0.8, length=5, pad=6
+            which="major",
+            direction="in",
+            right=True,
+            top=True,
+            width=0.8,
+            length=5,
+            pad=6,
         )
         self.plot.tick_params(
-            which="minor", direction="in", right=True, top=True, width=0.4, length=3, pad=6
+            which="minor",
+            direction="in",
+            right=True,
+            top=True,
+            width=0.4,
+            length=3,
+            pad=6,
         )
         # ,right=TrueopAndRightTicks,top=TopAndRightTicks,pad=7)
         # self.plot.tick_params(which='minor',direction='in',width=1,length=10)
@@ -93,7 +111,9 @@ class BasePlot:
         self.plot.xaxis.set_minor_locator(locmin)
 
         locmaj = mpl.ticker.LogLocator(base=10.0, subs=(1.0,), numticks=100)
-        locmin = mpl.ticker.LogLocator(base=10.0, subs=np.arange(2, 10) * 0.1, numticks=100)
+        locmin = mpl.ticker.LogLocator(
+            base=10.0, subs=np.arange(2, 10) * 0.1, numticks=100
+        )
         if ticksopt_y == "dense":
             locmaj = mpl.ticker.LogLocator(base=100.0, subs=(1.0,), numticks=100)
             locmin = mpl.ticker.LogLocator(base=10.0, subs=(1.0,), numticks=100)
@@ -108,6 +128,9 @@ class BasePlot:
         self.plot.yaxis.set_minor_formatter(mpl.ticker.NullFormatter())
 
         self.zorder = -100
+
+        self.dragged = None  # store the dragged text object
+        self.anchor_point = None  # store the anchor point of the dragged text object
 
     # ==============================================================================#
     # will draw a new exclusion line to the plot, no to be filled
@@ -129,33 +152,134 @@ class BasePlot:
             self.plot.fill_between(data[:, 0], data[:, 1], y2=y_bottom / 10, **kwargs)
         self.zorder += 1
 
-    def onclick(self, event):
-        print(
-            "%s click: button=%d, x=%d, y=%d, xdata=%g, ydata=%gf"
-            % (
-                "double" if event.dblclick else "single",
-                event.button,
-                event.x,
-                event.y,
-                event.xdata,
-                event.ydata,
+    def on_click(self, event):
+        if event.button == 3:  # right click
+            print(
+                "Right click: x=%d, y=%d, xdata=%.3g, ydata=%.3g"
+                % (
+                    event.x if event.x is not None else -1,
+                    event.y if event.y is not None else -1,
+                    event.xdata if event.xdata is not None else -1,
+                    event.ydata if event.ydata is not None else -1,
+                )
             )
-        )
+            # remove anchor point if it exists
+            if self.anchor_point is not None:
+                self.anchor_point.remove()
+                self.anchor_point = None
+                plt.draw()
+
+    def on_pick(self, event):
+        "Store which text object was picked and were the pick event occurs."
+        if event.mouseevent.button != 1:
+            return False
+        if isinstance(event.artist, mpl.text.Text):
+            self.dragged = event.artist
+            # self.dragged.set_bbox(dict(facecolor="None", edgecolor="black", alpha=0.5, boxstyle="square,pad=0.01"))
+            self.dragged.set_rotation_mode("anchor")
+        return True
+
+    def on_release(self, event):
+        "Update text position and redraw"
+
+        if self.dragged is not None:
+            old_pos = self.dragged.get_position()
+            new_pos = (event.xdata, event.ydata)
+            if new_pos[0] is None or new_pos[1] is None:
+                print("WARNING: new position is out of limits, not moving text.")
+                self.dragged = None
+                return False
+
+            self.dragged.set_position(new_pos)
+            if self.anchor_point is not None:
+                self.anchor_point.remove()
+            self.anchor_point = self.plot.scatter(
+                self.dragged.get_position()[0],
+                self.dragged.get_position()[1],
+                s=5,
+                color="red",
+                alpha=0.5,
+            )
+            print(
+                "%s, %.3g, %.3g, size=%d, rotation=%d"
+                % (
+                    self.dragged.get_text().replace("\n", "\\n"),
+                    self.dragged.get_position()[0],
+                    self.dragged.get_position()[1],
+                    self.dragged.get_fontsize(),
+                    self.dragged.get_rotation(),
+                ),
+                (
+                    ", rotation_mode=" + self.dragged.get_rotation_mode()
+                    if self.dragged.get_rotation() != 0
+                    else ""
+                ),
+            )
+            self.dragged = None
+            plt.draw()
+        return True
+
+    def on_scroll(self, event):
+        "Increase or decrease text size"
+
+        if self.dragged is not None:
+            old_size = self.dragged.get_fontsize()
+            new_size = old_size + event.step
+            if new_size < 1:
+                new_size = 1
+            if new_size == old_size:
+                return False
+            self.dragged.set_fontsize(new_size)
+            # print("Changed text %s size to %.3g" % (self.dragged.get_text(), new_size))
+            plt.draw()
+
+    def on_key(self, event):
+        "Rotate text"
+
+        if self.dragged is not None:
+            old_rotation = self.dragged.get_rotation()
+            rot = 0
+            if event.key == "+":
+                rot = 1
+            elif event.key == "*":
+                rot = 10
+            elif event.key == "-":
+                rot = -1
+            elif event.key == "/":
+                rot = -10
+            new_rotation = old_rotation + rot
+            self.dragged.set_rotation(new_rotation)
+            # print("Rotated text %s to %.3g" % (self.dragged.get_text(), new_rotation))
+            plt.draw()
 
     # ==============================================================================#
     # switch to interactive mode and shows the plot on screen
     #
     def ShowPlot(self):
-        cid = self.fig.canvas.mpl_connect("button_press_event", self.onclick)
+        cid_rclick = self.fig.canvas.mpl_connect("button_press_event", self.on_click)
+        cid_pick = self.fig.canvas.mpl_connect("pick_event", self.on_pick)
+        cid_release = self.fig.canvas.mpl_connect(
+            "button_release_event", self.on_release
+        )
+        cid_scroll = self.fig.canvas.mpl_connect("scroll_event", self.on_scroll)
+        cid_key = self.fig.canvas.mpl_connect("key_press_event", self.on_key)
         plt.ioff()
         print("Showing plot... Close the figure window to continue.")
         plt.show()
-        self.fig.canvas.mpl_disconnect(cid)
+        self.fig.canvas.mpl_disconnect(cid_rclick)
+        self.fig.canvas.mpl_disconnect(cid_pick)
+        self.fig.canvas.mpl_disconnect(cid_release)
+        self.fig.canvas.mpl_disconnect(cid_scroll)
+        self.fig.canvas.mpl_disconnect(cid_key)
 
     # ==============================================================================#
     # saves the plot on a file
     #
     def SavePlot(self, plotname):
+        if self.anchor_point is not None:
+            self.anchor_point.remove()
+            self.anchor_point = None
+
         filename = PATH_FIGURE_FOLDER + plotname
 
         extensions = [".pdf", ".png", ".svg", ".pickle"]
