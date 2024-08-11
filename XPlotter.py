@@ -57,23 +57,41 @@ class BasePlot:
         tickformatter_y=custom_formatter,
     ):
         plt.rc("text", usetex=True)
-        #plt.rc("font", family="times", size=labelfontsize)
+        # plt.rc("font", family="times", size=labelfontsize)
         plt.rc("font", family="serif", serif="cm", size=labelfontsize)
         self.fig = plt.figure(figsize=(figsizex, figsizey))
         self.plot = self.fig.add_subplot(111)
 
         # axis and labels
         self.plot.set_xlabel(
-            xlab, fontsize=labelfontsize, horizontalalignment="right", x=1,
+            xlab,
+            fontsize=labelfontsize,
+            horizontalalignment="right",
+            x=1,
         )
         self.plot.set_ylabel(
-            ylab, fontsize=labelfontsize, horizontalalignment="right", y=1,
+            ylab,
+            fontsize=labelfontsize,
+            horizontalalignment="right",
+            y=1,
         )
         self.plot.tick_params(
-            which="major", direction="in", right=True, top=True, width=0.8, length=5, pad=6
+            which="major",
+            direction="in",
+            right=True,
+            top=True,
+            width=0.8,
+            length=5,
+            pad=6,
         )
         self.plot.tick_params(
-            which="minor", direction="in", right=True, top=True, width=0.4, length=3, pad=6
+            which="minor",
+            direction="in",
+            right=True,
+            top=True,
+            width=0.4,
+            length=3,
+            pad=6,
         )
         # ,right=TrueopAndRightTicks,top=TopAndRightTicks,pad=7)
         # self.plot.tick_params(which='minor',direction='in',width=1,length=10)
@@ -93,7 +111,9 @@ class BasePlot:
         self.plot.xaxis.set_minor_locator(locmin)
 
         locmaj = mpl.ticker.LogLocator(base=10.0, subs=(1.0,), numticks=100)
-        locmin = mpl.ticker.LogLocator(base=10.0, subs=np.arange(2, 10) * 0.1, numticks=100)
+        locmin = mpl.ticker.LogLocator(
+            base=10.0, subs=np.arange(2, 10) * 0.1, numticks=100
+        )
         if ticksopt_y == "dense":
             locmaj = mpl.ticker.LogLocator(base=100.0, subs=(1.0,), numticks=100)
             locmin = mpl.ticker.LogLocator(base=10.0, subs=(1.0,), numticks=100)
@@ -133,7 +153,7 @@ class BasePlot:
         self.zorder += 1
 
     def on_click(self, event):
-        if event.button == 3: # right click
+        if event.button == 3:  # right click
             print(
                 "Right click: x=%d, y=%d, xdata=%.3g, ydata=%.3g"
                 % (
@@ -173,7 +193,13 @@ class BasePlot:
             self.dragged.set_position(new_pos)
             if self.anchor_point is not None:
                 self.anchor_point.remove()
-            self.anchor_point = self.plot.scatter(self.dragged.get_position()[0], self.dragged.get_position()[1], s=5, color="red", alpha=0.5)
+            self.anchor_point = self.plot.scatter(
+                self.dragged.get_position()[0],
+                self.dragged.get_position()[1],
+                s=5,
+                color="red",
+                alpha=0.5,
+            )
             print(
                 "%s, %.3g, %.3g, size=%d, rotation=%d"
                 % (
@@ -183,7 +209,11 @@ class BasePlot:
                     self.dragged.get_fontsize(),
                     self.dragged.get_rotation(),
                 ),
-                ", rotation_mode=" + self.dragged.get_rotation_mode() if self.dragged.get_rotation() != 0 else ""
+                (
+                    ", rotation_mode=" + self.dragged.get_rotation_mode()
+                    if self.dragged.get_rotation() != 0
+                    else ""
+                ),
             )
             self.dragged = None
             plt.draw()

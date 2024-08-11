@@ -86,7 +86,7 @@ class AxionGagPlot:
 
     def ShowPlot(self):
         self.baseplot.ShowPlot()
-        
+
     def PlotData(self, data):
         print("Plotting data:")
         for row in data:
