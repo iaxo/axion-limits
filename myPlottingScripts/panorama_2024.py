@@ -114,5 +114,6 @@ axionplot = AxionGagPlot(
     xmax = 10,
     ticksopt_x = "normal",
     ticksopt_y = "normal",
+    labelfontsize = 18,
 )
 

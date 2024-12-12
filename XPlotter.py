@@ -52,7 +52,7 @@ class BasePlot:
         x_max=1.0e9,
         ticksopt_x="normal",
         ticksopt_y="normal",
-        labelfontsize=18,
+        labelfontsize=14,
         tickformatter_x=custom_formatter,
         tickformatter_y=custom_formatter,
     ):

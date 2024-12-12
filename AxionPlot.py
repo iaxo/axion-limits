@@ -46,6 +46,7 @@ class AxionGagPlot:
         tickformatter_y=custom_formatter,
         labelx="$m_a$ (eV)",
         labely=r"$|g_{a\gamma}|$ (GeV$^{-1}$)",
+        labelfontsize=14,
     ):
         # plot the background
         self.baseplot = BasePlot(
@@ -59,6 +60,7 @@ class AxionGagPlot:
             x_max=xmax,
             ticksopt_x=ticksopt_x,
             ticksopt_y=ticksopt_y,
+            labelfontsize=labelfontsize,
             tickformatter_x=tickformatter_x,
             tickformatter_y=tickformatter_y,
         )
