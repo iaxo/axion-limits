@@ -6,7 +6,7 @@ from AxionPlot import *
 # --- LOAD THE DATABASE ---
 
 database = db.DataBaseGag(
-    "/home/cristina/GitHub/axion-limits/databases/Axions.db", "AxionsGag"
+    "databases/Axions.db", "AxionsGag"
 )  # the second parameter is the table name inside the database, see DataBaseClass.py for more info
 
 """
