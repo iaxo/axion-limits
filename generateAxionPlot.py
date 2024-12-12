@@ -21,7 +21,8 @@ database.update_row("exp_name", "drawOptions", "color='blue', linewidth=1")
 experimentsToPlot = [
     "qcdband",
     "ksvz",
-    "CAST",
+    #"CAST",
+    "CAST2021",
 ]
 exps = database.get_rows(
     "name", experimentsToPlot
@@ -39,5 +40,6 @@ axionplot = AxionGagPlot(
     labels=labels,
     plotCag=False,  # set to true to plot C_ag instead of g_ag
     showplot=True,  # set to false to add the labels later
+    saveplotname="test.pdf",
 )
 

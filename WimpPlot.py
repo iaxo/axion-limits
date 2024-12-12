@@ -28,6 +28,7 @@ class WimpPlot:
         tickformatter_y=custom_formatter,
         labelx=r"WIMP mass [GeV/c$^{2}$]",
         labely=r"SI WIMP-nucleon cross section $\sigma_{\chi n}^\mathrm{SI}$ [cm$^{2}$]",
+        labelfontsize=14,
         **excludedRegionOptions,  # color, alpha, lw, zorder, etc.
     ):
         # plot the background
@@ -42,6 +43,7 @@ class WimpPlot:
             x_max=xmax,
             ticksopt_x=ticksopt_x,
             ticksopt_y=ticksopt_y,
+            labelfontsize=labelfontsize,
             tickformatter_x=tickformatter_x,
             tickformatter_y=tickformatter_y,
         )

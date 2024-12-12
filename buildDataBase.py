@@ -111,7 +111,8 @@ AxionsGag = [
     ['HBalpbound_l', 'line', path + 'HBalpbound.txt', "color='blue', linewidth=0.5", 0, '', '', 0, 0, 0, 0, 1, 0, 0, 0],
     ['solar_nu', 'band', path + 'ALPSun_nu.txt', "facecolor='steelblue', edgecolor='blue', linewidth=0.5", 0, 'Raffelt & Gondolo', '2008', 0, 0, 0, 0, 1, 0, 0, 0],
     # STELLAR - HELIOSCOPES
-    ['CAST', 'band', path + 'cast_env_2016.dat', "facecolor='deepskyblue', edgecolor='blue', linewidth=0.5", 0, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
+    ['CAST', 'band', path + 'cast_env_2016.dat', "facecolor='deepskyblue', edgecolor='blue', linewidth=0.5", 0, '10.1038/nphys4109', '2017', 0, 0, 0, 0, 1, 1, 0, 0], #Up to Nature paper (2017)
+    ['CAST2021', 'band', path + 'CAST_2019_2021_PRL.txt', "facecolor='deepskyblue', edgecolor='blue', linewidth=0.5", 0, '10.1103/PhysRevLett.133.221005', '2024', 0, 0, 0, 0, 1, 1, 0, 0], #Legacy results of all the data up to 2021.
     # STELLAR - HELIOSCOPES - PROJECTIONS
     ['BabyIAXO', 'band', path + 'miniIAXO.dat', "facecolor='deepskyblue', linewidth=0.5, alpha=0.1, linestyle='-'", 1, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
     ['IAXO', 'band', path + 'IAXO_nominal.txt', "facecolor='deepskyblue', linewidth=0.5, alpha=0.1, linestyle='-'", 1, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
