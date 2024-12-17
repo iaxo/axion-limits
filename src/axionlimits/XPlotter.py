@@ -16,8 +16,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from .utils import resolve_relative_path, get_absolute_path
 from .utils import is_latex_installed, latex_to_plain_text
-PATH_FIGURE_FOLDER = "./plots/"
-
 
 def custom_formatter(x, pos):
     """Custom formatter for the x and y axis
@@ -281,8 +279,7 @@ class BasePlot:
             self.anchor_point.remove()
             self.anchor_point = None
 
-        filename = PATH_FIGURE_FOLDER + plotname
-
+        filename = plotname
         extensions = [".pdf", ".png", ".svg", ".pickle"]
         # if it does not end with any of this extensions add .pdf as default extension
         if not any(plotname.endswith(ext) for ext in extensions):
@@ -294,13 +291,7 @@ class BasePlot:
             print("Saving figure as " + filename)
             return
 
-        try:
-            self.fig.savefig(filename, bbox_inches="tight")
-        except FileNotFoundError:
-            # if PATH_FIGURE_FOLDER was already added to plotname
-            # or plotname included the path to another folder
-            filename = filename.replace(PATH_FIGURE_FOLDER, "")
-            self.fig.savefig(filename, bbox_inches="tight")
+        self.fig.savefig(filename, bbox_inches="tight")
         print("Saving figure as " + filename)
 
 
