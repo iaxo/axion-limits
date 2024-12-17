@@ -14,7 +14,8 @@ import pickle
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
-
+from .utils import resolve_relative_path, get_absolute_path
+from .utils import is_latex_installed, latex_to_plain_text
 PATH_FIGURE_FOLDER = "./plots/"
 
 
@@ -316,13 +317,13 @@ class ExPltItem:
     def __init__(self, name, typeitem, filename, **kwargs):
         self.name = name
         self.typeitem = typeitem
-        self.filename = filename
+        self.filename = get_absolute_path(filename, 'axionlimits')
         self.drawopt = kwargs
         if typeitem not in ["band", "region", "line", "fog"]:
             print("ERROR: unknown plot item " + typeitem)
         self.data = []
         try:
-            self.data = np.loadtxt(filename)
+            self.data = np.loadtxt(self.filename)
         except ValueError:
             delimiters = [" ", ",", ";"]
             for dlmt in delimiters:
@@ -338,7 +339,8 @@ class ExPltItem:
                     + ". Check the delimiter is within:",
                     delimiters,
                 )
-                exit()
+                raise ValueError
+
         # self.data = loadtxt(filename)
 
     def DrawItem(self, plot):
