@@ -328,7 +328,7 @@ class ExPltItem:
             delimiters = [" ", ",", ";"]
             for dlmt in delimiters:
                 try:
-                    self.data = np.loadtxt(filename, delimiter=dlmt)
+                    self.data = np.loadtxt(self.filename, delimiter=dlmt)
                     break
                 except ValueError:
                     pass
