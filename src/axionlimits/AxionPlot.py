@@ -1,19 +1,7 @@
 from __future__ import annotations
 
-from .XPlotter import *
-
-def extract_kwargs(arguments_str):
-    """Extracts kwargs from a string of arguments.
-    Example: extract_kwargs("a=1, b=2, c=3") returns {'a':1, 'b':2, 'c':3}
-             extract_kwargs("a=1, b="red", c=3,") returns {'a':1, 'b':'red', 'c':3}"""
-    kwargs = {}
-    for arg in arguments_str.split(","):
-        if arg.strip() != "":
-            key, value = arg.split("=")
-            kwargs[key.strip()] = eval(value.strip())
-    return kwargs
-
-
+from .XPlotter import BasePlot, ExPltItem
+from .utils import extract_kwargs, custom_formatter
 # ==============================================================================#
 # renormalize data, to plot C_ag instead of g_ag
 #

@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import numpy as np
 from scipy.interpolate import interp1d
-from .AxionPlot import extract_kwargs
-from .XPlotter import *
+from .XPlotter import BasePlot, ExPltItem
+from .utils import extract_kwargs, custom_formatter
 
 
 # ==============================================================================#

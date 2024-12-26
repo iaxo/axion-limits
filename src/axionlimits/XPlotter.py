@@ -17,18 +17,7 @@ import numpy as np
 from abc import ABC, abstractmethod
 from .utils import resolve_relative_path, get_absolute_path
 from .utils import is_latex_installed, latex_to_plain_text
-
-def custom_formatter(x, pos):
-    """Custom formatter for the x and y axis
-    It will format the axis in scientific notation,
-    except for the values 0.1, 1 and 10.
-    """
-    # Check if x is one of the values you want to format differently
-    if x in [0.1, 1, 10]:
-        return f"{x:g}"
-    else:
-        # For other values, use scientific notation
-        return rf"$10^{{{np.log10(x):.0f}}}$"
+from .utils import extract_kwargs, custom_formatter
 
 
 # ==============================================================================#
