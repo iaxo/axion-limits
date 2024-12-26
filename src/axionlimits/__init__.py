@@ -1,3 +1,3 @@
-from . import Database
-from . import AxionPlot
-from . import WimpPlot
+from . import databases
+from . import axion_plot
+from . import wimp_plot

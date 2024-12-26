@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 from scipy.interpolate import interp1d
-from .XPlotter import BasePlot, ExPltItem
+from .x_plotter import BasePlot, ExPltItem
 from .utils import extract_kwargs, custom_formatter
 
 

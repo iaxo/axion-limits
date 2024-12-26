@@ -1,5 +1,5 @@
-import axionlimits.Database as db
-from axionlimits.AxionPlot import AxionGagPlot
+import axionlimits.databases as db
+from axionlimits.axion_plot import AxionGagPlot
 
 # --- LOAD THE DATABASE ---
 

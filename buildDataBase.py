@@ -1,4 +1,4 @@
-import axionlimits.Database as db
+import axionlimits.databases as db
 
 FILE_DATABASE = "data/Axions.db"
 

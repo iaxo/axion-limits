@@ -1,5 +1,5 @@
-import axionlimits.Database as db
-from axionlimits.WimpPlot import WimpPlot
+import axionlimits.databases as db
+from axionlimits.wimp_plot import WimpPlot
 
 # --- LOAD THE DATABASE ---
 
