@@ -19,6 +19,7 @@ dependencies = [
     "matplotlib",
     "numpy",
     "scipy",
+    "pylatexenc",
 ]
 dynamic = [
     "version"
