@@ -14,6 +14,7 @@ import pickle
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
+from abc import ABC, abstractmethod
 from .utils import resolve_relative_path, get_absolute_path
 from .utils import is_latex_installed, latex_to_plain_text
 
@@ -34,13 +35,14 @@ def custom_formatter(x, pos):
 # == class representing a generic sensitivity plot
 # ==============================================================================#
 # ==============================================================================#
-class BasePlot:
+class BasePlot(ABC):
     """Base class to host a generic sensitivity plot"""
 
     # ==============================================================================#
     # the class is initialized with info on the limits, axis, etc
     def __init__(
         self,
+        saveplotname=None,
         xlab="x axis",
         ylab="y axis",
         figsizex=6.5,
@@ -130,6 +132,7 @@ class BasePlot:
 
         self.dragged = None  # store the dragged text object
         self.anchor_point = None  # store the anchor point of the dragged text object
+        self.saveplotname = saveplotname
 
     # ==============================================================================#
     # will draw a new exclusion line to the plot, no to be filled
@@ -150,6 +153,26 @@ class BasePlot:
         if typeitem == "fog":
             self.plot.fill_between(data[:, 0], data[:, 1], y2=y_bottom / 10, **kwargs)
         self.zorder += 1
+
+    def PlotLabels(self, labels: list):
+        print("Plotting labels:")
+        for label in labels:
+            kwargs = {}
+            if type(label[3]) == str:
+                kwargs = extract_kwargs(label[3])
+            elif type(label[3]) == dict:
+                kwargs = label[3]
+            # if "picker" not in kwargs:
+            #   kwargs["picker"] = True
+            text = label[0]
+            if not self._uselatex:
+                text = latex_to_plain_text(label[0])
+            print("->", text, label[1], label[2], kwargs)
+            self.plot.text(x=label[1], y=label[2], s=text, **kwargs)
+    
+    @abstractmethod
+    def PlotData(self, data: list):
+        pass
 
     def on_click(self, event):
         if event.button == 3:  # right click
@@ -274,15 +297,20 @@ class BasePlot:
     # ==============================================================================#
     # saves the plot on a file
     #
-    def SavePlot(self, plotname):
+    def SavePlot(self, plot_name=""):
+        if plot_name != "":
+            self.saveplotname = plot_name
+        if self.saveplotname is None or self.saveplotname == "":
+            raise ValueError("No filename specified for saving the plot.")
+
         if self.anchor_point is not None:
             self.anchor_point.remove()
             self.anchor_point = None
 
-        filename = plotname
+        filename = self.saveplotname
         extensions = [".pdf", ".png", ".svg", ".pickle"]
         # if it does not end with any of this extensions add .pdf as default extension
-        if not any(plotname.endswith(ext) for ext in extensions):
+        if not any(filename.endswith(ext) for ext in extensions):
             filename = filename + ".pdf"
 
         if filename.endswith(".pickle"):
@@ -293,6 +321,7 @@ class BasePlot:
 
         self.fig.savefig(filename, bbox_inches="tight")
         print("Saving figure as " + filename)
+        self.saveplotname = filename
 
 
 # ==============================================================================#

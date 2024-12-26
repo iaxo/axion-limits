@@ -25,7 +25,7 @@ def RenormItem(item: ExPltItem):
         # C_ag = g_ag / m_a * 5.172e9
 
 
-class AxionGagPlot:
+class AxionGagPlot(BasePlot):
     def __init__(
         self,
         experiments=[],
@@ -48,7 +48,8 @@ class AxionGagPlot:
         labelfontsize=14,
     ):
         # plot the background
-        self.baseplot = BasePlot(
+        super().__init__(
+            saveplotname=saveplotname,
             xlab=labelx,
             ylab=labely,
             figsizex=figx,
@@ -76,17 +77,11 @@ class AxionGagPlot:
         print("\n")
 
         if showplot:
-            self.baseplot.ShowPlot()
+            self.ShowPlot()
 
         if type(saveplotname) == str:
             if len(saveplotname) > 0:
-                self.SavePlot()
-
-    def SavePlot(self):
-        self.baseplot.SavePlot(self.saveplotname)
-
-    def ShowPlot(self):
-        self.baseplot.ShowPlot()
+                self.SavePlot(self.saveplotname)
 
     def PlotData(self, data):
         print("Plotting data:")
@@ -101,22 +96,8 @@ class AxionGagPlot:
             )  # row[0] = name, row[1] = type, row[2] = path, row[3] = drawOptions
             if self.plotCag:
                 RenormItem(pltItem)
-            pltItem.DrawItem(self.baseplot)
+            pltItem.DrawItem(self)
             self.axionDB.append(pltItem)
-
-    def PlotLabels(self, labels: list):
-        print("Plotting labels:")
-        for label in labels:
-            kwargs = {}
-            if type(label[3]) == str:
-                kwargs = extract_kwargs(label[3])
-            elif type(label[3]) == dict:
-                kwargs = label[3]
-            # if "picker" not in kwargs:
-            #   kwargs["picker"] = True
-            print("->", label[0], label[1], label[2], kwargs)
-
-            self.baseplot.plot.text(x=label[1], y=label[2], s=label[0], **kwargs)
 
 
 """

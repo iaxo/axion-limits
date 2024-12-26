@@ -7,7 +7,7 @@ from .XPlotter import *
 
 
 # ==============================================================================#
-class WimpPlot:
+class WimpPlot(BasePlot):
 
     def __init__(
         self,
@@ -32,7 +32,8 @@ class WimpPlot:
         **excludedRegionOptions,  # color, alpha, lw, zorder, etc.
     ):
         # plot the background
-        self.baseplot = BasePlot(
+        super().__init__(
+            saveplotname=saveplotname,
             xlab=labelx,
             ylab=labely,
             figsizex=figx,
@@ -61,11 +62,11 @@ class WimpPlot:
         print("\n")
 
         if showplot:
-            self.baseplot.ShowPlot()
+            self.ShowPlot()
 
         if type(saveplotname) == str:
             if len(saveplotname) > 0:
-                self.baseplot.SavePlot(saveplotname)
+                self.SavePlot(self.saveplotname)
 
     def PlotData(self, data: list):
         print("Plotting data:")
@@ -92,22 +93,9 @@ class WimpPlot:
             pltItem = ExPltItem(
                 row[0], row[1], row[2], **kwargs
             )  # row[0] = name, row[1] = type, row[2] = path, row[3] = drawOptions
-            pltItem.DrawItem(self.baseplot)
+            pltItem.DrawItem(self)
             if not isProjection:
                 self.wimpDB.append(pltItem)
-
-    def PlotLabels(self, labels: list):
-        print("Plotting labels:")
-        for label in labels:
-            kwargs = {}
-            if type(label[3]) == str:
-                kwargs = extract_kwargs(label[3])
-            elif type(label[3]) == dict:
-                kwargs = label[3]
-            # if "picker" not in kwargs:
-            #   kwargs["picker"] = True
-            print("->", label[0], label[1], label[2], kwargs)
-            self.baseplot.plot.text(x=label[1], y=label[2], s=label[0], **kwargs)
 
     def PlotExcludedRegion(self, **kwargs):
         # if kwargs does not contain one of the following, use the default values
@@ -123,10 +111,10 @@ class WimpPlot:
         (x_excluded, y_excluded) = self.getExcludedRegion()
         if len(y_excluded) > 0:
             print("Plotting excluded region.")
-            self.baseplot.plot.fill_between(
+            self.plot.fill_between(
                 x_excluded,
                 y_excluded,
-                self.baseplot.plot.get_ylim()[1] * 10,
+                self.plot.get_ylim()[1] * 10,
                 **kwargs,
             )
 
@@ -136,7 +124,7 @@ class WimpPlot:
             print("Error: no available data for computing the excluded region.")
             return ([], [])
 
-        xlim = self.baseplot.plot.get_xlim()
+        xlim = self.plot.get_xlim()
         x_val_arr = np.logspace(
             start=np.log10(xlim[0]), stop=np.log10(xlim[1]), num=1000
         )
