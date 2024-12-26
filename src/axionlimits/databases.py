@@ -107,7 +107,7 @@ class DataBaseGag(DataBase):
     def __init__(
         self, file_database="Axions.db", name: str = "AxionsGag", commit: bool = False
     ):
-        DataBase.__init__(self, file_database, name, commit)
+        super().__init__(file_database, name, commit)
 
         self.cursor.execute(
             f"""CREATE TABLE IF NOT EXISTS {self.name} (
@@ -195,7 +195,7 @@ class DataBaseGae(DataBase):
     def __init__(
         self, file_database="Axions.db", name: str = "AxionsGae", commit: bool = False
     ):
-        DataBase.__init__(self, file_database, name, commit)
+        super().__init__(file_database, name, commit)
 
         self.cursor.execute(
             f"""CREATE TABLE IF NOT EXISTS {self.name} (
@@ -244,7 +244,7 @@ class DataBaseWimps(DataBase):
     def __init__(
         self, file_database="Wimps.db", name: str = "Wimps_SI", commit: bool = False
     ):
-        DataBase.__init__(self, file_database, name, commit)
+        super().__init__(file_database, name, commit)
 
         self.cursor.execute(
             f"""CREATE TABLE IF NOT EXISTS {self.name} (
