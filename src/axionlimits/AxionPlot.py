@@ -2,16 +2,16 @@ from __future__ import annotations
 
 from .XPlotter import BasePlot, ExPltItem
 from .utils import extract_kwargs, custom_formatter
+
 # ==============================================================================#
 # renormalize data, to plot C_ag instead of g_ag
 #
-def RenormItem(item: ExPltItem):
+def renorm_item(item: ExPltItem):
     for i in range(len(item.data)):
         # print(item.name)
         item.data[i, 1] = item.data[i, 1] / item.data[i, 0] * 5.172e9
         # print(item.data[i,0],item.data[i,1])
         # C_ag = g_ag / m_a * 5.172e9
-
 
 class AxionGagPlot(BasePlot):
     def __init__(
@@ -59,19 +59,19 @@ class AxionGagPlot(BasePlot):
 
         # Plotting Data
         print("\n")
-        self.PlotData(experiments)
+        self.plot_data(experiments)
         print("\n")
-        self.PlotLabels(labels)
+        self.plot_labels(labels)
         print("\n")
 
         if showplot:
-            self.ShowPlot()
+            self.show_plot()
 
         if type(saveplotname) == str:
             if len(saveplotname) > 0:
                 self.SavePlot(self.saveplotname)
 
-    def PlotData(self, data):
+    def plot_data(self, data):
         print("Plotting data:")
         for row in data:
             kwargs = {}
@@ -83,8 +83,8 @@ class AxionGagPlot(BasePlot):
                 row[0], row[1], row[2], **kwargs
             )  # row[0] = name, row[1] = type, row[2] = path, row[3] = drawOptions
             if self.plotCag:
-                RenormItem(pltItem)
-            pltItem.DrawItem(self)
+                renorm_item(pltItem)
+            pltItem.draw_item(self)
             self.axionDB.append(pltItem)
 
 

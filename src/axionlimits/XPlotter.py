@@ -129,7 +129,7 @@ class BasePlot(ABC):
     # ==============================================================================#
     # will draw a new exclusion line to the plot, no to be filled
     #
-    def AddPlotItem(self, typeitem, linename, data, **kwargs):
+    def add_plot_item(self, typeitem, linename, data, **kwargs):
         y_top = self.plot.get_ylim()[1]
         y_bottom = self.plot.get_ylim()[0]
         kwargs["zorder"] = self.zorder
@@ -146,7 +146,7 @@ class BasePlot(ABC):
             self.plot.fill_between(data[:, 0], data[:, 1], y2=y_bottom / 10, **kwargs)
         self.zorder += 1
 
-    def PlotLabels(self, labels: list):
+    def plot_labels(self, labels: list):
         print("Plotting labels:")
         for label in labels:
             kwargs = {}
@@ -163,7 +163,7 @@ class BasePlot(ABC):
             self.plot.text(x=label[1], y=label[2], s=text, **kwargs)
     
     @abstractmethod
-    def PlotData(self, data: list):
+    def plot_data(self, data: list):
         pass
 
     def on_click(self, event):
@@ -269,7 +269,7 @@ class BasePlot(ABC):
     # ==============================================================================#
     # switch to interactive mode and shows the plot on screen
     #
-    def ShowPlot(self):
+    def show_plot(self):
         cid_rclick = self.fig.canvas.mpl_connect("button_press_event", self.on_click)
         cid_pick = self.fig.canvas.mpl_connect("pick_event", self.on_pick)
         cid_release = self.fig.canvas.mpl_connect(
@@ -355,9 +355,9 @@ class ExPltItem:
 
         # self.data = loadtxt(filename)
 
-    def DrawItem(self, plot):
+    def draw_item(self, plot):
         print("->", self.name, self.filename, self.drawopt)
-        plot.AddPlotItem(self.typeitem, self.name, self.data, **self.drawopt)
+        plot.add_plot_item(self.typeitem, self.name, self.data, **self.drawopt)
 
 
 # ==============================================================================#

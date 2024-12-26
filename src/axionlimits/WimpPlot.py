@@ -54,21 +54,21 @@ class WimpPlot(BasePlot):
 
         # Plotting Data
         print("\n")
-        self.PlotData(experiments)
+        self.plot_data(experiments)
         if excludedRegion:
-            self.PlotExcludedRegion(**excludedRegionOptions)
+            self.plot_excluded_region(**excludedRegionOptions)
         print("\n")
-        self.PlotLabels(labels)
+        self.plot_labels(labels)
         print("\n")
 
         if showplot:
-            self.ShowPlot()
+            self.show_plot()
 
         if type(saveplotname) == str:
             if len(saveplotname) > 0:
                 self.SavePlot(self.saveplotname)
 
-    def PlotData(self, data: list):
+    def plot_data(self, data: list):
         print("Plotting data:")
         for row in data:
             kwargs = {}
@@ -93,11 +93,11 @@ class WimpPlot(BasePlot):
             pltItem = ExPltItem(
                 row[0], row[1], row[2], **kwargs
             )  # row[0] = name, row[1] = type, row[2] = path, row[3] = drawOptions
-            pltItem.DrawItem(self)
+            pltItem.draw_item(self)
             if not isProjection:
                 self.wimpDB.append(pltItem)
 
-    def PlotExcludedRegion(self, **kwargs):
+    def plot_excluded_region(self, **kwargs):
         # if kwargs does not contain one of the following, use the default values
         if "color" not in kwargs:
             kwargs["color"] = "#aaffc3"
@@ -108,7 +108,7 @@ class WimpPlot(BasePlot):
         if "zorder" not in kwargs:
             kwargs["zorder"] = -101
 
-        (x_excluded, y_excluded) = self.getExcludedRegion()
+        (x_excluded, y_excluded) = self.get_excluded_region()
         if len(y_excluded) > 0:
             print("Plotting excluded region.")
             self.plot.fill_between(
@@ -119,7 +119,7 @@ class WimpPlot(BasePlot):
             )
 
     ## -------- CALCULATE THE EXCLUDED PARAMETER SPACE --------
-    def getExcludedRegion(self):
+    def get_excluded_region(self):
         if len(self.wimpDB) <= 0:
             print("Error: no available data for computing the excluded region.")
             return ([], [])
