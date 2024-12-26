@@ -1,6 +1,16 @@
+import shutil
 import os
 import numpy as np
 from importlib.resources import files
+from pylatexenc.latex2text import LatexNodes2Text
+
+def latex_to_plain_text(latex_string):
+    converter = LatexNodes2Text()
+    return converter.latex_to_text(latex_string)
+
+def is_latex_installed():
+    """Verify if LaTeX is installed in the system."""
+    return shutil.which("latex") is not None
 
 def resolve_relative_path(relative_path, package_route='axionlimits.data'):
     """

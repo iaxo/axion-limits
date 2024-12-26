@@ -46,9 +46,12 @@ class BasePlot(ABC):
         tickformatter_x=custom_formatter,
         tickformatter_y=custom_formatter,
     ):
-        plt.rc("text", usetex=True)
-        # plt.rc("font", family="times", size=labelfontsize)
-        plt.rc("font", family="serif", serif="cm", size=labelfontsize)
+        self._uselatex = is_latex_installed()
+        if self._uselatex:
+            plt.rc("text", usetex=True)
+            plt.rc("font", family="serif", size=labelfontsize)
+            plt.rc("font", family="serif", serif="cm", size=labelfontsize)
+            
         self.fig = plt.figure(figsize=(figsizex, figsizey))
         self.plot = self.fig.add_subplot(111)
 
