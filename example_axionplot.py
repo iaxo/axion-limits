@@ -3,9 +3,7 @@ from axionlimits.AxionPlot import AxionGagPlot
 
 # --- LOAD THE DATABASE ---
 
-database = db.DataBaseGag(
-    "Axions.db", "AxionsGag"
-)  # the second parameter is the table name inside the database, see DataBaseClass.py for more info
+database = db.DataBaseGag()  # the second parameter is the table name inside the database, see DataBaseClass.py for more info
 
 """
 # Here you can edit the database if you want.

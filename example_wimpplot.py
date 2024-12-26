@@ -3,9 +3,7 @@ from axionlimits.WimpPlot import WimpPlot
 
 # --- LOAD THE DATABASE ---
 
-database = db.DataBaseGag(
-    "data/Wimps.db", "Wimps_SI"
-)  # the second parameter is the table name inside the database, see DataBaseClass.py for more info
+database = db.DataBaseWimps()  # the second parameter is the table name inside the database, see DataBaseClass.py for more info
 
 """
 # Here you can edit the database if you want.
