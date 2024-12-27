@@ -24,10 +24,10 @@ Install the axionlimits package
 pip install .
 ```
 > [!NOTE]
-> These steps will not install the necessary LaTeX distribution to plot with LaTeX font. If LaTeX is not installed in the system (this is checked on run time), the default matplotlib font will be used.
+> These steps will not install the necessary _LaTeX_ distribution to plot with LaTeX font. If LaTeX is not installed in the system (this is checked on run time), the default matplotlib font will be used.
 
 >[!TIP]
-> To install latex in Linux:
+> To install LaTeX in Linux:
 > ```
 > sudo apt install texlive-full
 > ```
@@ -35,22 +35,22 @@ pip install .
 
 
 # Getting Started
-The files example_axionplot.py and example_wimpplot.py are given as examples on how to generate this sensitivity plots. You can do this by executing any of this scripts (let´s take the axion case)
+The files example_axionplot.py and example_wimpplot.py are given as examples on how to generate this sensitivity plots. You can do this by executing any of this scripts. Let's take the axion case.
 
 ```
 python3 example_axionplot.py
 ```
 
-Inside this script you can find how to use this package. The different dark matter detection experiment are organize in SQL databases. For now, we have one database for [axion](data/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](data/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). In order to load the desired database you may use the correspondent DataBase class defined in [databases.py](src/axionlimits/databases.py). In this case,
+Inside this script you can find how to generate an exclusion plot with this package. The different exclusion lines are organize in SQL databases. For now, we have one database for [axion](data/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](data/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). In order to load the desired database you may use the correspondent DataBase class defined in [databases.py](src/axionlimits/databases.py). In this case,
 
 ```
 import axionlimits.databases as db
 from axionlimits.axion_plot import AxionGagPlot
 
-# The first parameter is the path to the .db file and second parameter is the name of the database table inside that .db file.
-database = db.DataBaseGag("data/Axions.db", "AxionsGag")
+# Load the default axion-photon coupling exclusion lines database of the package
+database = db.DataBaseGag()
 ```
-Then, write a list with the experiments name (matching the name column of the database) you want to include in the plot. **Note that the order in which the experiments are added to this list will be the order in which they are plotted**, so the last experiments added will be drawn on top of the firsts experiments added to the database.
+Then, write a list with the experiments name (matching the name column of the database) you want to include in the plot. 
 ```
 experimentsToPlot = [
     "qcdband",
@@ -58,25 +58,31 @@ experimentsToPlot = [
     "CAST",
 ]
 ```
+> [!NOTE]
+> Note that the order in which the experiments are added to this list will be the order in which they are plotted, so the last experiments added will be drawn on top of the first ones.
+
 Now, extract this rows (the _get_rows(field, values)_ method return the rows in the same order in which they are given in the values argument) from the database as follows:
 ```
 exps = database.get_rows("name", experimentsToPlot)
 ```
-You may now include some labels. In order to do that, you could build a list where each element will be a label to plot. Each os these elements (labels) should be a tuple (or list) containing at least a string with the text of the label (LaTeX formatting is available), the x position and y position. Optionally, a 4th element can be given containing a dictionary with the matplotlib.pyplot.text() keyword arguments to customize the text label as you want. For example,
+You may now include some labels. In order to do that, you can build a list where each element will be a label to plot. Each os these elements (labels) should be a tuple (or list) containing at least a string with the text of the label (LaTeX formatting is available), the x position and y position. Optionally, a 4th element can be given containing a dictionary with the [matplotlib.pyplot.text()](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.text.html) keyword arguments to customize the text label as you want. For example,
 ```
 labels = [
     (r"{\bf Helioscopes (CAST)}", 1e-8, 2e-10, dict(color="black", size=10, picker=True)),
     ("KSVZ", 3e-4, 21e-14, dict( color="black", size=6, rotation=47)),
 ]
 ```
-The text labels with the parameter `picker` set to true (see "Helioscopes (CAST)" label in the example above) can be modified interactively within the pyplot figure. There are three options:
-* Move to a different position by clicking on the label and dragging it. The label will change the position when the click is released.
-* Increase or decrease the font size by scrolling the mouse roulette while holding the click on the text label or while keeping pressed the `ctrl` key.
-* Rotate the label by pressing the keys `+` (anticlockwise) or `-` (clockwise) while holding the click on the text label.
-
-After picking a text label, the anchor point of the text will be drawn as a red dot. _Note that the anchor point varies depending on the [text alignment](https://matplotlib.org/stable/gallery/text_labels_and_annotations/text_alignment.html)._ This serves as a reference of the text position. If you want to rotate or resize the text but don't want to move its position, hold the click on the anchor point. When saving the image don't worry about it, as the anchor point will be automatically deleted. Anyways, you can manually remove it using the right click.
-
-Note that these changes on the text labels will be printed in the final graph image but it will not be recorded in the script, so the graph will not be reproducible. For that purpose, the values of the label position, fontsize and rotation (and rotation mode) will be printed in the output terminal so you can copy these values and change them manually on the script.
+> [!TIP]
+> The text labels with the parameter `picker` set to true (see "Helioscopes (CAST)" label in the example above) can be modified interactively within the pyplot figure. There are three options:
+> * Move to a different position by clicking on the label and dragging it. The label will change the position when the click is released.
+> * Increase or decrease the font size by scrolling the mouse roulette while holding the click on the text label or while keeping pressed the `ctrl` key.
+> * Rotate the label by pressing the keys `+` (anticlockwise) or `-` (clockwise) while holding the click on the text label.
+>
+> After picking a text label, the anchor point of the text will be drawn as a red dot. This serves as a reference of the text position. Note that the anchor point varies depending on the [text alignment](https://matplotlib.org/stable/gallery/text_labels_and_annotations/text_alignment.html).
+> 
+> If you want to rotate or resize the text but don't want to move its position, hold the click on the anchor point. When saving the image don't worry about it, as the anchor point will be automatically deleted. Anyways, you can manually remove it using the right click.
+> 
+> Note that these changes on the text labels will be printed in the final graph image but it will not be recorded in the script, so the graph will not be reproducible. For that purpose, the values of the label position, fontsize and rotation (and rotation mode) will be printed in the output terminal so you can copy these values and change them manually on the script.
 
 Finally, call the AxionPlot constructor to generate the plot.
 ```
@@ -89,8 +95,9 @@ axionplot = AxionGagPlot(
 )
 ```
 Use the parameter `experiments` and `labels` to pass the previously defined data and labels. If a string is given to the `saveplotname`, it will save the plot in a file with that name (default extension will be pdf if none is given within the filename). You can check other useful customization arguments at [axion_plot.py](src/axionlimits/axion_plot.py).
+> [!TIP]
+> You may add now any additional matplotlib.pyplot object (such as lines or text) or further customize the figure. Just set the parameter `showplot=False` above and insert the desired plotting objects and customizations. Afterwards, remember to call the `show_plot` and `save_plot` methods. Check out this [example](myPlottingScripts/haloscope_zoom_Jun2024.py) for reference.
 
-## More complex examples
 Inside [myPlottingScripts](myPlottingScripts) folder you can find real examples of scripts used to generate the figures inside [plots](plots) folder.
 
 # Project contents
@@ -153,7 +160,7 @@ The different dark matter detection experiment are organize in SQL databases. Fo
 7. **_year_** : string containing the year of release of the data. For example: _2019_
 
 
-Furthermore, the different DM candidates databases have more specific additional columns. In order to create the desired database you may use the correspondent database class defined in [databases.py](src/axionlimits/databases.py). If the database file (.db) is already built and you don't want to add any new row, you may just use the base class DataBase.
+Furthermore, the different DM candidates databases have more specific additional columns. In order to create the desired database you may use the correspondent database class defined in [databases.py](src/axionlimits/databases.py).
 ## Loading a database
 
 To load the desired database use the constructor of the classes DataBaseGag (for
@@ -176,8 +183,8 @@ database.set_commit(True) # to commit the changes to the .db file
 database.insert_row("exp_name", "line", "path_to_datafile", "color='red', linewidth=2", 0, 'source?', 'year?', 0, 0, 0, 0, 0, 0, 0, 0)
 database.set_commit(False) # go back to default mode (not committing changes to the .db file)
 ```
-
-If you do so, please consider adding this experiment in the python script [buildDataBase.py](buildDataBase.py) as this file serves as backup for generating the databases in case they are unintentionally changed or deleted.
+> [!IMPORTANT]
+> If you do so, please consider adding this experiment in the python script [buildDataBase.py](buildDataBase.py) as this file serves as backup for generating the databases in case they are unintentionally changed or deleted.
 
 ## Editing existing row of the database
 You may want to change temporary the column value of an existing row. In that case you can load the database with the default parameter commit=False. Then, you can change the drawOptions of a row as follows:
