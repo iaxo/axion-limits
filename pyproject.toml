@@ -9,7 +9,7 @@ build-backend = "hatchling.build"
 name = "axionlimits"
 description = "A Python library for generating axion sensitivity plots."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
