@@ -23,19 +23,29 @@ Install the axionlimits package
 ```
 pip install .
 ```
+> [!NOTE]
+> These steps will not install the necessary LaTeX distribution to plot with LaTeX font. If LaTeX is not installed in the system (this is checked on run time), the default matplotlib font will be used.
+
+>[!TIP]
+> To install latex in Linux:
+> ```
+> sudo apt install texlive-full
+> ```
+> and get some coffee :coffee:, as this may take some time...
+
 
 # Getting Started
-The files generateAxionPlot.py and generateWimpPlot.py are given as examples on how to generate this sensitivity plots. You can do this by executing any of this scripts (let´s take the axion case)
+The files example_axionplot.py and example_wimpplot.py are given as examples on how to generate this sensitivity plots. You can do this by executing any of this scripts (let´s take the axion case)
 
 ```
-python3 generateAxionPlot.py
+python3 example_axionplot.py
 ```
 
-Inside this script you can find how to use this package. The different dark matter detection experiment are organize in SQL databases. For now, we have one database for [axion](data/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](data/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). In order to load the desired database you may use the correspondent DataBase class defined in [Database.py](src/axionlimits/Database.py). In this case,
+Inside this script you can find how to use this package. The different dark matter detection experiment are organize in SQL databases. For now, we have one database for [axion](data/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](data/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). In order to load the desired database you may use the correspondent DataBase class defined in [databases.py](src/axionlimits/databases.py). In this case,
 
 ```
-import axionlimits.Database as db
-from axionlimits.AxionPlot import AxionGagPlot
+import axionlimits.databases as db
+from axionlimits.axion_plot import AxionGagPlot
 
 # The first parameter is the path to the .db file and second parameter is the name of the database table inside that .db file.
 database = db.DataBaseGag("data/Axions.db", "AxionsGag")
@@ -78,7 +88,7 @@ axionplot = AxionGagPlot(
     saveplotname="test.pdf",
 )
 ```
-Use the parameter `experiments` and `labels` to pass the previously defined data and labels. If a string is given to the `saveplotname`, it will save the plot in a file with that name (default extension will be pdf if none is given within the filename). You can check other useful customization arguments at [AxionPlot.py](src/axionlimits/AxionPlot.py).
+Use the parameter `experiments` and `labels` to pass the previously defined data and labels. If a string is given to the `saveplotname`, it will save the plot in a file with that name (default extension will be pdf if none is given within the filename). You can check other useful customization arguments at [axion_plot.py](src/axionlimits/axion_plot.py).
 
 ## More complex examples
 Inside [myPlottingScripts](myPlottingScripts) folder you can find real examples of scripts used to generate the figures inside [plots](plots) folder.
@@ -87,13 +97,13 @@ Inside [myPlottingScripts](myPlottingScripts) folder you can find real examples 
 ### Source files
 The main files where the code is written are in the [src](src/axionlimits) folder. The code contains the following modules
 
-1. XPlotter.py : the matplotlib.pyplot objects creation and configuration are
+1. x_plotter.py : the matplotlib.pyplot objects creation and configuration are
    handled within the two classes (BasePlot and ExPltItem) defined in this file
-2. AxionPlot.py : the creation of the BasePlot for the two cases (AxionGagPlot
+2. axion_plot.py : the creation of the BasePlot for the two cases (AxionGagPlot
    and AxionGaePlot), the plotting of the data and labels are handled within
    this classes.
-3. WimpPlot.py : the creation of the BasePlot, the plotting of the data and labels are handled within this class.
-4. Database.py : Here the DataBase classes are defined to interface with
+3. wimp_plot.py : the creation of the BasePlot, the plotting of the data and labels are handled within this class.
+4. databases.py : Here the DataBase classes are defined to interface with
    the SQLite .db files. It has the following classes:
    - DataBase is the generic database class that can be used to load an already existing database.
    - DataBaseGag to create the database table of AxionGag experiments.
@@ -107,10 +117,10 @@ The files that are meant to be modified and used by the user are the following:
 1. buildDataBase.py : this is an example of the building of the database .db
    files. It also serves as backup to be able to recreate the Axions.db in case
    this one is lost or edited unintentionally.
-2. generateAxionPlot.py : this is the main file to be handled by the user to
+2. example_axionplot.py : this is the main file to be handled by the user to
    make the desired plot. Here load (and edit if you want) the database tables
    and call the corresponding AxionPlot constructor to make the plot.
-3. generateWimpPlot.py : same for WIMPs.
+3. example_wimpplot.py : same for WIMPs.
 ## Subdirectories description
 
 1. labeler : all needed files (html and java) for the labels app.
@@ -135,7 +145,7 @@ The different dark matter detection experiment are organize in SQL databases. Fo
    - _band_ : it will be plotted as an open surfarce from the line defined in the data up to the top of the figure.
    - _fog_ : it will be plotted as an open surfarce from the line defined in the data down to the bottom of the figure. For example, it is used for neutrino fog (or floor) representation on WimpPlot.
 
-   Each of this will use a different matplotlib.pyplot method (see [XPlotter](src/axionlimits/XPlotter.py)).
+   Each of this will use a different matplotlib.pyplot method (see [XPlotter](src/axionlimits/x_plotter.py)).
 3. **_path_** : string containing the relative path (from the database file directory) to the data file (.txt or .dat) where the data of that experiment is contained. This file should be inside the data/axion/ or data/wimp/ directory. For example: _axion/ADMX2018.txt_
 4. **_drawOptions_** : string containing the customization options for the plotting method of matplotlib.pyplot used (dependent on the _type_). For example: _facecolor='limegreen', edgecolor='darkgreen', lw=0.2_
 5. **_projection_** : integer (_0_ or _1_) that indicates if the data is just a prospect/projection for future results (_1_) or if it is a reported result (_0_).
@@ -143,14 +153,14 @@ The different dark matter detection experiment are organize in SQL databases. Fo
 7. **_year_** : string containing the year of release of the data. For example: _2019_
 
 
-Furthermore, the different DM candidates databases have more specific additional columns. In order to create the desired database you may use the correspondent database class defined in [Database.py](src/axionlimits/Database.py). If the database file (.db) is already built and you don't want to add any new row, you may just use the base class DataBase.
+Furthermore, the different DM candidates databases have more specific additional columns. In order to create the desired database you may use the correspondent database class defined in [databases.py](src/axionlimits/databases.py). If the database file (.db) is already built and you don't want to add any new row, you may just use the base class DataBase.
 ## Loading a database
 
 To load the desired database use the constructor of the classes DataBaseGag (for
 AxionGag experiments), DataBaseGae (for AxionGae experiments) or DataBaseWimps as follows:
 
 ```
-import axionlimits.Database as db
+import axionlimits.databases as db
 
 # Load the desired database. The first parameter is the path to the .db file and second parameter is the name of the database table inside that .db file.
 database = db.DataBaseGag("data/Axions.db", "AxionsGag") # load table AxionsGag of Gag experiments from the database file data/Axions.db
@@ -191,7 +201,7 @@ commit=True at the constructor of the databases to commit the changes to the db
 file. For a Gag exclusion plot:
 
 ```
-import axionlimits.Database as db
+import axionlimits.databases as db
 database = db.DataBaseGag("data/NewAxions.db", commit=True) # this will create (if it doesn't already exists) a table named AxionsGag (default) at data/NewAxions.db
 path = "data/axion/"
 AxionsGag = [
@@ -211,7 +221,7 @@ print(data)
 For a Gae exclusion plot:
 
 ```
-import axionlimits.Database as db
+import axionlimits.databases as db
 database = db.DataBaseGae("data/NewAxions.db", commit=True)  # this will create (if it doesn't already exists) a table named AxionsGae (default) at data/NewAxions.db
 path1 = 'data/axion/hints/'
 path2 = 'data/axion/gaegag/'
