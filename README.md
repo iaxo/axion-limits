@@ -1,7 +1,7 @@
 # IAXO axion-limits
-Project to generate the sensitivity plots of different experiments of dark matter searches. For now, it includes axion (coupling to photon and electrons) and WIMPs (spin independent interaction only) experiments, although its called 'axion-limits'.
+Python package to generate the limit exclusion plots of different experiments of dark matter searches. For now, it includes axion (coupling to photon and electrons) and WIMPs (spin independent interaction only) experiments, although its called 'axion-limits'.
 
-Some examples of this generated [plots](plots) can be found in the plots folder:
+Some examples of these generated [plots](plots) can be found in the plots folder:
 
 [<img align="center" height="275" src="plots/large_panorama.png">](plots/large_panorama.png)
 [<img align="center" height="275" src="plots/haloscopes.png">](plots/haloscopes)
@@ -12,38 +12,38 @@ This package is currently not available at PyPi, so the installation requieres t
 
 Download this github repository
 
-```
+```bash
 git clone https://github.com/iaxo/axion-limits.git
 ```
 Change directory to this repository folder
-```
+```bash
 cd axionlimits
 ```
 Install the axionlimits package
-```
+```bash
 pip install .
 ```
 > [!NOTE]
-> These steps will not install the necessary _LaTeX_ distribution to plot with LaTeX font. If LaTeX is not installed in the system (this is checked on run time), the default matplotlib font will be used.
+> These steps will not install the necessary _LaTeX_ distribution to plot with _LaTeX_ font. If _LaTeX_ is not installed in the system (this is checked on run time), the default matplotlib font will be used.
 
 >[!TIP]
-> To install LaTeX in Linux:
-> ```
+> To install _LaTeX_ in Linux:
+> ```bash
 > sudo apt install texlive-full
 > ```
 > and get some coffee :coffee:, as this may take some time...
 
 
 # Getting Started
-The files example_axionplot.py and example_wimpplot.py are given as examples on how to generate this sensitivity plots. You can do this by executing any of this scripts. Let's take the axion case.
+The files [example_axionplot.py](example_axionplot.py) and [example_wimpplot.py](example_wimpplot.py) are given as simple examples on how to generate the sensitivity plots with this package. You can do this by executing any of this scripts. Let's take the axion case.
 
-```
+```bash
 python3 example_axionplot.py
 ```
 
 Inside this script you can find how to generate an exclusion plot with this package. The different exclusion lines are organize in SQL databases. For now, we have one database for [axion](data/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](data/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). In order to load the desired database you may use the correspondent DataBase class defined in [databases.py](src/axionlimits/databases.py). In this case,
 
-```
+```python
 import axionlimits.databases as db
 from axionlimits.axion_plot import AxionGagPlot
 
@@ -51,7 +51,7 @@ from axionlimits.axion_plot import AxionGagPlot
 database = db.DataBaseGag()
 ```
 Then, write a list with the experiments name (matching the name column of the database) you want to include in the plot. 
-```
+```python
 experimentsToPlot = [
     "qcdband",
     "ksvz",
@@ -62,18 +62,18 @@ experimentsToPlot = [
 > Note that the order in which the experiments are added to this list will be the order in which they are plotted, so the last experiments added will be drawn on top of the first ones.
 
 Now, extract this rows (the _get_rows(field, values)_ method return the rows in the same order in which they are given in the values argument) from the database as follows:
-```
+```python
 exps = database.get_rows("name", experimentsToPlot)
 ```
-You may now include some labels. In order to do that, you can build a list where each element will be a label to plot. Each os these elements (labels) should be a tuple (or list) containing at least a string with the text of the label (LaTeX formatting is available), the x position and y position. Optionally, a 4th element can be given containing a dictionary with the [matplotlib.pyplot.text()](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.text.html) keyword arguments to customize the text label as you want. For example,
-```
+You may now include some labels. In order to do that, you can build a list where each element will be a label to plot. Each of these elements (labels) should be a tuple (or list) containing at least a string with the text of the label (_LaTeX_ formatting is available), the x position and y position. Optionally, a 4th element can be given containing a dictionary with the [matplotlib.pyplot.text()](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.text.html) keyword arguments to customize the text label as you want. For example,
+```python
 labels = [
     (r"{\bf Helioscopes (CAST)}", 1e-8, 2e-10, dict(color="black", size=10, picker=True)),
     ("KSVZ", 3e-4, 21e-14, dict( color="black", size=6, rotation=47)),
 ]
 ```
 > [!TIP]
-> The text labels with the parameter `picker` set to true (see "Helioscopes (CAST)" label in the example above) can be modified interactively within the pyplot figure. There are three options:
+> The text labels with the parameter `picker` set to true (see "Helioscopes (CAST)" label in the example above) can be modified interactively in the shown figure. There are three options:
 > * Move to a different position by clicking on the label and dragging it. The label will change the position when the click is released.
 > * Increase or decrease the font size by scrolling the mouse roulette while holding the click on the text label or while keeping pressed the `ctrl` key.
 > * Rotate the label by pressing the keys `+` (anticlockwise) or `-` (clockwise) while holding the click on the text label.
@@ -82,10 +82,10 @@ labels = [
 > 
 > If you want to rotate or resize the text but don't want to move its position, hold the click on the anchor point. When saving the image don't worry about it, as the anchor point will be automatically deleted. Anyways, you can manually remove it using the right click.
 > 
-> Note that these changes on the text labels will be printed in the final graph image but it will not be recorded in the script, so the graph will not be reproducible. For that purpose, the values of the label position, fontsize and rotation (and rotation mode) will be printed in the output terminal so you can copy these values and change them manually on the script.
+> Note that these changes on the text labels will be printed in the final graph image but it will not be recorded in the script, so the graph will not be reproducible. For that purpose, the values of the label position, fontsize and rotation (and rotation mode) will be printed in the output terminal so you can copy these values and change them manually on the script to keep record of the label positions.
 
 Finally, call the AxionPlot constructor to generate the plot.
-```
+```python
 axionplot = AxionGagPlot(
     experiments=exps,
     labels=labels,
@@ -96,7 +96,7 @@ axionplot = AxionGagPlot(
 ```
 Use the parameter `experiments` and `labels` to pass the previously defined data and labels. If a string is given to the `saveplotname`, it will save the plot in a file with that name (default extension will be pdf if none is given within the filename). You can check other useful customization arguments at [axion_plot.py](src/axionlimits/axion_plot.py).
 > [!TIP]
-> You may add now any additional matplotlib.pyplot object (such as lines or text) or further customize the figure. Just set the parameter `showplot=False` above and insert the desired plotting objects and customizations. Afterwards, remember to call the `show_plot` and `save_plot` methods. Check out this [example](myPlottingScripts/haloscope_zoom_Jun2024.py) for reference.
+> You can add any additional matplotlib.pyplot object (such as lines or text) or further customize the figure. Just set the parameter `showplot=False` above and insert the desired plotting objects and customizations. Afterwards, remember to call the `show_plot` and `save_plot` methods. Check out this [example](myPlottingScripts/haloscope_zoom_Jun2024.py) for reference.
 
 Inside [myPlottingScripts](myPlottingScripts) folder you can find real examples of scripts used to generate the figures inside [plots](plots) folder.
 
@@ -144,7 +144,7 @@ The files that are meant to be modified and used by the user are the following:
    helioscopes.py, haloscopes.py and lsw.py .
 
 # Handling the databases
-The different dark matter detection experiment are organize in SQL databases. For now, we have one database for [axion](data/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](data/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). Any of this table databases contain at least this first columns:
+The different dark matter detection experiment are organize in SQL databases. For now, we have one database for [axion](data/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](data/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). Any of this table databases contain at least these first columns:
 1. **_name_** : string used to identify the experiment. It should be unique (although it is not forbidden) to the data that would load, so is recommended to add some other identificative tag to the experiment name itself. For example, instead of just _ADMX_ you may use _ADMX2021_ .
 2. **_type_** : string used to specify the type of exclusion data it is. It can hold this valid values:
    - _line_ : it will be plotted as a line. In WimpPlot, it will be included by default to get the exclusion region.
@@ -161,55 +161,71 @@ The different dark matter detection experiment are organize in SQL databases. Fo
 
 
 Furthermore, the different DM candidates databases have more specific additional columns. In order to create the desired database you may use the correspondent database class defined in [databases.py](src/axionlimits/databases.py).
+
 ## Loading a database
 
-To load the desired database use the constructor of the classes DataBaseGag (for
-AxionGag experiments), DataBaseGae (for AxionGae experiments) or DataBaseWimps as follows:
+The package includes default databases installed with the source code. To load one, use any of the `DataBase` subclasses:
 
-```
+- `DataBaseGag`: Axion-photon coupling exclusion limits.
+- `DataBaseGae`: Axion-electron coupling exclusion limits.
+- `DataBaseWimps`: WIMP-nucleon spin-independent cross-section exclusion limits.
+
+Each subclass is preconfigured to load its corresponding default database.
+
+```python
 import axionlimits.databases as db
 
-# Load the desired database. The first parameter is the path to the .db file and second parameter is the name of the database table inside that .db file.
-database = db.DataBaseGag("data/Axions.db", "AxionsGag") # load table AxionsGag of Gag experiments from the database file data/Axions.db
+# Load the default axion-photon coupling database
+database_gag = db.DataBaseGag()
+
+# Load the default axion-electron coupling database
+database_gae = db.DataBaseGae()
+
+# Load the default wimp-nucleon SI cross section database
+database_wimps = db.DataBaseWimps()
 ```
+
+> [!NOTE]
+> Ensure no file with the same name as the default database exists in your current directory. Local files take precedence over package-installed files during the search (see get_absolute_path in [utils.py](src/axionlimits/utils.py)).
+
 ## Adding new data to the database
 Once loaded, you can edit the database if you want. By default, the database
 file will not be edited. To commit the changes to the db file, set parameter
-commit=True at the constructor or use the DataBase.set_commit(True) method. For
+`commit=True` at the constructor or use the DataBase.set_commit(True) method. For
 example, you can add a new row with the following command:
 
-```
+```python
 database.set_commit(True) # to commit the changes to the .db file
 database.insert_row("exp_name", "line", "path_to_datafile", "color='red', linewidth=2", 0, 'source?', 'year?', 0, 0, 0, 0, 0, 0, 0, 0)
 database.set_commit(False) # go back to default mode (not committing changes to the .db file)
 ```
 > [!IMPORTANT]
-> If you do so, please consider adding this experiment in the python script [buildDataBase.py](buildDataBase.py) as this file serves as backup for generating the databases in case they are unintentionally changed or deleted.
+> If you do so, please consider adding this new row of the database in the python script [buildDataBase.py](buildDataBase.py) as this file serves as backup for generating the databases in case they are unintentionally changed or deleted.
 
 ## Editing existing row of the database
 You may want to change temporary the column value of an existing row. In that case you can load the database with the default parameter commit=False. Then, you can change the drawOptions of a row as follows:
 
-```
+```python
 database.update_row("exp_name", "drawOptions", "color='blue', linewidth=1")
 ```
 
 Or delete a row:
 
-```
+```python
 database.delete_rows("name='exp_name'") # set parameter confirm=True to avoid the security check
 ```
-
-To commit this changes to the database file is not recommended as it could make previous plots not reproducible in the future even with their original plotting script.
+> [!CAUTION]
+> To commit this changes to the database file is not recommended as it could make previous plots not reproducible in the future even with their original plotting script.
 
 ## Creating a new database
 
-To create a new database for a new plot you may follow this examples. Note the parameter
-commit=True at the constructor of the databases to commit the changes to the db
-file. For a Gag exclusion plot:
+To create a new database for a new plot you may follow this examples. Note the parameter `commit=True` at the constructor of the databases to commit the changes to the db
+file.
 
-```
+For a axion-photon (Gag) database:
+```python
 import axionlimits.databases as db
-database = db.DataBaseGag("data/NewAxions.db", commit=True) # this will create (if it doesn't already exists) a table named AxionsGag (default) at data/NewAxions.db
+database = db.DataBaseGag("NewAxions.db", commit=True) # this will create (if it doesn't already exists) a table named AxionsGag (default) at NewAxions.db
 path = "data/axion/"
 AxionsGag = [
     ['qcdband', 'band', path + 'QCD_band.dat', "facecolor='yellow'", 0, '', '', 1, 1, 0, 0, 0, 0, 0, 0],
@@ -227,9 +243,9 @@ print(data)
 
 For a Gae exclusion plot:
 
-```
+```python
 import axionlimits.databases as db
-database = db.DataBaseGae("data/NewAxions.db", commit=True)  # this will create (if it doesn't already exists) a table named AxionsGae (default) at data/NewAxions.db
+database = db.DataBaseGae("NewAxions.db", commit=True)  # this will create (if it doesn't already exists) a table named AxionsGae (default) at NewAxions.db
 path1 = 'data/axion/hints/'
 path2 = 'data/axion/gaegag/'
 
@@ -260,7 +276,7 @@ are provided within the webpage itself.
 
 ## Known Issues
 
-- The labels application cannot interpret LaTeX.
+- The labels application cannot interpret _LaTeX_.
 - At labels application, when working with multiple labels, moving a label other
   than the last label will replace the coordinates of the last label written.
 
