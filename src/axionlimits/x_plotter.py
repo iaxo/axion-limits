@@ -333,7 +333,7 @@ class ExPltItem:
         self.filename = get_absolute_path(self.short_filename, 'axionlimits.data')
         self.drawopt = kwargs
         if typeitem not in ["band", "region", "line", "fog"]:
-            print("ERROR: unknown plot item " + typeitem)
+            raise ValueError("item type " + typeitem + " not known")
         self.data = []
         try:
             self.data = np.loadtxt(self.filename)
@@ -352,7 +352,7 @@ class ExPltItem:
                     + ". Check the delimiter is within:",
                     delimiters,
                 )
-                raise ValueError
+                raise ValueError("Could not load data from file " + filename)
 
         # self.data = loadtxt(filename)
 
