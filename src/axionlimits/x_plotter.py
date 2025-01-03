@@ -129,7 +129,7 @@ class BasePlot(ABC):
     # ==============================================================================#
     # will draw a new exclusion line to the plot, no to be filled
     #
-    def add_plot_item(self, typeitem, linename, data, **kwargs):
+    def add_plot_item(self, typeitem, data, **kwargs):
         y_top = self.plot.get_ylim()[1]
         y_bottom = self.plot.get_ylim()[0]
         kwargs["zorder"] = self.zorder
@@ -358,7 +358,7 @@ class ExPltItem:
 
     def draw_item(self, plot):
         print("->", self.name, self.short_filename, self.drawopt)
-        plot.add_plot_item(self.typeitem, self.name, self.data, **self.drawopt)
+        plot.add_plot_item(self.typeitem, self.data, **self.drawopt)
 
 
 # ==============================================================================#
