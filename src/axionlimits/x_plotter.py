@@ -139,7 +139,7 @@ class BasePlot(ABC):
         if typeitem == "band":
             self.plot.fill_between(data[:, 0], data[:, 1], y2=y_top, **kwargs)
         if typeitem == "region":
-            plt.fill(data[:, 0], data[:, 1], **kwargs)
+            self.plot.fill(data[:, 0], data[:, 1], **kwargs)
         if typeitem == "line":
             self.plot.plot(data[:, 0], data[:, 1], **kwargs)
         if typeitem == "fog":
