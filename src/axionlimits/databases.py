@@ -8,7 +8,11 @@ class DataBase:
     def __init__(
         self, file_database: str, name: str, commit: bool = False
     ):  
-        absolute_path = get_absolute_path(file_database)
+        try:
+            absolute_path = get_absolute_path(file_database)
+        except FileNotFoundError:
+            print(f"WARNING: The file '{file_database}' does not exist. Creating a new database.")
+            absolute_path = file_database
         self.FILE_DATABASE = absolute_path
 
         self.conn = sql.connect(self.FILE_DATABASE)

@@ -119,15 +119,6 @@ The main files where the code is written are in the [src](src/axionlimits) folde
 
 All these files are not intended to be modified by the user.
 
-The files that are meant to be modified and used by the user are the following:
-
-1. buildDataBase.py : this is an example of the building of the database .db
-   files. It also serves as backup to be able to recreate the Axions.db in case
-   this one is lost or edited unintentionally.
-2. example_axionplot.py : this is the main file to be handled by the user to
-   make the desired plot. Here load (and edit if you want) the database tables
-   and call the corresponding AxionPlot constructor to make the plot.
-3. example_wimpplot.py : same for WIMPs.
 ## Subdirectories description
 
 1. labeler : all needed files (html and java) for the labels app.
@@ -200,7 +191,7 @@ database.insert_row("exp_name", "line", "path_to_datafile", "color='red', linewi
 database.set_commit(False) # go back to default mode (not committing changes to the .db file)
 ```
 > [!IMPORTANT]
-> If you do so, please consider adding this new row of the database in the python script [buildDataBase.py](buildDataBase.py) as this file serves as backup for generating the databases in case they are unintentionally changed or deleted.
+> If you do so, please consider adding this new row of the database in the python script [build_database.py](src/axionlimits/data/build_databases.py) as this file serves as backup for generating the databases in case they are unintentionally changed or deleted.
 
 ## Editing existing row of the database
 You may want to change temporary the column value of an existing row. In that case you can load the database with the default parameter commit=False. Then, you can change the drawOptions of a row as follows:

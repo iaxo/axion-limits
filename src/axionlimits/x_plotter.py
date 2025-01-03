@@ -330,7 +330,7 @@ class ExPltItem:
         self.name = name
         self.typeitem = typeitem
         self.short_filename = filename
-        self.filename = get_absolute_path(self.short_filename, 'axionlimits')
+        self.filename = get_absolute_path(self.short_filename, 'axionlimits.data')
         self.drawopt = kwargs
         if typeitem not in ["band", "region", "line", "fog"]:
             print("ERROR: unknown plot item " + typeitem)

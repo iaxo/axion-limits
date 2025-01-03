@@ -1,6 +1,6 @@
 import axionlimits.databases as db
 
-FILE_DATABASE = "data/Axions.db"
+FILE_DATABASE = "Axions.db"
 
 print("File database: " + FILE_DATABASE)
 print("If it already exists, the table will be appended. Note this can cause to have duplicated rows.")
