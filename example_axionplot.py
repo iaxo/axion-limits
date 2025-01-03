@@ -1,13 +1,9 @@
-from __future__ import annotations
-
-import DataBaseClass as db
-from AxionPlot import *
+import axionlimits.databases as db
+from axionlimits.axion_plot import AxionGagPlot
 
 # --- LOAD THE DATABASE ---
 
-database = db.DataBaseGag(
-    "databases/Axions.db", "AxionsGag"
-)  # the second parameter is the table name inside the database, see DataBaseClass.py for more info
+database = db.DataBaseGag()  # the second parameter is the table name inside the database, see DataBaseClass.py for more info
 
 """
 # Here you can edit the database if you want.

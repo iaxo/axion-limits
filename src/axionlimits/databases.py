@@ -1,59 +1,21 @@
 from __future__ import annotations
 
 import sqlite3 as sql
-
-"""
-# Example of usage:
-import DataBaseClass as db
-database = db.DataBaseGag("databases/NewAxions.db", commit=True) # this will create (if it doesn't already exists) a table named AxionsGag (default) at databases/NewAxions.db
-path = "data/axion/"
-AxionsGag = [
-    ['qcdband', 'band', path + 'QCD_band.dat', "facecolor='yellow'", 0, '', '', 1, 1, 0, 0, 0, 0, 0, 0],
-    ['CMB_DEsuE', 'band', path + 'cosmoalp/CMB_DEsuE.txt', "facecolor='forestgreen', edgecolor='darkgreen', linewidth=0.5", 0, '1110.2895', '2011', 0, 0, 1, 0, 0, 0, 0, 0],
-    ['old_haloscopes', 'band', path + 'MicrowaveCavities.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '', '', 0, 0, 1, 1, 0, 0, 0, 0],
-    ['RADES2021', 'band', path + 'RADES2021.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '2104.13798', '2021', 0, 0, 1, 1, 0, 0, 0, 0],
-    ['CAST', 'band', path + 'cast_env_2016.dat', "facecolor='deepskyblue', edgecolor='blue', linewidth=0.5", 0, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
-    ['BabyIAXO', 'band', path + 'miniIAXO.dat', "facecolor='deepskyblue', linewidth=0.5, alpha=0.1, linestyle='-'", 1, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
-    ['IAXO', 'band', path + 'IAXO_nominal.txt', "facecolor='deepskyblue', linewidth=0.5, alpha=0.1, linestyle='-'", 1, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
-]
-database.insert_rows(AxionsGag)
-data = database.get_rows_where("1")
-print(data)
-"""
-
-"""
-# Example of usage:
-import DataBaseClass as db
-database = db.DataBaseGae("databases/NewAxions.db", commit=True)  # this will create (if it doesn't already exists) a table named AxionsGae (default) at databases/NewAxions.db
-path1 = 'data/axion/hints/'
-path2 = 'data/axion/gaegag/'
-AxionsGae= [
-    ["DFSZ1_starhint", "region", path1 + "DFSZ1_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='springgreen', edgecolor='darkgreen', alpha=0.2", 0, '', ''],
-    ["AJ83_starhint", "region", path1 + "AJ83_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='red', edgecolor='red', alpha=0.2", 0, '', ''],
-    ["QCDband", "band", path2 + "DFSZband_gaegag.dat", "facecolor='lemonchiffon', edgecolor='none', linewidth=1", 0, '', ''],
-    ["CAST_gae", "band", path2 + "CAST_gae_gagg.dat", "facecolor='steelblue', edgecolor='darkblue', linewidth=0.5", 0, '', ''],
-
-    ["IAXO_gae", "band", path2 + "sqrtgaagae_sc2.dat", "facecolor='skyblue', edgecolor='black', linewidth=0.5, alpha=0.3", 1, '', ''],
-    ["IAXO_gae_l", "line", path2 + "sqrtgaagae_sc2.dat", "color='black', linewidth=0.5, linestyle='--'", 1, '', ''],
-]
-database.insert_rows(AxionsGae)
-data = database.get_rows_where("1")
-print(data)
-"""
-
+from .utils import resolve_relative_path, get_absolute_path
 
 # DataBase class is the generic database class that can be used to load an already existing database.
 class DataBase:
     def __init__(
-        self, file_database="Axions.db", name: str = "Axions", commit: bool = False
-    ):
-        self.FILE_DATABASE = file_database
+        self, file_database: str, name: str, commit: bool = False
+    ):  
         try:
-            self.conn = sql.connect(self.FILE_DATABASE)
-        except Error as e:
-            print(e)
-            exit()
+            absolute_path = get_absolute_path(file_database)
+        except FileNotFoundError:
+            print(f"WARNING: The file '{file_database}' does not exist. Creating a new database.")
+            absolute_path = file_database
+        self.FILE_DATABASE = absolute_path
 
+        self.conn = sql.connect(self.FILE_DATABASE)
         self.cursor = self.conn.cursor()
         self.name = name
         self.commit = commit  # If commit is True, the database file will be updated
@@ -149,7 +111,7 @@ class DataBaseGag(DataBase):
     def __init__(
         self, file_database="Axions.db", name: str = "AxionsGag", commit: bool = False
     ):
-        DataBase.__init__(self, file_database, name, commit)
+        super().__init__(file_database, name, commit)
 
         self.cursor.execute(
             f"""CREATE TABLE IF NOT EXISTS {self.name} (
@@ -237,7 +199,7 @@ class DataBaseGae(DataBase):
     def __init__(
         self, file_database="Axions.db", name: str = "AxionsGae", commit: bool = False
     ):
-        DataBase.__init__(self, file_database, name, commit)
+        super().__init__(file_database, name, commit)
 
         self.cursor.execute(
             f"""CREATE TABLE IF NOT EXISTS {self.name} (
@@ -284,9 +246,9 @@ class DataBaseGae(DataBase):
 
 class DataBaseWimps(DataBase):
     def __init__(
-        self, file_database="Axions.db", name: str = "Wimps", commit: bool = False
+        self, file_database="Wimps.db", name: str = "Wimps_SI", commit: bool = False
     ):
-        DataBase.__init__(self, file_database, name, commit)
+        super().__init__(file_database, name, commit)
 
         self.cursor.execute(
             f"""CREATE TABLE IF NOT EXISTS {self.name} (

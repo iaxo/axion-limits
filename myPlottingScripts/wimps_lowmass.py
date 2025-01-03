@@ -1,14 +1,9 @@
-from __future__ import annotations
-
-import myPath # adds the project path
-import DataBaseClass as db
-from WimpPlot import *
+import axionlimits.databases as db
+from axionlimits.wimp_plot import WimpPlot
 
 # --- LOAD THE DATABASE ---
 
-database = db.DataBaseWimps(
-    "databases/Wimps.db", "Wimps_SI"
-)  # the second parameter is the table name inside the database, see DataBaseClass.py for more info
+database = db.DataBaseWimps()  # the second parameter is the table name inside the database, see DataBaseClass.py for more info
 
 """
 # Here you can edit the database if you want.

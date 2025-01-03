@@ -1,8 +1,6 @@
-from __future__ import annotations
+import axionlimits.databases as db
 
-import DataBaseClass as db
-
-FILE_DATABASE = "databases/Axions.db"
+FILE_DATABASE = "Axions.db"
 
 print("File database: " + FILE_DATABASE)
 print("If it already exists, the table will be appended. Note this can cause to have duplicated rows.")
@@ -11,7 +9,7 @@ if input("Are you sure you want to continue? (y/n)\n") not in ["y", "yes", "Y", 
     exit()
 
 # ==================== DATABASES ====================
-path = "data/axion/"
+path = "axion/"
 AxionsGag = [
     # name, type, path, drawOptions, projection, source, year, hint, model, cosmology, haloscope, stellar, helisocope, laboratory, LSW
 
@@ -137,7 +135,7 @@ AxionsGag = [
 
 ]
 
-path = "data/wimp/"
+path = "wimp/"
 Wimps = [
     ['PICO_CF3I_2015', 'line', path+'limit_data/PICO_CF3I_2015.dat', "color='#e6beff'", 0, '1510.07754', '2015', "PICO CF3I", 3.5, 9.4e-37, "color='#e6beff', size=10"],
     ['CDEX10_2018', 'line', path+'limit_data/CDEX10_2018.dat', "color='#004444'", 0, '1802.09016', '2018', "CDEX10", 2.6, 1.2e-39, "color='#004444', size=10"],
@@ -183,8 +181,8 @@ Wimps = [
     ['PandaX_2017', 'line', path+'limit_data/PandaX_2017.dat', "color='#f58231'", 0, '1708.06917', '2017', "PandaX-II", 6, 9e-44, "color='#f58231', size=10"],
 ]
 
-path1 = 'data/axion/hints/'
-path2 = 'data/axion/gaegag/'
+path1 = 'axion/hints/'
+path2 = 'axion/gaegag/'
 AxionsGae= [
     ["DFSZ1_starhint", "region", path1 + "DFSZ1_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='springgreen', edgecolor='darkgreen', alpha=0.2", 0, '', ''],
     ["DFSZ2_starhint", "region", path1 + "DFSZ2_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='lime', edgecolor='darkgreen', alpha=0.2", 0, '', ''],

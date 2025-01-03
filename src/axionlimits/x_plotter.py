@@ -14,34 +14,24 @@ import pickle
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
-
-PATH_FIGURE_FOLDER = "./plots/"
-
-
-def custom_formatter(x, pos):
-    """Custom formatter for the x and y axis
-    It will format the axis in scientific notation,
-    except for the values 0.1, 1 and 10.
-    """
-    # Check if x is one of the values you want to format differently
-    if x in [0.1, 1, 10]:
-        return f"{x:g}"
-    else:
-        # For other values, use scientific notation
-        return rf"$10^{{{np.log10(x):.0f}}}$"
+from abc import ABC, abstractmethod
+from .utils import resolve_relative_path, get_absolute_path
+from .utils import is_latex_installed, latex_to_plain_text
+from .utils import extract_kwargs, custom_formatter
 
 
 # ==============================================================================#
 # == class representing a generic sensitivity plot
 # ==============================================================================#
 # ==============================================================================#
-class BasePlot:
+class BasePlot(ABC):
     """Base class to host a generic sensitivity plot"""
 
     # ==============================================================================#
     # the class is initialized with info on the limits, axis, etc
     def __init__(
         self,
+        saveplotname=None,
         xlab="x axis",
         ylab="y axis",
         figsizex=6.5,
@@ -56,9 +46,12 @@ class BasePlot:
         tickformatter_x=custom_formatter,
         tickformatter_y=custom_formatter,
     ):
-        plt.rc("text", usetex=True)
-        # plt.rc("font", family="times", size=labelfontsize)
-        plt.rc("font", family="serif", serif="cm", size=labelfontsize)
+        self._uselatex = is_latex_installed()
+        if self._uselatex:
+            plt.rc("text", usetex=True)
+            plt.rc("font", family="serif", size=labelfontsize)
+            plt.rc("font", family="serif", serif="cm", size=labelfontsize)
+            
         self.fig = plt.figure(figsize=(figsizex, figsizey))
         self.plot = self.fig.add_subplot(111)
 
@@ -131,11 +124,12 @@ class BasePlot:
 
         self.dragged = None  # store the dragged text object
         self.anchor_point = None  # store the anchor point of the dragged text object
+        self.saveplotname = saveplotname
 
     # ==============================================================================#
     # will draw a new exclusion line to the plot, no to be filled
     #
-    def AddPlotItem(self, typeitem, linename, data, **kwargs):
+    def add_plot_item(self, typeitem, data, **kwargs):
         y_top = self.plot.get_ylim()[1]
         y_bottom = self.plot.get_ylim()[0]
         kwargs["zorder"] = self.zorder
@@ -145,12 +139,32 @@ class BasePlot:
         if typeitem == "band":
             self.plot.fill_between(data[:, 0], data[:, 1], y2=y_top, **kwargs)
         if typeitem == "region":
-            plt.fill(data[:, 0], data[:, 1], **kwargs)
+            self.plot.fill(data[:, 0], data[:, 1], **kwargs)
         if typeitem == "line":
             self.plot.plot(data[:, 0], data[:, 1], **kwargs)
         if typeitem == "fog":
             self.plot.fill_between(data[:, 0], data[:, 1], y2=y_bottom / 10, **kwargs)
         self.zorder += 1
+
+    def plot_labels(self, labels: list):
+        print("Plotting labels:")
+        for label in labels:
+            kwargs = {}
+            if type(label[3]) == str:
+                kwargs = extract_kwargs(label[3])
+            elif type(label[3]) == dict:
+                kwargs = label[3]
+            # if "picker" not in kwargs:
+            #   kwargs["picker"] = True
+            text = label[0]
+            if not self._uselatex:
+                text = latex_to_plain_text(label[0])
+            print("->", text, label[1], label[2], kwargs)
+            self.plot.text(x=label[1], y=label[2], s=text, **kwargs)
+    
+    @abstractmethod
+    def plot_data(self, data: list):
+        pass
 
     def on_click(self, event):
         if event.button == 3:  # right click
@@ -255,7 +269,7 @@ class BasePlot:
     # ==============================================================================#
     # switch to interactive mode and shows the plot on screen
     #
-    def ShowPlot(self):
+    def show_plot(self):
         cid_rclick = self.fig.canvas.mpl_connect("button_press_event", self.on_click)
         cid_pick = self.fig.canvas.mpl_connect("pick_event", self.on_pick)
         cid_release = self.fig.canvas.mpl_connect(
@@ -275,16 +289,20 @@ class BasePlot:
     # ==============================================================================#
     # saves the plot on a file
     #
-    def SavePlot(self, plotname):
+    def save_plot(self, plot_name=""):
+        if plot_name != "":
+            self.saveplotname = plot_name
+        if self.saveplotname is None or self.saveplotname == "":
+            raise ValueError("No filename specified for saving the plot.")
+
         if self.anchor_point is not None:
             self.anchor_point.remove()
             self.anchor_point = None
 
-        filename = PATH_FIGURE_FOLDER + plotname
-
+        filename = self.saveplotname
         extensions = [".pdf", ".png", ".svg", ".pickle"]
         # if it does not end with any of this extensions add .pdf as default extension
-        if not any(plotname.endswith(ext) for ext in extensions):
+        if not any(filename.endswith(ext) for ext in extensions):
             filename = filename + ".pdf"
 
         if filename.endswith(".pickle"):
@@ -293,14 +311,9 @@ class BasePlot:
             print("Saving figure as " + filename)
             return
 
-        try:
-            self.fig.savefig(filename, bbox_inches="tight")
-        except FileNotFoundError:
-            # if PATH_FIGURE_FOLDER was already added to plotname
-            # or plotname included the path to another folder
-            filename = filename.replace(PATH_FIGURE_FOLDER, "")
-            self.fig.savefig(filename, bbox_inches="tight")
+        self.fig.savefig(filename, bbox_inches="tight")
         print("Saving figure as " + filename)
+        self.saveplotname = filename
 
 
 # ==============================================================================#
@@ -316,18 +329,19 @@ class ExPltItem:
     def __init__(self, name, typeitem, filename, **kwargs):
         self.name = name
         self.typeitem = typeitem
-        self.filename = filename
+        self.short_filename = filename
+        self.filename = get_absolute_path(self.short_filename, 'axionlimits.data')
         self.drawopt = kwargs
         if typeitem not in ["band", "region", "line", "fog"]:
-            print("ERROR: unknown plot item " + typeitem)
+            raise ValueError("item type " + typeitem + " not known")
         self.data = []
         try:
-            self.data = np.loadtxt(filename)
+            self.data = np.loadtxt(self.filename)
         except ValueError:
             delimiters = [" ", ",", ";"]
             for dlmt in delimiters:
                 try:
-                    self.data = np.loadtxt(filename, delimiter=dlmt)
+                    self.data = np.loadtxt(self.filename, delimiter=dlmt)
                     break
                 except ValueError:
                     pass
@@ -338,12 +352,13 @@ class ExPltItem:
                     + ". Check the delimiter is within:",
                     delimiters,
                 )
-                exit()
+                raise ValueError("Could not load data from file " + filename)
+
         # self.data = loadtxt(filename)
 
-    def DrawItem(self, plot):
-        print("->", self.name, self.filename, self.drawopt)
-        plot.AddPlotItem(self.typeitem, self.name, self.data, **self.drawopt)
+    def draw_item(self, plot):
+        print("->", self.name, self.short_filename, self.drawopt)
+        plot.add_plot_item(self.typeitem, self.data, **self.drawopt)
 
 
 # ==============================================================================#

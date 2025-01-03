@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 import numpy as np
-from AxionPlot import extract_kwargs
 from scipy.interpolate import interp1d
-from XPlotter import *
+from .x_plotter import BasePlot, ExPltItem
+from .utils import extract_kwargs, custom_formatter
 
 
 # ==============================================================================#
-class WimpPlot:
+class WimpPlot(BasePlot):
 
     def __init__(
         self,
@@ -32,7 +32,8 @@ class WimpPlot:
         **excludedRegionOptions,  # color, alpha, lw, zorder, etc.
     ):
         # plot the background
-        self.baseplot = BasePlot(
+        super().__init__(
+            saveplotname=saveplotname,
             xlab=labelx,
             ylab=labely,
             figsizex=figx,
@@ -53,21 +54,21 @@ class WimpPlot:
 
         # Plotting Data
         print("\n")
-        self.PlotData(experiments)
+        self.plot_data(experiments)
         if excludedRegion:
-            self.PlotExcludedRegion(**excludedRegionOptions)
+            self.plot_excluded_region(**excludedRegionOptions)
         print("\n")
-        self.PlotLabels(labels)
+        self.plot_labels(labels)
         print("\n")
 
         if showplot:
-            self.baseplot.ShowPlot()
+            self.show_plot()
 
         if type(saveplotname) == str:
             if len(saveplotname) > 0:
-                self.baseplot.SavePlot(saveplotname)
+                self.save_plot(self.saveplotname)
 
-    def PlotData(self, data: list):
+    def plot_data(self, data: list):
         print("Plotting data:")
         for row in data:
             kwargs = {}
@@ -92,24 +93,11 @@ class WimpPlot:
             pltItem = ExPltItem(
                 row[0], row[1], row[2], **kwargs
             )  # row[0] = name, row[1] = type, row[2] = path, row[3] = drawOptions
-            pltItem.DrawItem(self.baseplot)
+            pltItem.draw_item(self)
             if not isProjection:
                 self.wimpDB.append(pltItem)
 
-    def PlotLabels(self, labels: list):
-        print("Plotting labels:")
-        for label in labels:
-            kwargs = {}
-            if type(label[3]) == str:
-                kwargs = extract_kwargs(label[3])
-            elif type(label[3]) == dict:
-                kwargs = label[3]
-            # if "picker" not in kwargs:
-            #   kwargs["picker"] = True
-            print("->", label[0], label[1], label[2], kwargs)
-            self.baseplot.plot.text(x=label[1], y=label[2], s=label[0], **kwargs)
-
-    def PlotExcludedRegion(self, **kwargs):
+    def plot_excluded_region(self, **kwargs):
         # if kwargs does not contain one of the following, use the default values
         if "color" not in kwargs:
             kwargs["color"] = "#aaffc3"
@@ -120,23 +108,23 @@ class WimpPlot:
         if "zorder" not in kwargs:
             kwargs["zorder"] = -101
 
-        (x_excluded, y_excluded) = self.getExcludedRegion()
+        (x_excluded, y_excluded) = self.get_excluded_region()
         if len(y_excluded) > 0:
             print("Plotting excluded region.")
-            self.baseplot.plot.fill_between(
+            self.plot.fill_between(
                 x_excluded,
                 y_excluded,
-                self.baseplot.plot.get_ylim()[1] * 10,
+                self.plot.get_ylim()[1] * 10,
                 **kwargs,
             )
 
     ## -------- CALCULATE THE EXCLUDED PARAMETER SPACE --------
-    def getExcludedRegion(self):
+    def get_excluded_region(self):
         if len(self.wimpDB) <= 0:
             print("Error: no available data for computing the excluded region.")
             return ([], [])
 
-        xlim = self.baseplot.plot.get_xlim()
+        xlim = self.plot.get_xlim()
         x_val_arr = np.logspace(
             start=np.log10(xlim[0]), stop=np.log10(xlim[1]), num=1000
         )
