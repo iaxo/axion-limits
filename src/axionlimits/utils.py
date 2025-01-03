@@ -1,5 +1,7 @@
 import shutil
 import os
+import ast
+import re
 import numpy as np
 from importlib.resources import files
 from pylatexenc.latex2text import LatexNodes2Text
@@ -44,14 +46,21 @@ def get_absolute_path(path, package_route='axionlimits.data'):
     return absolute_path
 
 def extract_kwargs(arguments_str):
-    """Extracts kwargs from a string of arguments.
-    Example: extract_kwargs("a=1, b=2, c=3") returns {'a':1, 'b':2, 'c':3}
-             extract_kwargs("a=1, b="red", c=3,") returns {'a':1, 'b':'red', 'c':3}"""
+    """Extracts kwargs from a string of arguments, including lists or tuples.
+    Example: 
+        extract_kwargs("a=1, b=2, c=(3, 4)") returns {'a': 1, 'b': 2, 'c': (3, 4)}
+        extract_kwargs("a=1, b='red', c=[1,2,3], d=(4,5,6)") returns {'a': 1, 'b': 'red', 'c': [1, 2, 3], 'd': (4, 5, 6)}
+    """
     kwargs = {}
-    for arg in arguments_str.split(","):
-        if arg.strip() != "":
-            key, value = arg.split("=")
-            kwargs[key.strip()] = eval(value.strip())
+    # Regex to match key=value pairs, allowing nested structures like lists/tuples
+    pattern = r'\s*(\w+)\s*=\s*(.+?)\s*(?=,\s*\w+\s*=|$)'
+    
+    matches = re.findall(pattern, arguments_str)
+    for key, value in matches:
+        try:
+            kwargs[key.strip()] = ast.literal_eval(value.strip())
+        except (ValueError, SyntaxError):
+            kwargs[key.strip()] = value.strip()
     return kwargs
 
 def custom_formatter(x, pos):
