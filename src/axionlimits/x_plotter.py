@@ -289,7 +289,7 @@ class BasePlot(ABC):
     # ==============================================================================#
     # saves the plot on a file
     #
-    def SavePlot(self, plot_name=""):
+    def save_plot(self, plot_name=""):
         if plot_name != "":
             self.saveplotname = plot_name
         if self.saveplotname is None or self.saveplotname == "":

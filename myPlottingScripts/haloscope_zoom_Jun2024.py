@@ -147,7 +147,7 @@ plt.text(4.1e-5,3.6,'QUAX',color="black",size=8,ha='center',va='center',rotation
 plt.text(0.84e-4,35,'ORGAN',color="black",size=8,ha='center',va='center',rotation=90) #xdata=8.48019e-05, ydata=61.4904f
 
 # we finish by plotting and saving (because we set the flag to false above)
-axionplot.ShowPlot()
-axionplot.SavePlot()
+axionplot.show_plot()
+axionplot.save_plot()
 
 # ---  end of customization

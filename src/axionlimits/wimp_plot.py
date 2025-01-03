@@ -66,7 +66,7 @@ class WimpPlot(BasePlot):
 
         if type(saveplotname) == str:
             if len(saveplotname) > 0:
-                self.SavePlot(self.saveplotname)
+                self.save_plot(self.saveplotname)
 
     def plot_data(self, data: list):
         print("Plotting data:")
