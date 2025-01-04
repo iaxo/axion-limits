@@ -5,6 +5,7 @@ import re
 import numpy as np
 from importlib.resources import files
 from pylatexenc.latex2text import LatexNodes2Text
+from shapely.geometry import Polygon
 
 def latex_to_plain_text(latex_string):
     converter = LatexNodes2Text()
@@ -74,3 +75,101 @@ def custom_formatter(x, pos):
     else:
         # For other values, use scientific notation
         return rf"$10^{{{np.log10(x):.0f}}}$"
+
+def get_polygon_max_shrink_distance(polygon, precision=1e-4):
+    """
+    Get the maximum distance that can be applied to a polygon without causing self-intersections.
+
+    Parameters
+    ----------
+    polygon : shapely.geometry.Polygon
+        The polygon to shrink.
+    precision : float, optional
+        The precision of the calculation.
+    """
+
+    # Gross approximation of the maximum buffer distance
+    d = polygon.area**0.5 * 1e-5 # use sqrt(area) as estimate of the characteristic length of the polygon
+    multiplier = 1.5
+    while True:
+        d *= multiplier
+        polygon_mod = polygon.buffer(-d)
+        if polygon_mod.is_empty:
+            break
+
+    # Fine tune the buffer distance
+    min_d = d/multiplier
+    max_d = d
+    while (max_d - min_d) / min_d > precision:
+        d = (max_d + min_d) / 2
+        polygon_mod = polygon.buffer(-d)
+        if polygon_mod.is_empty:
+            max_d = d
+        else:
+            min_d = d
+
+    return min_d
+
+def shrink_mpl_polygon(polygon, shrunk_factor, max_distance=None, logscale=False):
+    """
+    Shrink a matplotlib Polygon object by a given factor.
+
+    Parameters
+    ----------
+    polygon : matplotlib.patches.Polygon
+        The polygon to shrink.
+    shrunk_factor : float
+        The factor by which to shrink the polygon.
+    max_distance : float, optional
+        The maximum distance to shrink the polygon. If None, it will be calculated.
+    logscale : bool, optional
+        If True, the polygon is in logscale, so the polygon will be built on the transformed coordinates,
+        shrunk and then transformed back to the original coordinates.
+    """
+    # Get the vertices of the polygon
+    path = polygon.get_path()
+    vertices = path.vertices
+    # Apply the transform if it is in logscale
+    if logscale:
+        transformation = polygon.get_transform()
+        vertices = transformation.transform(vertices)
+    polygon_coords = vertices.tolist()
+
+    # Create a shapely Polygon from the coordinates
+    shapely_polygon = Polygon(polygon_coords)
+
+    # Shrink the polygon
+    if max_distance is None:
+        max_distance = get_polygon_max_shrink_distance(shapely_polygon)
+    distance = shrunk_factor * max_distance
+    shrunken_polygon = shapely_polygon.buffer(-distance)
+
+    # transform back to original coordinates
+    if logscale:
+        x, y = shrunken_polygon.exterior.xy
+        xy = list(zip(x, y))
+        xy = transformation.inverted().transform(xy)
+        shrunken_polygon = Polygon(xy)
+
+    return shrunken_polygon
+
+def mpl_to_shapely(polygon, logscale=False):
+    """
+    Convert a matplotlib Polygon object to a shapely Polygon object.
+    """
+    # Get the vertices of the polygon
+    path = polygon.get_path()
+
+    # Apply the transform if it is in logscale
+    if logscale:
+        transformation = polygon.get_transform()
+        path = path.transformed(transformation)
+    
+    # Get the vertices of the polygon
+    vertices = path.vertices
+    # Convert the vertices to a list of tuples
+    polygon_coords = vertices.tolist()
+
+    # Create a shapely Polygon from the coordinates
+    shapely_polygon = Polygon(polygon_coords)
+    return shapely_polygon

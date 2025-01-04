@@ -23,19 +23,22 @@ experimentsToPlot = [
 exps = database.get_rows(
     "name", experimentsToPlot
 )  # Get the data of the experiments to plot from the database
-
-
+exps = [list(exp) for exp in exps]  # Convert the tuples to lists
+exps[0][1] = "region"
+exps[0][3] += ", cmap=('YlOrBr', 0, 0.45, 20)"
+#exps[2][3] += ", cmap=('Blues', 0, 1, 100)" # TODO: this doesn`t work as expected
 labels = [
     (r"{\bf Helioscopes (CAST)}", 1e-8, 2e-10, dict( color="black", size=10)),
     ("KSVZ", 3e-4, 21e-14, dict( color="black", size=6, rotation=47)),
 ]
 
+exps[1][3] += ", color='#a35c2f'"
 # --- BUILD THE PLOT ---
 axionplot = AxionGagPlot(
     experiments=exps,
     labels=labels,
     plotCag=False,  # set to true to plot C_ag instead of g_ag
     showplot=True,  # set to false to add the labels later
-    saveplotname="test.pdf",
+    #saveplotname="test.pdf",
 )
 

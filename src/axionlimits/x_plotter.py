@@ -18,7 +18,7 @@ from abc import ABC, abstractmethod
 from .utils import resolve_relative_path, get_absolute_path
 from .utils import is_latex_installed, latex_to_plain_text
 from .utils import extract_kwargs, custom_formatter
-
+from .utils import get_polygon_max_shrink_distance, shrink_mpl_polygon, mpl_to_shapely
 
 # ==============================================================================#
 # == class representing a generic sensitivity plot
@@ -129,21 +129,48 @@ class BasePlot(ABC):
     # ==============================================================================#
     # will draw a new exclusion line to the plot, no to be filled
     #
-    def add_plot_item(self, typeitem, data, **kwargs):
+    def add_plot_item(self, typeitem, linename, data, **kwargs):
         y_top = self.plot.get_ylim()[1]
         y_bottom = self.plot.get_ylim()[0]
         kwargs["zorder"] = self.zorder
+        colorseq = kwargs.get("colorseq", None)
+        if colorseq is not None:
+            del kwargs["colorseq"] # is not a valid argument for plt plotting functions
+            del kwargs["cmap"]
         if typeitem not in ["band", "line", "region", "fog"]:
-            print("ERROR: item type" + typeitem + "not known")
-            exit()
+            raise ValueError("item type " + typeitem + " not known")
         if typeitem == "band":
-            self.plot.fill_between(data[:, 0], data[:, 1], y2=y_top, **kwargs)
+            if colorseq is None:
+                self.plot.fill_between(data[:, 0], data[:, 1], y2=y_top, **kwargs)
+            else: # TODO: this doesn't work as expected...
+                for i in range(len(colorseq)):
+                    y_lower = data[:, 1] + (y_top- data[:, 1]) * (i / len(colorseq))
+                    y_upper = data[:, 1] + (y_top - data[:, 1]) * ((i + 1) / len(colorseq))
+                    color = colorseq[i]
+                    self.plot.fill_between(data[:, 0], y_lower, y_upper, color=color, zorder=self.zorder)
+
         if typeitem == "region":
-            self.plot.fill(data[:, 0], data[:, 1], **kwargs)
+            mpl_pol = self.plot.fill(data[:, 0], data[:, 1], **kwargs)[0]
+            if colorseq is not None:
+                is_logscale = self.plot.get_xscale() == "log" or self.plot.get_yscale() == "log"
+                max_d = get_polygon_max_shrink_distance(mpl_to_shapely(mpl_pol, is_logscale))
+                for i in range(len(colorseq)):
+                    shrunk_factor = i / len(colorseq)
+                    shrunken_pol = shrink_mpl_polygon(mpl_pol, shrunk_factor, max_d, is_logscale)
+                    x, y = shrunken_pol.exterior.xy
+                    self.plot.fill(x, y, color=colorseq[i], zorder=self.zorder)
+
         if typeitem == "line":
             self.plot.plot(data[:, 0], data[:, 1], **kwargs)
+
         if typeitem == "fog":
             self.plot.fill_between(data[:, 0], data[:, 1], y2=y_bottom / 10, **kwargs)
+            if colorseq is not None:
+                for i in range(len(colorseq)):
+                    y_lower = data[:, 1] + (y_bottom - data[:, 1]) * (i / len(colorseq))
+                    y_upper = data[:, 1] + (y_bottom - data[:, 1]) * ((i + 1) / len(colorseq))
+                    color = colorseq[i]
+                    self.plot.fill_between(data[:, 0], y_lower, y_upper, color=color, zorder=self.zorder)
         self.zorder += 1
 
     def plot_labels(self, labels: list):
@@ -332,6 +359,25 @@ class ExPltItem:
         self.short_filename = filename
         self.filename = get_absolute_path(self.short_filename, 'axionlimits.data')
         self.drawopt = kwargs
+        cmap_description = kwargs.get("cmap", None)
+        cseq = None
+        if cmap_description:
+            params = {
+                0 : "", # name of the colormap
+                1 : 0, # minimum value of the colormap
+                2 : 1, # maximum value of the colormap
+                3 : 100 # number of colors from the colormap
+            }
+            if type(cmap_description) == str:
+                params[0] = cmap_description
+            elif type(cmap_description) in [list, tuple]:
+                for i in range(len(cmap_description)):
+                    params[i] = cmap_description[i]
+            else:
+                raise ValueError("cmap description must be a string or a list/tuple")
+            cseq = plt.get_cmap(params[0])(np.linspace(params[1], params[2], params[3]))
+            self.drawopt["colorseq"] = cseq
+
         if typeitem not in ["band", "region", "line", "fog"]:
             raise ValueError("item type " + typeitem + " not known")
         self.data = []
@@ -357,8 +403,11 @@ class ExPltItem:
         # self.data = loadtxt(filename)
 
     def draw_item(self, plot):
-        print("->", self.name, self.short_filename, self.drawopt)
-        plot.add_plot_item(self.typeitem, self.data, **self.drawopt)
+        drawopt_to_print = self.drawopt.copy()
+        if "colorseq" in drawopt_to_print:
+            del drawopt_to_print["colorseq"] # it is very messy to print this
+        print("->", self.name, self.short_filename, drawopt_to_print)
+        plot.add_plot_item(self.typeitem, self.name, self.data, **self.drawopt)
 
 
 # ==============================================================================#

@@ -33,6 +33,9 @@ experimentsToPlot = [
 exps = database.get_rows(
     "name", experimentsToPlot
 )  # Get the data of the experiments to plot from the database
+exps = [list(exp) for exp in exps]  # Convert the tuples to lists
+
+exps[-1][3] += ", cmap=('Greys', 0, 0.5, 50)"
 exps.append(
     ["TREX-DM_projection", "line", "data/wimp/Ar_iso1/C_2y.dat", dict(projection=True, color="red"), True]
 )
