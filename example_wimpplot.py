@@ -3,13 +3,7 @@ from axionlimits.wimp_plot import WimpPlot
 
 # --- LOAD THE DATABASE ---
 
-database = db.DataBaseWimps()  # the second parameter is the table name inside the database, see DataBaseClass.py for more info
-
-"""
-# Here you can edit the database if you want.
-# For example, change the drawOptions of a row:
-database.update_row("exp_name", "drawOptions", "color='blue', linewidth=1")
-"""
+database = db.DataBaseWimps()
 
 # List of the names of the experiments to plot. The names must match the name column in the database
 # To see the names of the experiments in the database, you can use the following command:
@@ -33,18 +27,37 @@ experimentsToPlot = [
 exps = database.get_rows(
     "name", experimentsToPlot
 )  # Get the data of the experiments to plot from the database
-exps = [list(exp) for exp in exps]  # Convert the tuples to lists
 
-exps[-1][3] += ", cmap=('Greys', 0, 0.5, 50)"
-exps.append(
-    ["TREX-DM_projection", "line", "data/wimp/Ar_iso1/C_2y.dat", dict(projection=True, color="red"), True]
-)
+# --- EDIT THE ITEMS PROPERTIES ---
+# If you want to edit the properties of an item you have selected from the database,
+# you can do it here. For example, change the drawOptions of the element "NuFloorXe":
+exps["NuFloorXe"]["drawOptions"] += ", cmap=('Greys', 0, 0.8, 100), edgecolor=None"
+
+# Or add a new element which is not present in the database. For example, a projection
+# you have calculated and want to compare with the existing exclusion lines from the
+# database:
+exps["TREX-DM_projection"] = {
+    "type": "line",
+    "path": "wimp/Ar_iso1/C_2y.dat",
+    "drawOptions": "color='red'",
+    "projection": True,
+}
+
 
 # --- ADD THE LABELS ---
-labels = database.get_rows("name", experimentsToPlot)
-# get the 7th (label text), 8th (x), 9th (y) and 10th (draw opts) columns
-labels = [row[7:11] for row in labels]
-
+# Get the default label properties from the database
+default_labels = database.get_rows("name", experimentsToPlot)
+labels = []
+for label in default_labels.values():
+    labels.append(
+        (
+            label.get("label",None),
+            label.get("labelPosX",None),
+            label.get("labelPosY",None),
+            label.get("labelDrawOptions",""),
+        )
+    )
+# add extra label
 extralabels = [
     ("TREX-DM", 0.21, 1.4e-37, dict(size=10, color="red")),
 ]

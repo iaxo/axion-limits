@@ -70,31 +70,33 @@ class WimpPlot(BasePlot):
 
     def plot_data(self, data: list):
         print("Plotting data:")
-        for row in data:
+        for name, info in data.items():
             kwargs = {}
-            if type(row[3]) == str:
-                kwargs = extract_kwargs(row[3])
-            elif type(row[3]) == dict:
-                kwargs = row[3]
+            draw_options = info.get("drawOptions", {})
+            if type(draw_options) == str:
+                kwargs = extract_kwargs(draw_options)
+            elif type(draw_options) == dict:
+                kwargs = draw_options
 
             if "projection" in kwargs:
-                isProjection = kwargs["projection"]  # not use for excluding region
+                is_projection = kwargs["projection"]  # not use for excluding region
                 del kwargs["projection"]
-            elif len(row) >= 4:
-                isProjection = row[4] == 1
             else:
-                isProjection = False
+                is_projection = info.get("projection", False)
 
-            if isProjection:
+            if is_projection:
                 # use '--' as default linestyle for projections
                 if ("linestyle" not in kwargs) and ("ls" not in kwargs):
                     kwargs["ls"] = "--"
 
             pltItem = ExPltItem(
-                row[0], row[1], row[2], **kwargs
-            )  # row[0] = name, row[1] = type, row[2] = path, row[3] = drawOptions
+                name,
+                info.get('type', ''),
+                info.get('path', ''),
+                **kwargs
+            )
             pltItem.draw_item(self)
-            if not isProjection:
+            if not is_projection:
                 self.wimpDB.append(pltItem)
 
     def plot_excluded_region(self, **kwargs):

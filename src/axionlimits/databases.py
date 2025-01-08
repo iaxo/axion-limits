@@ -44,7 +44,15 @@ class DataBase:
 
         self.cursor.execute(instruction)
         rows = self.cursor.fetchall()
-        return rows
+
+        # convert list of rows to dictionary
+        rows_dict = {}
+        column_names = self.get_columns_names()
+        for row in rows:
+            rows_dict[row[0]] = dict(zip(column_names[1:], row[1:]))
+
+        return rows_dict
+
 
     def get_rows(self, field: str, values: list):
         if type(values) not in [list, tuple]:
@@ -85,8 +93,14 @@ class DataBase:
                         print(f"Did you mean any of these? {candidates}")
                     else:
                         print("No candidates found")
+        
+        # convert list of rows to dictionary
+        rows_dict = {}
+        column_names = self.get_columns_names()
+        for row in rows:
+            rows_dict[row[0]] = dict(zip(column_names[1:], row[1:]))
 
-        return rows
+        return rows_dict
 
     def update_row(self, name, field, value):
         instruction = (
