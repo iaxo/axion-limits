@@ -23,6 +23,20 @@ class DataBase:
     def set_commit(self, commit: bool):
         self.commit = commit
 
+    def get_columns(self):
+        self.cursor.execute(f"PRAGMA table_info({self.name})")
+        columns = self.cursor.fetchall()
+        return columns
+    def get_columns_names(self):
+        columns = self.get_columns()
+        return [col[1] for col in columns]
+    def get_columns_types(self):
+        columns = self.get_columns()
+        return [col[2] for col in columns]
+    def get_columns_names_types(self):
+        columns = self.get_columns()
+        return [(col[1], col[2]) for col in columns]
+
     def get_rows_where(self, selection: str = ""):
         instruction = f"SELECT * FROM {self.name}"
         if selection != "":
