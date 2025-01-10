@@ -145,16 +145,12 @@ class BasePlot(ABC):
                 is_logscale = self.plot.get_yscale() == "log"
                 data_visible = data[data[:, 1] < y_top, :]
                 if is_logscale:
-                    y_steps = np.logspace(np.log10(data_visible[:, 1]), np.log10(y_top), len(colorseq))
+                    y_steps = np.logspace(np.log10(data_visible[:, 1]), np.log10(y_top), len(colorseq)+1)
                 else:
                     y_steps = np.linspace(data_visible[:, 1], y_top, len(colorseq))
                 for i in range(len(colorseq)):
-                    if i == 0:
-                        y_lower = data_visible[:, 1]
-                    else:
-                        y_lower = y_steps[i-1, :]
-                    y_upper = y_steps[i, :]
-
+                    y_lower = y_steps[i, :]
+                    y_upper = y_steps[i+1, :]
                     color = colorseq[i]
                     self.plot.fill_between(data_visible[:, 0], y_lower, y_upper, color=color, zorder=self.zorder)
 
@@ -181,19 +177,15 @@ class BasePlot(ABC):
                 is_logscale = self.plot.get_yscale() == "log"
                 data_visible = data[data[:, 1] > y_bottom, :]
                 if is_logscale:
-                    y_steps = np.logspace(np.log10(y_bottom), np.log10(data_visible[:, 1]), len(colorseq))
+                    y_steps = np.logspace(np.log10(y_bottom), np.log10(data_visible[:, 1]), len(colorseq)+1)
                 else:
                     y_steps = np.linspace(y_bottom, data_visible[:, 1], len(colorseq))
                 for i in range(len(colorseq)):
-                    if i == 0:
-                        y_lower = y_bottom
-                    else:
-                        y_lower = y_steps[i-1, :]
-
-                    y_upper = y_steps[i, :]
-
-                    color = colorseq[len(colorseq) - i - 1]
+                    y_lower = y_steps[i, :]
+                    y_upper = y_steps[i+1, :]
+                    color = colorseq[len(colorseq) - i - 1] # reverse to have the lighter colours with the data curve
                     self.plot.fill_between(data_visible[:, 0], y_lower, y_upper, color=color, zorder=self.zorder)
+
         self.zorder += 1
 
     def plot_labels(self, labels: list):
@@ -427,8 +419,7 @@ class ExPltItem:
 
     def draw_item(self, plot):
         drawopt_to_print = self.drawopt.copy()
-        if "cseq" in drawopt_to_print:
-            del drawopt_to_print["cseq"] # it is very messy to print this
+        drawopt_to_print.pop("cseq", None)
         print("->", self.name, self.short_filename, drawopt_to_print)
         plot.add_plot_item(self.typeitem, self.data, **self.drawopt)
 
