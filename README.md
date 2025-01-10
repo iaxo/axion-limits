@@ -65,6 +65,15 @@ Now, extract this rows (the _get_rows(field, values)_ method return the rows in 
 ```python
 exps = database.get_rows("name", experimentsToPlot)
 ```
+> [!TIP]  
+> The `exps` dictionary provides detailed row information from the database for each selected experiment. The keys in this dictionary correspond to the names of the experiments, and the values are nested dictionaries where column names serve as keys. You can modify these values to customize the plot beyond the default settings.  
+> For example, to replicate the iconic [AxionLimits](https://cajohare.github.io/AxionLimits/) style for the QCD band:  
+> ```python
+> exps["qcdband"]["drawOptions"] = "cmap=('YlOrBr', 0, 0.45, 40)"
+> exps["ksvz"]["drawOptions"] += ", color='#a35c2f'"
+> ```  
+
+
 You may now include some labels. In order to do that, you can build a list where each element will be a label to plot. Each of these elements (labels) should be a tuple (or list) containing at least a string with the text of the label (_LaTeX_ formatting is available), the x position and y position. Optionally, a 4th element can be given containing a dictionary with the [matplotlib.pyplot.text()](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.text.html) keyword arguments to customize the text label as you want. For example,
 ```python
 labels = [
