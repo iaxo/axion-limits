@@ -139,16 +139,28 @@ class BasePlot(ABC):
             del kwargs["cmap"]
         if typeitem not in ["band", "line", "region", "fog"]:
             raise ValueError("item type " + typeitem + " not known")
-        if typeitem == "band":
-            if colorseq is None:
-                self.plot.fill_between(data[:, 0], data[:, 1], y2=y_top, **kwargs)
-            else: # TODO: this doesn't work as expected...
-                for i in range(len(colorseq)):
-                    y_lower = data[:, 1] + (y_top- data[:, 1]) * (i / len(colorseq))
-                    y_upper = data[:, 1] + (y_top - data[:, 1]) * ((i + 1) / len(colorseq))
-                    color = colorseq[i]
-                    self.plot.fill_between(data[:, 0], y_lower, y_upper, color=color, zorder=self.zorder)
 
+        # band is a filled region between the line and the top of the plot
+        if typeitem == "band":
+            self.plot.fill_between(data[:, 0], data[:, 1], y2=y_top, **kwargs)
+            if colorseq is not None:
+                is_logscale = self.plot.get_yscale() == "log"
+                data_visible = data[data[:, 1] < y_top, :]
+                if is_logscale:
+                    y_steps = np.logspace(np.log10(data_visible[:, 1]), np.log10(y_top), len(colorseq))
+                else:
+                    y_steps = np.linspace(data_visible[:, 1], y_top, len(colorseq))
+                for i in range(len(colorseq)):
+                    if i == 0:
+                        y_lower = data_visible[:, 1]
+                    else:
+                        y_lower = y_steps[i-1, :]
+                    y_upper = y_steps[i, :]
+
+                    color = colorseq[i]
+                    self.plot.fill_between(data_visible[:, 0], y_lower, y_upper, color=color, zorder=self.zorder)
+
+        # region is an enclosed region defined by the data points
         if typeitem == "region":
             mpl_pol = self.plot.fill(data[:, 0], data[:, 1], **kwargs)[0]
             if colorseq is not None:
@@ -160,17 +172,30 @@ class BasePlot(ABC):
                     x, y = shrunken_pol.exterior.xy
                     self.plot.fill(x, y, color=colorseq[i], zorder=self.zorder)
 
+        # line is a simple line with no surface filling
         if typeitem == "line":
             self.plot.plot(data[:, 0], data[:, 1], **kwargs)
 
+        # fog is a filled region between the line and the bottom of the plot
         if typeitem == "fog":
             self.plot.fill_between(data[:, 0], data[:, 1], y2=y_bottom / 10, **kwargs)
             if colorseq is not None:
+                is_logscale = self.plot.get_yscale() == "log"
+                data_visible = data[data[:, 1] > y_bottom, :]
+                if is_logscale:
+                    y_steps = np.logspace(np.log10(y_bottom), np.log10(data_visible[:, 1]), len(colorseq))
+                else:
+                    y_steps = np.linspace(y_bottom, data_visible[:, 1], len(colorseq))
                 for i in range(len(colorseq)):
-                    y_lower = data[:, 1] + (y_bottom - data[:, 1]) * (i / len(colorseq))
-                    y_upper = data[:, 1] + (y_bottom - data[:, 1]) * ((i + 1) / len(colorseq))
-                    color = colorseq[i]
-                    self.plot.fill_between(data[:, 0], y_lower, y_upper, color=color, zorder=self.zorder)
+                    if i == 0:
+                        y_lower = y_bottom
+                    else:
+                        y_lower = y_steps[i-1, :]
+
+                    y_upper = y_steps[i, :]
+
+                    color = colorseq[len(colorseq) - i - 1]
+                    self.plot.fill_between(data_visible[:, 0], y_lower, y_upper, color=color, zorder=self.zorder)
         self.zorder += 1
 
     def plot_labels(self, labels: list):
