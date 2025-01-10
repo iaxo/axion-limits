@@ -6,6 +6,7 @@ import numpy as np
 from importlib.resources import files
 from pylatexenc.latex2text import LatexNodes2Text
 from shapely.geometry import Polygon
+import matplotlib.colors as mcolors
 
 def latex_to_plain_text(latex_string):
     converter = LatexNodes2Text()
@@ -173,3 +174,50 @@ def mpl_to_shapely(polygon, logscale=False):
     # Create a shapely Polygon from the coordinates
     shapely_polygon = Polygon(polygon_coords)
     return shapely_polygon
+
+def generate_colors_with_alpha(color_name, alpha_min=0.0, alpha_max=1.0, n=10):
+    """
+    Genera un vector de N colores con valores alpha equiespaciados entre alpha_min y alpha_max.
+
+    Args:
+        color_name (str or tuple): Nombre del color o tupla RGB.
+        N (int): Número de colores a generar.
+        alpha_min (float): Valor mínimo de alpha (entre 0 y 1).
+        alpha_max (float): Valor máximo de alpha (entre 0 y 1).
+
+    Returns:
+        list of tuples: Lista de colores en formato RGBA.
+    """
+    
+    rgb = mcolors.to_rgb(color_name)
+    alphas = np.linspace(alpha_min, alpha_max, n)
+    rgba_colors = [[rgb[0], rgb[1], rgb[2], alpha] for alpha in alphas]
+    
+    return rgba_colors
+
+
+def rgba_to_rgb(rgba, background_rgba=(1, 1, 1, 1)):
+    """
+    Convert an RGBA color to RGB with a given background color.
+
+    Parameters
+    ----------
+    rgba : array-like
+        The RGBA color to convert.
+    background_rgba : array-like, optional
+        The background color in RGBA format.
+        Default is white.
+    
+    Returns
+    -------
+    array-like
+        The RGB color.
+    """
+
+    rgba = np.array(rgba, ndmin=2) # ensure input is 2D for generalization
+    background_rgba = np.array(background_rgba)
+    
+    # Perform RGBA to RGB conversion
+    rgb = (1 - rgba[:, 3, None]) * background_rgba[:3] + rgba[:, 3, None] * rgba[:, :3]
+    
+    return np.squeeze(rgb) # squeeze to recover input dimensionality

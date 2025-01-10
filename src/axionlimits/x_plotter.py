@@ -19,6 +19,7 @@ from .utils import resolve_relative_path, get_absolute_path
 from .utils import is_latex_installed, latex_to_plain_text
 from .utils import extract_kwargs, custom_formatter
 from .utils import get_polygon_max_shrink_distance, shrink_mpl_polygon, mpl_to_shapely
+from .utils import generate_colors_with_alpha, rgba_to_rgb
 
 # ==============================================================================#
 # == class representing a generic sensitivity plot
@@ -374,13 +375,15 @@ class ExPltItem:
         self.short_filename = filename
         self.filename = get_absolute_path(self.short_filename, 'axionlimits.data')
         self.drawopt = kwargs
+
+        # parse the colormap description
         cmap_description = kwargs.get("cmap", None)
         cseq = None
         if cmap_description:
             params = {
-                0 : "", # name of the colormap
-                1 : 0, # minimum value of the colormap
-                2 : 1, # maximum value of the colormap
+                0 : "", # name of the colormap or color
+                1 : 0, # minimum value of the colormap or alpha
+                2 : 1, # maximum value of the colormap or alpha
                 3 : 100 # number of colors from the colormap
             }
             if type(cmap_description) == str:
@@ -390,7 +393,14 @@ class ExPltItem:
                     params[i] = cmap_description[i]
             else:
                 raise ValueError("cmap description must be a string or a list/tuple")
-            cseq = plt.get_cmap(params[0])(np.linspace(params[1], params[2], params[3]))
+
+            # generate the sequence of colors
+            try:
+                cseq = plt.get_cmap(params[0])(np.linspace(params[1], params[2], params[3]))
+            except ValueError: # if the colormap is not recognized, try to generate the colors
+                cseq = generate_colors_with_alpha(params[0], params[1], params[2], params[3])
+                cseq = rgba_to_rgb(cseq)
+
             self.drawopt["cseq"] = cseq
 
         if typeitem not in ["band", "region", "line", "fog"]:
@@ -414,8 +424,6 @@ class ExPltItem:
                     delimiters,
                 )
                 raise ValueError("Could not load data from file " + filename)
-
-        # self.data = loadtxt(filename)
 
     def draw_item(self, plot):
         drawopt_to_print = self.drawopt.copy()
