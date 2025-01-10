@@ -1,7 +1,7 @@
-# IAXO axion-limits
-Python package to generate the limit exclusion plots of different experiments of dark matter searches. For now, it includes axion (coupling to photon and electrons) and WIMPs (spin independent interaction only) experiments, although its called 'axion-limits'.
+# IAXO axionlimits
+A Python package for generating limit exclusion plots from various dark matter particle candidates. Currently, it supports axion experiments (photon and electron coupling) and WIMP experiments (spin-independent interactions). Despite its name, 'axionlimits' covers both types of experiments.  
 
-Some examples of these generated [plots](plots) can be found in the plots folder:
+You can find some examples of the generated [plots](plots) in the plots folder:  
 
 [<img align="center" height="275" src="plots/large_panorama.png">](plots/large_panorama.png)
 [<img align="center" height="275" src="plots/haloscopes.png">](plots/haloscopes)
@@ -55,7 +55,7 @@ Then, write a list with the experiments name (matching the name column of the da
 experimentsToPlot = [
     "qcdband",
     "ksvz",
-    "CAST",
+    "CAST2021",
 ]
 ```
 > [!NOTE]
@@ -122,8 +122,8 @@ This feature enables gradient color filling for bands, regions, and fog areas us
   4. **Number of gradient steps** (higher values create smoother gradients but may impact performance). 
   
   Example: `cmap=('Greys', 0.1, 1, 50)`. 
-  >[!TIP]
-  >  Reverse gradient direction by swapping the second and third `cmap` values. E.g. `cmap=('Greys', 1, 0.1, 50)`. 
+  > [!TIP]
+  > Reverse gradient direction by swapping the second and third `cmap` values. E.g. `cmap=('Greys', 1, 0.1, 50)`. 
 
 - For fully custom gradients, use the `cseq` argument, e.g., `cseq=['red', 'blue', 'green']`.  
 
@@ -171,18 +171,18 @@ database_wimps = db.DataBaseWimps()
 > Ensure no file with the same name as the default database exists in your current directory. Local files take precedence over package-installed files during the search (see get_absolute_path in [utils.py](src/axionlimits/utils.py)).
 
 ## Adding new data to the database
-Once loaded, you can edit the database if you want. By default, the database
-file will not be edited. To commit the changes to the db file, set parameter
-`commit=True` at the constructor or use the DataBase.set_commit(True) method. For
-example, you can add a new row with the following command:
+
+You can modify the database after loading it. By default, changes are not saved to the database file. To commit changes, enable the `commit` mode by setting `commit=True` when initializing the database or by calling the `DataBase.set_commit(True)` method.  
+
+For example, to add a new row to the database:  
 
 ```python
-database.set_commit(True) # to commit the changes to the .db file
+database.set_commit(True)  # Enable commit mode to save changes to the .db file
 database.insert_row("exp_name", "line", "path_to_datafile", "color='red', linewidth=2", 0, 'source?', 'year?', 0, 0, 0, 0, 0, 0, 0, 0)
-database.set_commit(False) # go back to default mode (not committing changes to the .db file)
+database.set_commit(False)  # Disable commit mode to return to default (no changes saved)
 ```
 > [!IMPORTANT]
-> If you do so, please consider adding this new row of the database in the python script [build_database.py](src/axionlimits/data/build_databases.py) as this file serves as backup for generating the databases in case they are unintentionally changed or deleted.
+> When adding new rows, update the corresponding Python script (build_database.py) to ensure the database can be rebuilt. This script serves as a reliable backup for generating the databases.
 
 ## Editing existing row of the database
 You may want to change temporary the column value of an existing row. In that case you can load the database with the default parameter commit=False. Then, you can change the drawOptions of a row as follows:
