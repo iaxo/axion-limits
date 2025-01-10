@@ -129,14 +129,12 @@ class BasePlot(ABC):
     # ==============================================================================#
     # will draw a new exclusion line to the plot, no to be filled
     #
-    def add_plot_item(self, typeitem, linename, data, **kwargs):
+    def add_plot_item(self, typeitem, data, **kwargs):
         y_top = self.plot.get_ylim()[1]
         y_bottom = self.plot.get_ylim()[0]
         kwargs["zorder"] = self.zorder
-        colorseq = kwargs.get("colorseq", None)
-        if colorseq is not None:
-            del kwargs["colorseq"] # is not a valid argument for plt plotting functions
-            del kwargs["cmap"]
+        colorseq = kwargs.pop("cseq", None)
+        kwargs.pop("cmap", None) # dont need it here as it has been parsed in ExPltItem
         if typeitem not in ["band", "line", "region", "fog"]:
             raise ValueError("item type " + typeitem + " not known")
 
@@ -401,7 +399,7 @@ class ExPltItem:
             else:
                 raise ValueError("cmap description must be a string or a list/tuple")
             cseq = plt.get_cmap(params[0])(np.linspace(params[1], params[2], params[3]))
-            self.drawopt["colorseq"] = cseq
+            self.drawopt["cseq"] = cseq
 
         if typeitem not in ["band", "region", "line", "fog"]:
             raise ValueError("item type " + typeitem + " not known")
@@ -429,10 +427,10 @@ class ExPltItem:
 
     def draw_item(self, plot):
         drawopt_to_print = self.drawopt.copy()
-        if "colorseq" in drawopt_to_print:
-            del drawopt_to_print["colorseq"] # it is very messy to print this
+        if "cseq" in drawopt_to_print:
+            del drawopt_to_print["cseq"] # it is very messy to print this
         print("->", self.name, self.short_filename, drawopt_to_print)
-        plot.add_plot_item(self.typeitem, self.name, self.data, **self.drawopt)
+        plot.add_plot_item(self.typeitem, self.data, **self.drawopt)
 
 
 # ==============================================================================#
