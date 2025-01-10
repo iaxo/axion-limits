@@ -108,59 +108,41 @@ Use the parameter `experiments` and `labels` to pass the previously defined data
 > You can add any additional matplotlib.pyplot object (such as lines or text) or further customize the figure. Just set the parameter `showplot=False` above and insert the desired plotting objects and customizations. Afterwards, remember to call the `show_plot` and `save_plot` methods. Check out this [example](myPlottingScripts/haloscope_zoom_Jun2024.py) for reference.
 
 Inside [myPlottingScripts](myPlottingScripts) folder you can find real examples of scripts used to generate the figures inside [plots](plots) folder.
+## Advanced Features
 
-# Project contents
-### Source files
-The main files where the code is written are in the [src](src/axionlimits) folder. The code contains the following modules
+### Gradient Filling with Colormap  
 
-1. x_plotter.py : the matplotlib.pyplot objects creation and configuration are
-   handled within the two classes (BasePlot and ExPltItem) defined in this file
-2. axion_plot.py : the creation of the BasePlot for the two cases (AxionGagPlot
-   and AxionGaePlot), the plotting of the data and labels are handled within
-   this classes.
-3. wimp_plot.py : the creation of the BasePlot, the plotting of the data and labels are handled within this class.
-4. databases.py : Here the DataBase classes are defined to interface with
-   the SQLite .db files. It has the following classes:
-   - DataBase is the generic database class that can be used to load an already existing database.
-   - DataBaseGag to create the database table of AxionGag experiments.
-   - DataBaseGae to create the  database table of AxionGae experiments.
-   - DataBaseWimps to create the database table of WIMps experiments.
+This feature enables gradient color filling for bands, regions, and fog areas using customizable colormaps.  
 
-All these files are not intended to be modified by the user.
+##### Key Details:  
+- Use the `cmap` argument in `drawOptions` to define the gradient. It accepts a tuple with the following elements:
+  1. **Colormap name or base color** (e.g., `'Greys'`, `'darkcyan'`, `(0, 0, 0)`, or `'#ff0000'`). Check the full list of [colormaps](https://matplotlib.org/stable/users/explain/colors/colormaps.html).
+  2. **Minimum colormap value or alpha** (default range: 0–1).
+  3. **Maximum colormap value or alpha** (default range: 0–1; values >1 delay the gradient start).
+  4. **Number of gradient steps** (higher values create smoother gradients but may impact performance). 
+  
+  Example: `cmap=('Greys', 0.1, 1, 50)`. 
+  >[!TIP]
+  >  Reverse gradient direction by swapping the second and third `cmap` values. E.g. `cmap=('Greys', 1, 0.1, 50)`. 
 
-## Subdirectories description
-
-1. labeler : all needed files (html and java) for the labels app.
-2. data : here the .txt or .dat files with the exclusion lines of the different
-   experiments should be stored.
-3. databases : here the .db files with the databases of the experiments data and
-   labels should be stored. Include here any new database you build to make a
-   new plot you may want to reproduce in the future.
-4. plots : here the saved plots should be stored. The relative path to this
-   directory is added automatically to the plotname specified by the user.
-5. myPlottingScripts : this folder is meant to serve as the warehouse of the
-   scripts used to generate a plot you may want to reproduce in the future. Here
-   you can found some examples as large_panorama.py, panorama.py,
-   helioscopes.py, haloscopes.py and lsw.py .
-
-# Handling the databases
-The different dark matter detection experiment are organize in SQL databases. For now, we have one database for [axion](data/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and for [WIMPs](data/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction). Any of this table databases contain at least these first columns:
-1. **_name_** : string used to identify the experiment. It should be unique (although it is not forbidden) to the data that would load, so is recommended to add some other identificative tag to the experiment name itself. For example, instead of just _ADMX_ you may use _ADMX2021_ .
-2. **_type_** : string used to specify the type of exclusion data it is. It can hold this valid values:
-   - _line_ : it will be plotted as a line. In WimpPlot, it will be included by default to get the exclusion region.
-   - _region_ : it will be plotted as an enclosed surface on the plot.
-   - _band_ : it will be plotted as an open surfarce from the line defined in the data up to the top of the figure.
-   - _fog_ : it will be plotted as an open surfarce from the line defined in the data down to the bottom of the figure. For example, it is used for neutrino fog (or floor) representation on WimpPlot.
-
-   Each of this will use a different matplotlib.pyplot method (see [XPlotter](src/axionlimits/x_plotter.py)).
-3. **_path_** : string containing the relative path (from the database file directory) to the data file (.txt or .dat) where the data of that experiment is contained. This file should be inside the data/axion/ or data/wimp/ directory. For example: _axion/ADMX2018.txt_
-4. **_drawOptions_** : string containing the customization options for the plotting method of matplotlib.pyplot used (dependent on the _type_). For example: _facecolor='limegreen', edgecolor='darkgreen', lw=0.2_
-5. **_projection_** : integer (_0_ or _1_) that indicates if the data is just a prospect/projection for future results (_1_) or if it is a reported result (_0_).
-6. **_source_** : string containing the origin of the data. It can be the DOI of the publication, the arXiV identifier or any other way of tracing the origin of the data. This information should also be included inside the data file as a header (starting with the comment character # ). For example: _2110.06096_
-7. **_year_** : string containing the year of release of the data. For example: _2019_
+- For fully custom gradients, use the `cseq` argument, e.g., `cseq=['red', 'blue', 'green']`.  
 
 
-Furthermore, the different DM candidates databases have more specific additional columns. In order to create the desired database you may use the correspondent database class defined in [databases.py](src/axionlimits/databases.py).
+
+# Database
+The different dark matter detection experiment are organize in SQL databases. For now, we have one default database for [axion](data/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and another one for [WIMPs](data/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction).
+
+Each table includes essential columns such as:  
+- **_name_**: A unique identifier for the experiment.  
+- **_type_**: Specifies the exclusion data type (_line_, _region_, _band_, _fog_).  
+- **_path_**: Relative path to the data file.  
+- **_drawOptions_**: Customization options for matplotlib plotting.  
+- **_projection_**: Indicates whether the data is a projection (_1_) or a reported result (_0_).  
+- **_source_**: Origin of the data (e.g., DOI or arXiv ID).  
+- **_year_**: Year of the data release.  
+
+
+Additional columns specific to each dark matter candidate are also included.
 
 ## Loading a database
 
@@ -262,23 +244,6 @@ database.insert_rows(AxionsGae)
 data = database.read_rows()
 print(data)
 ```
-
-# Labels web app
-
-To quickly add new labels to the plots in a easy way (although this would not be
-saved anywhere to be reproduced) you may use the labels app programmed in the
-labeler directory. Or just click on the following link:
-[Label's APP](https://danielmartinezmiravete.github.io/Labels-App/)
-
-You can start the app by opening the HTML script called 'index.html'. This
-application is only capable of modifying SVG files. Instructions for the webpage
-are provided within the webpage itself.
-
-## Known Issues
-
-- The labels application cannot interpret _LaTeX_.
-- At labels application, when working with multiple labels, moving a label other
-  than the last label will replace the coordinates of the last label written.
 
 # Acknowledgements
 External contributors:
