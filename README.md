@@ -1,4 +1,4 @@
-# [IAXO axionlimits](https://github.com/iaxo/axion-limits)
+# [IAXO axionlimits](https://github.com/iaxo/axion-limits) 🌌🐍
 A Python package for generating limit exclusion plots from various dark matter particle candidates. Currently, it supports axion experiments (photon and electron coupling) and WIMP experiments (spin-independent interactions). Despite its name, 'axionlimits' covers both types of experiments.  
 
 You can find some examples of the generated [plots](plots) in the plots folder:  
@@ -8,18 +8,18 @@ You can find some examples of the generated [plots](plots) in the plots folder:
 
 [<img align="center" height="350" src="plots/wimps_lowmass.png">](plots/wimps_lowmass.png)
 # Installation ⚙️
-This package is currently not available at PyPi, so the installation requieres to download the source code from this repository. To do so, follow this steps:
+This package is currently not available at PyPi, so the installation requieres to download the source code from this repository. To do so, follow these steps:
 
-Download this github repository
+1️⃣ Download this github repository
 
 ```bash
 git clone https://github.com/iaxo/axion-limits.git
 ```
-Change directory to this repository folder
+2️⃣ Change directory to this repository folder
 ```bash
 cd axionlimits
 ```
-Install the axionlimits package
+3️⃣ Install the axionlimits package
 ```bash
 pip install .
 ```
@@ -107,7 +107,7 @@ Use the parameter `experiments` and `labels` to pass the previously defined data
 > [!TIP]
 > You can add any additional matplotlib.pyplot object (such as lines or text) or further customize the figure. Just set the parameter `showplot=False` above and insert the desired plotting objects and customizations. Afterwards, remember to call the `show_plot` and `save_plot` methods. Check out this [example](myPlottingScripts/haloscope_zoom_Jun2024.py) for reference.
 
-Inside [myPlottingScripts](myPlottingScripts) folder you can find real examples of scripts used to generate the figures inside [plots](plots) folder.
+📂 Inside [myPlottingScripts](myPlottingScripts) folder you can find more complex examples of scripts used to generate the figures at [plots](plots) directory.
 ## Advanced Features
 
 ### Gradient Filling with Colormap  
@@ -130,7 +130,7 @@ This feature enables gradient color filling for bands, regions, and fog areas us
 
 
 
-# Database 📗
+# Databases 📗
 The different dark matter detection experiment are organize in SQL databases. For now, we have one default database for [axion](data/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and another one for [WIMPs](data/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction).
 
 Each table includes essential columns such as:  
@@ -246,11 +246,11 @@ data = database.read_rows()
 print(data)
 ```
 
-# Acknowledgements💫
-- IAXO contributors:
-   - Álvaro Ezquerro
-   - Igor G. Irastorza
-   - Luis Obis
+# Contributors💫
+- IAXO collaboration contributors:
+   - [Álvaro Ezquerro](https://github.com/AlvaroEzq)
+   - [Igor G. Irastorza](https://github.com/igarciai)
+   - [Luis Obis](https://github.com/lobis)
 
 - External contributors:
 
