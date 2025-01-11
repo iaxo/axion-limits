@@ -1,4 +1,4 @@
-# IAXO axionlimits
+# [IAXO axionlimits](https://github.com/iaxo/axion-limits)
 A Python package for generating limit exclusion plots from various dark matter particle candidates. Currently, it supports axion experiments (photon and electron coupling) and WIMP experiments (spin-independent interactions). Despite its name, 'axionlimits' covers both types of experiments.  
 
 You can find some examples of the generated [plots](plots) in the plots folder:  
@@ -7,7 +7,7 @@ You can find some examples of the generated [plots](plots) in the plots folder:
 [<img align="center" height="275" src="plots/haloscopes.png">](plots/haloscopes)
 
 [<img align="center" height="350" src="plots/wimps_lowmass.png">](plots/wimps_lowmass.png)
-# Installation
+# Installation ⚙️
 This package is currently not available at PyPi, so the installation requieres to download the source code from this repository. To do so, follow this steps:
 
 Download this github repository
@@ -34,7 +34,7 @@ pip install .
 > and get some coffee :coffee:, as this may take some time...
 
 
-# Getting Started
+# Getting Started 👨‍💻
 The files [example_axionplot.py](example_axionplot.py) and [example_wimpplot.py](example_wimpplot.py) are given as simple examples on how to generate the sensitivity plots with this package. You can do this by executing any of this scripts. Let's take the axion case.
 
 ```bash
@@ -121,15 +121,16 @@ This feature enables gradient color filling for bands, regions, and fog areas us
   3. **Maximum colormap value or alpha** (default range: 0–1; values >1 delay the gradient start).
   4. **Number of gradient steps** (higher values create smoother gradients but may impact performance). 
   
-  Example: `cmap=('Greys', 0.1, 1, 50)`. 
-  > [!TIP]
-  > Reverse gradient direction by swapping the second and third `cmap` values. E.g. `cmap=('Greys', 1, 0.1, 50)`. 
+  Example: `cmap=('Greys', 0.1, 1, 50)`.
+
+> [!TIP]
+> Reverse gradient direction by swapping the second and third `cmap` values. E.g. `cmap=('Greys', 1, 0.1, 50)`. 
 
 - For fully custom gradients, use the `cseq` argument, e.g., `cseq=['red', 'blue', 'green']`.  
 
 
 
-# Database
+# Database 📗
 The different dark matter detection experiment are organize in SQL databases. For now, we have one default database for [axion](data/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and another one for [WIMPs](data/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction).
 
 Each table includes essential columns such as:  
@@ -245,9 +246,14 @@ data = database.read_rows()
 print(data)
 ```
 
-# Acknowledgements
-External contributors:
+# Acknowledgements💫
+- IAXO contributors:
+   - Álvaro Ezquerro
+   - Igor G. Irastorza
+   - Luis Obis
 
-- Daniel Martínez Miravete contribution for an internship within the IAXO group of University of Zaragoza on summer 2023
+- External contributors:
+
+   - Daniel Martínez Miravete contribution for an internship within the IAXO group of University of Zaragoza on summer 2023
 (https://github.com/DanielMartinezMiravete/Axion_Limits_Memory) for his Bachelor in Physics. Internship supervised by [Juan Antonio García](https://github.com/juanangp) and [Álvaro Ezquerro](https://github.com/AlvaroEzq). Also, very helpful insight
 was given by [David Díez](https://github.com/DavidDiezIb) and [Luis Antonio Obis](https://github.com/lobis).
