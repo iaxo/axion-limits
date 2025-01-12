@@ -42,3 +42,21 @@ The different dark matter detection experiment are organize in SQL databases. Fo
 Furthermore, the different DM candidates databases have more specific additional columns. In order to create the desired database you may use the correspondent database class defined in [databases.py](src/axionlimits/databases.py).
 
 The python script [build_database.py](src/axionlimits/data/build_databases.py) serves as backup for generating the databases in case they are unintentionally changed or deleted.
+
+## Editing an existing row of the database
+You may want to change temporary the column value of an existing row. In that case you can load the database with the default parameter commit=False. Then, you can change the drawOptions of a row as follows:
+
+```python
+database.update_row("exp_name", "drawOptions", "color='blue', linewidth=1")
+```
+
+Or delete a row:
+
+```python
+database.delete_rows("name='exp_name'") # set parameter confirm=True to avoid the security check
+```
+> [!CAUTION]
+> To commit this changes to the database file is not recommended as it could make previous plots not reproducible in the future even with their original plotting script.
+
+## Creating a new database
+To create a new database for a new plot you may follow the [build_database.py](src/axionlimits/data/build_databases.py) script.

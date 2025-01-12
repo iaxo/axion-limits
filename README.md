@@ -61,7 +61,7 @@ experimentsToPlot = [
 > [!NOTE]
 > Note that the order in which the experiments are added to this list will be the order in which they are plotted, so the last experiments added will be drawn on top of the first ones.
 
-Now, extract this rows (the _get_rows(field, values)_ method return the rows in the same order in which they are given in the values argument) from the database as follows:
+Now, extract these rows (the _get_rows(field, values)_ method return the rows in the same order in which they are given in the values argument) from the database as follows:
 ```python
 exps = database.get_rows("name", experimentsToPlot)
 ```
@@ -168,13 +168,13 @@ Each subclass is preconfigured to load its corresponding default database.
 import axionlimits.databases as db
 
 # Load the default axion-photon coupling database
-database_gag = db.DataBaseGag()
+database_gag = db.DataBaseGag() # loads file Axions.db, table AxionsGag
 
 # Load the default axion-electron coupling database
-database_gae = db.DataBaseGae()
+database_gae = db.DataBaseGae() # loads file Axions.db, table AxionGae
 
 # Load the default wimp-nucleon SI cross section database
-database_wimps = db.DataBaseWimps()
+database_wimps = db.DataBaseWimps() # loads file Wimps.db, table Wimps_SI
 ```
 
 > [!NOTE]
@@ -184,76 +184,16 @@ database_wimps = db.DataBaseWimps()
 
 You can modify the database after loading it. By default, changes are not saved to the database file. To commit changes, enable the `commit` mode by setting `commit=True` when initializing the database or by calling the `DataBase.set_commit(True)` method.  
 
-For example, to add a new row to the database:  
+For example, to add a new row to the axion-photon (Gag) coupling database table:  
 
 ```python
-database.set_commit(True)  # Enable commit mode to save changes to the .db file
-database.insert_row("exp_name", "line", "path_to_datafile", "color='red', linewidth=2", 0, 'source?', 'year?', 0, 0, 0, 0, 0, 0, 0, 0)
-database.set_commit(False)  # Disable commit mode to return to default (no changes saved)
+database_gag.set_commit(True)  # Enable commit mode to save changes to the .db file
+database_gag.insert_row("exp_name", "line", "path_to_datafile", "color='red', linewidth=2", 0, 'source?', 'year?', 0, 0, 0, 0, 0, 0, 0, 0)
+database_gag.set_commit(False)  # Disable commit mode to return to default (no changes saved)
 ```
 > [!IMPORTANT]
-> When adding new rows, update the corresponding Python script (build_database.py) to ensure the database can be rebuilt. This script serves as a reliable backup for generating the databases.
+> When adding new rows, update the corresponding Python script ([build_database.py](src/axionlimits/data/build_databases.py)) to ensure the database can be rebuilt. This script serves as a reliable backup for generating the databases.
 
-## Editing existing row of the database
-You may want to change temporary the column value of an existing row. In that case you can load the database with the default parameter commit=False. Then, you can change the drawOptions of a row as follows:
-
-```python
-database.update_row("exp_name", "drawOptions", "color='blue', linewidth=1")
-```
-
-Or delete a row:
-
-```python
-database.delete_rows("name='exp_name'") # set parameter confirm=True to avoid the security check
-```
-> [!CAUTION]
-> To commit this changes to the database file is not recommended as it could make previous plots not reproducible in the future even with their original plotting script.
-
-## Creating a new database
-
-To create a new database for a new plot you may follow this examples. Note the parameter `commit=True` at the constructor of the databases to commit the changes to the db
-file.
-
-For a axion-photon (Gag) database:
-```python
-import axionlimits.databases as db
-database = db.DataBaseGag("NewAxions.db", commit=True) # this will create (if it doesn't already exists) a table named AxionsGag (default) at NewAxions.db
-path = "data/axion/"
-AxionsGag = [
-    ['qcdband', 'band', path + 'QCD_band.dat', "facecolor='yellow'", 0, '', '', 1, 1, 0, 0, 0, 0, 0, 0],
-    ['CMB_DEsuE', 'band', path + 'cosmoalp/CMB_DEsuE.txt', "facecolor='forestgreen', edgecolor='darkgreen', linewidth=0.5", 0, '1110.2895', '2011', 0, 0, 1, 0, 0, 0, 0, 0],
-    ['old_haloscopes', 'band', path + 'MicrowaveCavities.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '', '', 0, 0, 1, 1, 0, 0, 0, 0],
-    ['RADES2021', 'band', path + 'RADES2021.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '2104.13798', '2021', 0, 0, 1, 1, 0, 0, 0, 0],
-    ['CAST', 'band', path + 'cast_env_2016.dat', "facecolor='deepskyblue', edgecolor='blue', linewidth=0.5", 0, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
-    ['BabyIAXO', 'band', path + 'miniIAXO.dat', "facecolor='deepskyblue', linewidth=0.5, alpha=0.1, linestyle='-'", 1, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
-    ['IAXO', 'band', path + 'IAXO_nominal.txt', "facecolor='deepskyblue', linewidth=0.5, alpha=0.1, linestyle='-'", 1, '', '', 0, 0, 0, 0, 1, 1, 0, 0],
-]
-database.insert_rows(AxionsGag)
-data = database.read_rows()
-print(data)
-```
-
-For a Gae exclusion plot:
-
-```python
-import axionlimits.databases as db
-database = db.DataBaseGae("NewAxions.db", commit=True)  # this will create (if it doesn't already exists) a table named AxionsGae (default) at NewAxions.db
-path1 = 'data/axion/hints/'
-path2 = 'data/axion/gaegag/'
-
-AxionsGae= [
-    ["DFSZ1_starhint", "region", path1 + "DFSZ1_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='springgreen', edgecolor='darkgreen', alpha=0.2", 0, '', ''],
-    ["AJ83_starhint", "region", path1 + "AJ83_ABC_dominant_No_SN_2sigma_hint_rootgaegag_vs_ma.dat", "facecolor='red', edgecolor='red', alpha=0.2", 0, '', ''],
-    ["QCDband", "band", path2 + "DFSZband_gaegag.dat", "facecolor='lemonchiffon', edgecolor='none', linewidth=1", 0, '', ''],
-    ["CAST_gae", "band", path2 + "CAST_gae_gagg.dat", "facecolor='steelblue', edgecolor='darkblue', linewidth=0.5", 0, '', ''],
-
-    ["IAXO_gae", "band", path2 + "sqrtgaagae_sc2.dat", "facecolor='skyblue', edgecolor='black', linewidth=0.5, alpha=0.3", 1, '', ''],
-    ["IAXO_gae_l", "line", path2 + "sqrtgaagae_sc2.dat", "color='black', linewidth=0.5, linestyle='--'", 1, '', ''],
-]
-database.insert_rows(AxionsGae)
-data = database.read_rows()
-print(data)
-```
 
 # Contributors💫
 - IAXO collaboration contributors:
