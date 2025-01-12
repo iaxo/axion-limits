@@ -332,7 +332,7 @@ class BasePlot(ABC):
     # ==============================================================================#
     # saves the plot on a file
     #
-    def save_plot(self, plot_name=""):
+    def save_plot(self, plot_name="", **kwargs):
         if plot_name != "":
             self.saveplotname = plot_name
         if self.saveplotname is None or self.saveplotname == "":
@@ -354,7 +354,9 @@ class BasePlot(ABC):
             print("Saving figure as " + filename)
             return
 
-        self.fig.savefig(filename, bbox_inches="tight")
+        if kwargs.get("bbox_inches", None) is None:
+            kwargs["bbox_inches"] = "tight" # default value
+        self.fig.savefig(filename, **kwargs)
         print("Saving figure as " + filename)
         self.saveplotname = filename
 
