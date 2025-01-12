@@ -18,9 +18,9 @@ AxionsGag = [
     ['THintCIBER', 'region', path + 'CIBER_contour_data.dat', "facecolor='yellow', edgecolor='orange', linewidth=0.5", 0, '', '', 1, 0, 0, 0, 0, 0, 0, 0],
     ['HBhint', 'region', path + 'hints/HB_hint.dat', "facecolor='none', edgecolor='orangered', linewidth=0.3, linestyle='-', hatch='////'", 0, '', '', 1, 0, 0, 0, 0, 0, 0, 0],
     # HINTS - MODELS
-    ['qcdband', 'band', path + 'QCD_band.dat', "facecolor='yellow'", 0, '', '', 1, 1, 0, 0, 0, 0, 0, 0],
-    ['ksvz', 'region', path + 'ksvz.dat', "facecolor='white', edgecolor='orange', linewidth=1", 0, '', '', 1, 1, 0, 0, 0, 0, 0, 0],
-    ['dfsz', 'region', path + 'dfsz.dat', "facecolor='white', edgecolor='orange', linewidth=1", 0, '', '', 1, 1, 0, 0, 0, 0, 0, 0],
+    ['qcdband', 'region', path + 'QCD_band.dat', "facecolor='yellow'", 0, '', '', 1, 1, 0, 0, 0, 0, 0, 0],
+    ['ksvz', 'line', path + 'ksvz.dat', "color='orange', linewidth=1", 0, '', '', 1, 1, 0, 0, 0, 0, 0, 0],
+    ['dfsz', 'line', path + 'dfsz.dat', "color='orange', linewidth=1", 0, '', '', 1, 1, 0, 0, 0, 0, 0, 0],
 
     # COSMOLOGY
     ['endlist2_gamma_projimprov', 'band', path + 'endlist2_gamma_projimprov.txt', "facecolor='gray', edgecolor='black', linewidth=0.5", 0, '', '', 0, 0, 1, 0, 0, 0, 0, 0],

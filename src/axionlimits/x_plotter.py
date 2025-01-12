@@ -12,13 +12,15 @@ from __future__ import annotations
 import pickle
 
 import matplotlib as mpl
+import matplotlib.patheffects as mplpe
 import matplotlib.pyplot as plt
 import numpy as np
 from abc import ABC, abstractmethod
 from .utils import resolve_relative_path, get_absolute_path
 from .utils import is_latex_installed, latex_to_plain_text
 from .utils import extract_kwargs, custom_formatter
-
+from .utils import get_polygon_max_shrink_distance, shrink_mpl_polygon, mpl_to_shapely
+from .utils import generate_colors_with_alpha, rgba_to_rgb
 
 # ==============================================================================#
 # == class representing a generic sensitivity plot
@@ -133,33 +135,93 @@ class BasePlot(ABC):
         y_top = self.plot.get_ylim()[1]
         y_bottom = self.plot.get_ylim()[0]
         kwargs["zorder"] = self.zorder
+        colorseq = kwargs.pop("cseq", None)
+        kwargs.pop("cmap", None) # dont need it here as it has been parsed in ExPltItem
         if typeitem not in ["band", "line", "region", "fog"]:
-            print("ERROR: item type" + typeitem + "not known")
-            exit()
+            raise ValueError("item type " + typeitem + " not known")
+
+        # band is a filled region between the line and the top of the plot
         if typeitem == "band":
             self.plot.fill_between(data[:, 0], data[:, 1], y2=y_top, **kwargs)
+            if colorseq is not None:
+                is_logscale = self.plot.get_yscale() == "log"
+                data_visible = data[data[:, 1] < y_top, :]
+                if is_logscale:
+                    y_steps = np.logspace(np.log10(data_visible[:, 1]), np.log10(y_top), len(colorseq)+1)
+                else:
+                    y_steps = np.linspace(data_visible[:, 1], y_top, len(colorseq))
+                for i in range(len(colorseq)):
+                    y_lower = y_steps[i, :]
+                    y_upper = y_steps[i+1, :]
+                    color = colorseq[i]
+                    self.plot.fill_between(data_visible[:, 0], y_lower, y_upper, color=color, zorder=self.zorder)
+
+        # region is an enclosed region defined by the data points
         if typeitem == "region":
-            self.plot.fill(data[:, 0], data[:, 1], **kwargs)
+            mpl_pol = self.plot.fill(data[:, 0], data[:, 1], **kwargs)[0]
+            if colorseq is not None:
+                is_logscale = self.plot.get_xscale() == "log" or self.plot.get_yscale() == "log"
+                max_d = get_polygon_max_shrink_distance(mpl_to_shapely(mpl_pol, is_logscale))
+                for i in range(len(colorseq)):
+                    shrunk_factor = i / len(colorseq)
+                    shrunken_pol = shrink_mpl_polygon(mpl_pol, shrunk_factor, max_d, is_logscale)
+                    x, y = shrunken_pol.exterior.xy
+                    self.plot.fill(x, y, color=colorseq[i], zorder=self.zorder)
+
+        # line is a simple line with no surface filling
         if typeitem == "line":
             self.plot.plot(data[:, 0], data[:, 1], **kwargs)
+
+        # fog is a filled region between the line and the bottom of the plot
         if typeitem == "fog":
             self.plot.fill_between(data[:, 0], data[:, 1], y2=y_bottom / 10, **kwargs)
+            if colorseq is not None:
+                is_logscale = self.plot.get_yscale() == "log"
+                data_visible = data[data[:, 1] > y_bottom, :]
+                if is_logscale:
+                    y_steps = np.logspace(np.log10(y_bottom), np.log10(data_visible[:, 1]), len(colorseq)+1)
+                else:
+                    y_steps = np.linspace(y_bottom, data_visible[:, 1], len(colorseq))
+                for i in range(len(colorseq)):
+                    y_lower = y_steps[i, :]
+                    y_upper = y_steps[i+1, :]
+                    color = colorseq[len(colorseq) - i - 1] # reverse to have the lighter colours with the data curve
+                    self.plot.fill_between(data_visible[:, 0], y_lower, y_upper, color=color, zorder=self.zorder)
+
         self.zorder += 1
 
     def plot_labels(self, labels: list):
         print("Plotting labels:")
         for label in labels:
+            # extract plt.text kwargs from the fourth element of the tuple
             kwargs = {}
             if type(label[3]) == str:
                 kwargs = extract_kwargs(label[3])
             elif type(label[3]) == dict:
                 kwargs = label[3]
+            
+            # add functionality for border around text
+            border_color = kwargs.pop("bordercolor", None) or kwargs.pop("bc", None)
+            border_width = kwargs.pop("borderwidth", None) or kwargs.pop("bw", None)
+            # default values if one of them is not provided
+            if border_color is not None and border_width is None:
+                border_width = 1 # default border width
+            elif border_color is None and border_width is not None:
+                border_color = "black" # default border color
+            if border_color is not None and border_width is not None:
+                kwargs["path_effects"] = [mplpe.withStroke(linewidth=border_width, foreground=border_color)]
+
             # if "picker" not in kwargs:
             #   kwargs["picker"] = True
             text = label[0]
             if not self._uselatex:
                 text = latex_to_plain_text(label[0])
-            print("->", text, label[1], label[2], kwargs)
+            kwargs_to_print = kwargs.copy()
+            is_path_effect = kwargs_to_print.pop("path_effects", False)
+            if is_path_effect:
+                kwargs_to_print["bc"] = border_color
+                kwargs_to_print["bw"] = border_width
+            print("->", text, label[1], label[2], kwargs_to_print)
             self.plot.text(x=label[1], y=label[2], s=text, **kwargs)
     
     @abstractmethod
@@ -224,7 +286,7 @@ class BasePlot(ABC):
                     self.dragged.get_rotation(),
                 ),
                 (
-                    ", rotation_mode=" + self.dragged.get_rotation_mode()
+                    ", rotation_mode=" + f"'{self.dragged.get_rotation_mode()}'"
                     if self.dragged.get_rotation() != 0
                     else ""
                 ),
@@ -289,7 +351,7 @@ class BasePlot(ABC):
     # ==============================================================================#
     # saves the plot on a file
     #
-    def save_plot(self, plot_name=""):
+    def save_plot(self, plot_name="", **kwargs):
         if plot_name != "":
             self.saveplotname = plot_name
         if self.saveplotname is None or self.saveplotname == "":
@@ -311,7 +373,9 @@ class BasePlot(ABC):
             print("Saving figure as " + filename)
             return
 
-        self.fig.savefig(filename, bbox_inches="tight")
+        if kwargs.get("bbox_inches", None) is None:
+            kwargs["bbox_inches"] = "tight" # default value
+        self.fig.savefig(filename, **kwargs)
         print("Saving figure as " + filename)
         self.saveplotname = filename
 
@@ -332,6 +396,34 @@ class ExPltItem:
         self.short_filename = filename
         self.filename = get_absolute_path(self.short_filename, 'axionlimits.data')
         self.drawopt = kwargs
+
+        # parse the colormap description
+        cmap_description = kwargs.get("cmap", None)
+        cseq = None
+        if cmap_description:
+            params = {
+                0 : "", # name of the colormap or color
+                1 : 0, # minimum value of the colormap or alpha
+                2 : 1, # maximum value of the colormap or alpha
+                3 : 100 # number of colors from the colormap
+            }
+            if type(cmap_description) == str:
+                params[0] = cmap_description
+            elif type(cmap_description) in [list, tuple]:
+                for i in range(len(cmap_description)):
+                    params[i] = cmap_description[i]
+            else:
+                raise ValueError("cmap description must be a string or a list/tuple")
+
+            # generate the sequence of colors
+            try:
+                cseq = plt.get_cmap(params[0])(np.linspace(params[1], params[2], params[3]))
+            except ValueError: # if the colormap is not recognized, try to generate the colors
+                cseq = generate_colors_with_alpha(params[0], params[1], params[2], params[3])
+                cseq = rgba_to_rgb(cseq)
+
+            self.drawopt["cseq"] = cseq
+
         if typeitem not in ["band", "region", "line", "fog"]:
             raise ValueError("item type " + typeitem + " not known")
         self.data = []
@@ -354,10 +446,10 @@ class ExPltItem:
                 )
                 raise ValueError("Could not load data from file " + filename)
 
-        # self.data = loadtxt(filename)
-
     def draw_item(self, plot):
-        print("->", self.name, self.short_filename, self.drawopt)
+        drawopt_to_print = self.drawopt.copy()
+        drawopt_to_print.pop("cseq", None)
+        print("->", self.name, self.short_filename, drawopt_to_print)
         plot.add_plot_item(self.typeitem, self.data, **self.drawopt)
 
 

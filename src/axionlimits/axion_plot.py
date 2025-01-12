@@ -71,17 +71,21 @@ class AxionGagPlot(BasePlot):
             if len(saveplotname) > 0:
                 self.save_plot(self.saveplotname)
 
-    def plot_data(self, data):
+    def plot_data(self, data: dict):
         print("Plotting data:")
-        for row in data:
+        for name, info in data.items():
             kwargs = {}
-            if type(row[3]) == str:
-                kwargs = extract_kwargs(row[3])
-            elif type(row[3]) == dict:
-                kwargs = row[3]
+            draw_options = info.get("drawOptions", {})
+            if type(draw_options) == str:
+                kwargs = extract_kwargs(draw_options)
+            elif type(draw_options) == dict:
+                kwargs = draw_options
             pltItem = ExPltItem(
-                row[0], row[1], row[2], **kwargs
-            )  # row[0] = name, row[1] = type, row[2] = path, row[3] = drawOptions
+                name,
+                info.get('type', ''),
+                info.get('path', ''),
+                **kwargs
+            )
             if self.plotCag:
                 renorm_item(pltItem)
             pltItem.draw_item(self)
