@@ -286,7 +286,7 @@ class BasePlot(ABC):
                     self.dragged.get_rotation(),
                 ),
                 (
-                    ", rotation_mode=" + self.dragged.get_rotation_mode()
+                    ", rotation_mode=" + f"'{self.dragged.get_rotation_mode()}'"
                     if self.dragged.get_rotation() != 0
                     else ""
                 ),
