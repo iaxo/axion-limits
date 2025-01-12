@@ -12,6 +12,7 @@ from __future__ import annotations
 import pickle
 
 import matplotlib as mpl
+import matplotlib.patheffects as mplpe
 import matplotlib.pyplot as plt
 import numpy as np
 from abc import ABC, abstractmethod
@@ -192,17 +193,35 @@ class BasePlot(ABC):
     def plot_labels(self, labels: list):
         print("Plotting labels:")
         for label in labels:
+            # extract plt.text kwargs from the fourth element of the tuple
             kwargs = {}
             if type(label[3]) == str:
                 kwargs = extract_kwargs(label[3])
             elif type(label[3]) == dict:
                 kwargs = label[3]
+            
+            # add functionality for border around text
+            border_color = kwargs.pop("bordercolor", None) or kwargs.pop("bc", None)
+            border_width = kwargs.pop("borderwidth", None) or kwargs.pop("bw", None)
+            # default values if one of them is not provided
+            if border_color is not None and border_width is None:
+                border_width = 1 # default border width
+            elif border_color is None and border_width is not None:
+                border_color = "black" # default border color
+            if border_color is not None and border_width is not None:
+                kwargs["path_effects"] = [mplpe.withStroke(linewidth=border_width, foreground=border_color)]
+
             # if "picker" not in kwargs:
             #   kwargs["picker"] = True
             text = label[0]
             if not self._uselatex:
                 text = latex_to_plain_text(label[0])
-            print("->", text, label[1], label[2], kwargs)
+            kwargs_to_print = kwargs.copy()
+            is_path_effect = kwargs_to_print.pop("path_effects", False)
+            if is_path_effect:
+                kwargs_to_print["bc"] = border_color
+                kwargs_to_print["bw"] = border_width
+            print("->", text, label[1], label[2], kwargs_to_print)
             self.plot.text(x=label[1], y=label[2], s=text, **kwargs)
     
     @abstractmethod
