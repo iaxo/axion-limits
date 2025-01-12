@@ -7,7 +7,7 @@ database = db.DataBaseWimps()
 
 # List of the names of the experiments to plot. The names must match the name column in the database
 # To see the names of the experiments in the database, you can use the following command:
-# print([row[0] for row in database.get_rows_where("1 ORDER BY name")])
+# print([name for name in database.get_rows_where("1 ORDER BY name").keys()])
 experimentsToPlot = [
     "CDMSLite_2016",
     "CRESSTII_2015",
@@ -31,7 +31,7 @@ exps = database.get_rows(
 # --- EDIT THE ITEMS PROPERTIES ---
 # If you want to edit the properties of an item you have selected from the database,
 # you can do it here. For example, change the drawOptions of the element "NuFloorXe":
-exps["NuFloorXe"]["drawOptions"] += ", cmap=('Greys', 0, 0.8, 100), edgecolor=None"
+exps["NuFloorXe"]["drawOptions"] += ", cmap=('Greys', 0.1, 0.8, 50), edgecolor=None"
 
 # Or add a new element which is not present in the database. For example, a projection
 # you have calculated and want to compare with the existing exclusion lines from the
@@ -59,7 +59,7 @@ for label in default_labels.values():
     )
 # add extra label
 extralabels = [
-    ("TREX-DM", 0.21, 1.4e-37, dict(size=10, color="red")),
+    #("TREX-DM", 0.21, 1.4e-37, dict(size=10, color="red")),
 ]
 labels.extend(
     extralabels

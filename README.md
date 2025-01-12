@@ -4,7 +4,7 @@ A Python package for generating limit exclusion plots from various dark matter p
 You can find some examples of the generated [plots](plots) in the plots folder:  
 
 [<img align="center" height="275" src="plots/large_panorama.png">](plots/large_panorama.png)
-[<img align="center" height="275" src="plots/haloscopes.png">](plots/haloscopes)
+[<img align="center" height="275" src="plots/haloscopes_2024_stylish.png">](plots/haloscopes_2024_stylish.png)
 
 [<img align="center" height="350" src="plots/wimps_lowmass.png">](plots/wimps_lowmass.png)
 # Installation ⚙️
@@ -108,14 +108,14 @@ Use the parameter `experiments` and `labels` to pass the previously defined data
 > You can add any additional matplotlib.pyplot object (such as lines or text) or further customize the figure. Just set the parameter `showplot=False` above and insert the desired plotting objects and customizations. Afterwards, remember to call the `show_plot` and `save_plot` methods. Check out this [example](myPlottingScripts/haloscope_zoom_Jun2024.py) for reference.
 
 📂 Inside [myPlottingScripts](myPlottingScripts) folder you can find more complex examples of scripts used to generate the figures at [plots](plots) directory.
-## Advanced Features
+## Enhanced Options
 
 ### Gradient Filling with Colormap  
 
 This feature enables gradient color filling for bands, regions, and fog areas using customizable colormaps.  
 
-##### Key Details:  
-- Use the `cmap` argument in `drawOptions` to define the gradient. It accepts a tuple with the following elements:
+##### Usage:
+Add the `cmap` argument in `drawOptions` to define the gradient. This will generate the color sequence (`cseq`). It accepts a tuple with the following elements:
   1. **Colormap name or base color** (e.g., `'Greys'`, `'darkcyan'`, `(0, 0, 0)`, or `'#ff0000'`). Check the full list of [colormaps](https://matplotlib.org/stable/users/explain/colors/colormaps.html).
   2. **Minimum colormap value or alpha** (default range: 0–1).
   3. **Maximum colormap value or alpha** (default range: 0–1; values >1 delay the gradient start).
@@ -126,9 +126,18 @@ This feature enables gradient color filling for bands, regions, and fog areas us
 > [!TIP]
 > Reverse gradient direction by swapping the second and third `cmap` values. E.g. `cmap=('Greys', 1, 0.1, 50)`. 
 
-- For fully custom gradients, use the `cseq` argument, e.g., `cseq=['red', 'blue', 'green']`.  
+Or add the `cseq` argument for fully custom gradients, use, e.g., `cseq=['red', 'blue', 'green']`.  
 
+### Adding Borders to Text
 
+This feature allows you to add a customizable border (or outline) around text using the new `bordercolor` (`bc`) and `borderwidth` (`bw`) keyword arguments when plotting labels through `BasePlot.plot_labels` method.
+
+#### Usage
+To add a border around text, simply provide the following arguments to the label element passed to the `BasePlot.plot_labels` method.
+- **`bordercolor` (`bc`)**: The color of the text border. Defaults to `'black'` if not provided but `borderwidth` is specified.
+- **`borderwidth` (`bw`)**: The thickness of the text border. Defaults to `1` if not provided but `bordercolor` is specified.
+
+If neither `bordercolor` nor `borderwidth` is specified, no border will be applied.
 
 # Databases 📗
 The different dark matter detection experiment are organize in SQL databases. For now, we have one default database for [axion](data/Axions.db) experiments (which contains one table named AxionsGag for photon coupling and another one called AxionGae for electron coupling) and another one for [WIMPs](data/Wimps.db) experiments (which contains one table named WIMPs_SI for spin independent interaction).

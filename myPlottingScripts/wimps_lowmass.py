@@ -33,10 +33,28 @@ experimentsToPlot = [
     # projections
 ]
 exps = database.get_rows("name", experimentsToPlot)  # Get the data of the experiments to plot from the database
+# Edit the drawOptions if you want
+exps["NuFloorXe"]["drawOptions"] += ", cmap=('Greys', 0.1, 0.7, 50), edgecolor=None"
 
-labels = database.get_rows("name", experimentsToPlot)
-# get the 7th (label text), 8th (x), 9th (y) and 10th (draw opts) columns
-labels = [row[7:11] for row in labels]
+# Get the labels of the experiments to plot from the database
+db_labels = database.get_rows("name", experimentsToPlot)
+# Edit the labels if you want
+db_labels["PandaX-4T_2022"]["labelPosX"] = 3.7
+db_labels["PandaX-4T_2022"]["labelPosY"] = 2.67e-44
+db_labels["PandaX-4T_2022"]["labelDrawOptions"] += ", rotation=313, rotation_mode='anchor', picker=True"
+
+# Extract the labels in the format (label, labelPosX, labelPosY, labelDrawOptions)
+# as required by the WimpPlot class
+labels = []
+for label in db_labels.values():
+    labels.append(
+        (
+            label.get("label",None),
+            label.get("labelPosX",None),
+            label.get("labelPosY",None),
+            label.get("labelDrawOptions",""),
+        )
+    )
 
 # --- BUILD THE PLOT ---
 axionplot = WimpPlot(
@@ -48,3 +66,4 @@ axionplot = WimpPlot(
     figy=7,
 )
 
+axionplot.save_plot(__file__+".png")
