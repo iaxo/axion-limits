@@ -1,0 +1,57 @@
+body {
+    margin: 0;
+    background-color: #1e1e2f;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+/* Dark theme for Dropdown menus */
+.dark-theme .Select-control {
+    background-color: #333;
+    color: #fff;
+    border-color: #444;
+}
+
+.dark-theme .Select-menu-outer {
+    background-color: #444;
+    color: #fff;
+}
+
+.dark-theme .Select-option {
+    color: #fff;
+}
+
+.dark-theme .Select-option.is-focused {
+    background-color: #555;
+}
+
+.dark-theme .Select-placeholder {
+    color: #bbb;
+}
+
+/* Dark theme for RangeSlider */
+.dark-theme .rc-slider {
+    background-color: #333;
+}
+
+.dark-theme .rc-slider-rail {
+    background-color: #444;
+}
+
+.dark-theme .rc-slider-track {
+    background-color: #555;
+}
+
+.dark-theme .rc-slider-handle {
+    border-color: #777;
+    background-color: #fff;
+}
+
+.dark-theme .rc-slider-handle:focus {
+    border-color: #ccc;
+}
+
+.dark-theme .rc-slider-mark {
+    color: #bbb;
+}
