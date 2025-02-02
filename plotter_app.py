@@ -10,6 +10,7 @@ import pandas as pd
 import io
 import base64
 
+GENERATED_PLOT = None
 def create_plot(experiments, xrange=(1e-9, 10), yrange=(1e-17, 1e-6), plot_type="AxionGag"):
     #exps = database.get_rows("name", experiments)
     #exps = df[df["name"].isin(experiments)].values.tolist()
@@ -58,14 +59,36 @@ def create_plot(experiments, xrange=(1e-9, 10), yrange=(1e-17, 1e-6), plot_type=
             ticksopt_y="normal",
         )
     else:
+        plot = None
         return ""
 
+    global GENERATED_PLOT
+    GENERATED_PLOT = plot
     buffer = io.BytesIO()
     plot.fig.savefig(buffer, format="png")
     buffer.seek(0)
     encoded_image = base64.b64encode(buffer.read()).decode()
     plt.close(plot.fig)
     return f"data:image/png;base64,{encoded_image}"
+
+def generate_plotting_script_str(plot, filename="plotting_script.py"):
+    imports = "import axionlimits.databases as db\n"
+    if isinstance(plot, AxionGagPlot):
+        imports += "from axionlimits.axion_plot import AxionGagPlot\n"
+    elif isinstance(plot, WimpPlot):
+        imports += "from axionlimits.wimp_plot import WimpPlot\n"
+    
+    experiments_init = "exps = " + plot.get_plotted_data_dict_str() + "\n"
+
+    plot_init = f"plot = {plot.__class__.__name__}(\n"
+    plot_init += f"    experiments=exps,\n"
+    if isinstance(plot, AxionGagPlot):
+        plot_init += f"    plotCag={plot.plotCag},\n"
+    plot_init += f"    showplot=True,\n"
+    plot_init += f"    **{plot.get_plot_customization()}\n"
+    plot_init += f")\n"
+
+    return imports + experiments_init + plot_init
 
 # Initialize Dash app
 app = Dash(__name__)
@@ -132,6 +155,7 @@ app.layout = html.Div(
                 "color": "#ffffff",
                 "marginBottom": "20px",
                 "textShadow": "2px 2px 5px rgba(0, 0, 0, 0.7)",
+                "fontSize": "54px",
             },
         ),
         html.Div(
@@ -169,7 +193,7 @@ app.layout = html.Div(
                             children=[
                                 html.Img(
                                     id="curve-plot",
-                                    style={"width": "100%", "objectFit": "contain"},
+                                    style={"width": "80%", "objectFit": "contain"},
                                 ),
                             ],
                         ),
@@ -219,6 +243,58 @@ app.layout = html.Div(
                             style={"height": "80vh", "width": "100%"},
                             dashGridOptions={"rowSelection": "multiple"},
                             className="ag-theme-alpine-dark",
+                        ),
+                        # Container for the two buttons side by side
+                        html.Div(
+                            style={
+                                "display": "flex",
+                                "alignItems": "center",
+                                "justifyContent": "flex-start",
+                                "marginTop": "10px",
+                            },
+                            children=[
+                                # Container for the Generate 🐍 button
+                                html.Div(
+                                    children=[
+                                        html.Button(
+                                            "Generate 🐍",
+                                            id="btn-generate-py",
+                                            n_clicks=0,
+                                            style={
+                                                "backgroundColor": "#4CAF50",
+                                                "color": "white",
+                                                "padding": "10px 24px",
+                                                "border": "none",
+                                                "cursor": "pointer",
+                                                "borderRadius": "5px",
+                                                "fontSize": "24px",
+                                            },
+                                        ),
+                                        dcc.Download(id="download-py"),
+                                    ],
+                                    style={"marginRight": "20px"},  # separation between buttons
+                                ),
+                                # Container for the Generate PDF button
+                                html.Div(
+                                    children=[
+                                        html.Button(
+                                            "Generate PDF",
+                                            id="btn-generate-pdf",
+                                            n_clicks=0,
+                                            style={
+                                                "backgroundColor": "#8b2b2b",
+                                                "color": "white",
+                                                "padding": "10px 24px",
+                                                "border": "none",
+                                                "cursor": "pointer",
+                                                "borderRadius": "5px",
+                                                "fontSize": "24px",
+                                            },
+                                        ),
+                                        dcc.Download(id="download-pdf"),
+                                    ],
+                                ),
+                            ],
                         ),
                     ],
                 ),
@@ -294,6 +370,31 @@ def update_drawOptions(cell_changed, data):
         return data
     df = pd.DataFrame(data)
     return df.to_dict("records")
+
+@app.callback(
+    Output("download-py", "data"),
+    Input("btn-generate-py", "n_clicks"),
+    prevent_initial_call=True
+)
+def generate_python_file(n_clicks):
+    # Contenido del archivo Python como un string
+    python_code = generate_plotting_script_str(GENERATED_PLOT)
+    # Enviar el archivo para descarga
+    return dict(content=python_code, filename="script_generado.py", type="text/plain")
+
+@app.callback(
+    Output("download-pdf", "data"),
+    Input("btn-generate-pdf", "n_clicks"),
+    prevent_initial_call=True
+)
+def generate_pdf_file(n_clicks):
+    # Guardar la figura en un buffer de memoria
+    buffer = io.BytesIO()
+    GENERATED_PLOT.fig.savefig(buffer, format="pdf")  # Guardar como PDF
+    buffer.seek(0)  # Ir al inicio del buffer
+    # Enviar el contenido del buffer como bytes para descarga
+    return dcc.send_bytes(buffer.getvalue(), filename="grafico_generado.pdf")
+
 
 if __name__ == "__main__":
     app.run_server(debug=True)
