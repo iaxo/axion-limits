@@ -71,9 +71,8 @@ def create_plot(experiments, xrange=(1e-9, 10), yrange=(1e-17, 1e-6), plot_type=
 app = Dash(__name__)
 app.title = "Interactive Axion Limits"
 
-# Load database and curves
+# Load database
 database = db.DataBaseGag()
-curves = [row[0] for row in database.get_rows_where("1 ORDER BY name")]
 df = database.get_pandas_dataframe()
 
 # Dropdown options for databases
