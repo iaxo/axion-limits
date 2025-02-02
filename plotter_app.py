@@ -113,7 +113,11 @@ columns_defs = [
 ]
 columns_defs.extend([{"field": col, "headerName": col} for col in df.columns])
 # make drawOptions editable
-for col in columns_defs[1:]:
+for col in columns_defs:
+    if col["field"] == "checkbox":
+        col["pinned"] = "left"
+    if col["field"] == "name":
+        col["pinned"] = "left"
     if col["field"] == "drawOptions":
         col["editable"] = True
 
