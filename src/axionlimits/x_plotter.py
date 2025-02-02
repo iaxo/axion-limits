@@ -128,6 +128,8 @@ class BasePlot(ABC):
         self.anchor_point = None  # store the anchor point of the dragged text object
         self.saveplotname = saveplotname
 
+        self.data_to_plot = []
+
     # ==============================================================================#
     # will draw a new exclusion line to the plot, no to be filled
     #

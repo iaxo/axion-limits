@@ -49,7 +49,7 @@ class WimpPlot(BasePlot):
             tickformatter_y=tickformatter_y,
         )
 
-        self.wimpDB = []
+        self.data_to_plot = []
         # print(self.axionDB.get_rows())
 
         # Plotting Data
@@ -97,7 +97,7 @@ class WimpPlot(BasePlot):
             )
             pltItem.draw_item(self)
             if not is_projection:
-                self.wimpDB.append(pltItem)
+                self.data_to_plot.append(pltItem)
 
     def plot_excluded_region(self, **kwargs):
         # if kwargs does not contain one of the following, use the default values
@@ -122,7 +122,7 @@ class WimpPlot(BasePlot):
 
     ## -------- CALCULATE THE EXCLUDED PARAMETER SPACE --------
     def get_excluded_region(self):
-        if len(self.wimpDB) <= 0:
+        if len(self.data_to_plot) <= 0:
             print("Error: no available data for computing the excluded region.")
             return ([], [])
 
@@ -132,7 +132,7 @@ class WimpPlot(BasePlot):
         )
 
         interp_array = []
-        for item in self.wimpDB:
+        for item in self.data_to_plot:
             if item.typeitem != "line":  # use only curves
                 continue
             interpolator = interp1d(
