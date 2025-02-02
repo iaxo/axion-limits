@@ -229,6 +229,45 @@ class BasePlot(ABC):
     @abstractmethod
     def plot_data(self, data: list):
         pass
+    
+    def get_plotted_data_dict(self):
+        d = {}
+        for item in self.data_to_plot:
+            properties = {}
+            #properties["name"] = item.name
+            properties["type"] = item.typeitem
+            properties["path"] = item.short_filename
+            properties["drawOptions"] = item.drawopt
+            d[item.name] = properties.copy()
+        return d.copy()
+    
+    def get_plotted_data_dict_str(self):
+        d = self.get_plotted_data_dict()
+        s = "{\n"
+        for name, properties in d.items():
+            s += f'    "{name}": {properties},\n'
+        s += "}"
+        return s
+    
+    def get_plotted_data_names(self):
+        return [item.name for item in self.data_to_plot]
+    
+    def get_plot_customization(self):
+        return {
+            "labelx": self.plot.get_xlabel(),
+            "labely": self.plot.get_ylabel(),
+            "figx": self.fig.get_figwidth(),
+            "figy": self.fig.get_figheight(),
+            "ymin": self.plot.get_ylim()[0],
+            "ymax": self.plot.get_ylim()[1],
+            "xmin": self.plot.get_xlim()[0],
+            "xmax": self.plot.get_xlim()[1],
+            #"ticksopt_x": "dense" if self.plot.xaxis.get_major_locator().base == 100.0 else "normal",
+            #"ticksopt_y": "dense" if self.plot.yaxis.get_major_locator().base == 100.0 else "normal",
+            #"labelfontsize": self.plot.get_xlabel().get_fontsize(),
+            #"tickformatter_x": self.plot.xaxis.get_major_formatter(),
+            #"tickformatter_y": self.plot.yaxis.get_major_formatter(),
+        }
 
     def on_click(self, event):
         if event.button == 3:  # right click
