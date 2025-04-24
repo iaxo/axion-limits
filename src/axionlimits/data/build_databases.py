@@ -108,6 +108,7 @@ AxionsGag = [
     ['HBalpbound', 'band', path + 'HBalpbound.txt', "facecolor='skyblue', edgecolor='blue', alpha=1, linewidth=0.5", 0, 'Ayala et al.', '', 0, 0, 0, 0, 1, 0, 0, 0],
     ['HBalpbound_l', 'line', path + 'HBalpbound.txt', "color='blue', linewidth=0.5", 0, '', '', 0, 0, 0, 0, 1, 0, 0, 0],
     ['solar_nu', 'band', path + 'ALPSun_nu.txt', "facecolor='steelblue', edgecolor='blue', linewidth=0.5", 0, 'Raffelt & Gondolo', '2008', 0, 0, 0, 0, 1, 0, 0, 0],
+    ['CombinedAstro2024', 'band', path + 'Combined_Astro_2024.txt', "facecolor='steelblue', edgecolor='blue', linewidth=0.5", 0, 'https://github.com/cajohare/AxionLimits (commit: d8c5829)', '2024', 0, 0, 0, 0, 1, 0, 0, 0],
     # STELLAR - HELIOSCOPES
     ['CAST', 'band', path + 'cast_env_2016.dat', "facecolor='deepskyblue', edgecolor='blue', linewidth=0.5", 0, '10.1038/nphys4109', '2017', 0, 0, 0, 0, 1, 1, 0, 0], #Up to Nature paper (2017)
     ['CAST2021', 'band', path + 'CAST_2019_2021_PRL.txt', "facecolor='deepskyblue', edgecolor='blue', linewidth=0.5", 0, '10.1103/PhysRevLett.133.221005', '2024', 0, 0, 0, 0, 1, 1, 0, 0], #Legacy results of all the data up to 2021.
