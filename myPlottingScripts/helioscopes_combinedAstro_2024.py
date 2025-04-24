@@ -61,7 +61,6 @@ exps = database.get_rows(
 )  # Get the data of the experiments to plot from the database
 
 # style
-exps["CombinedAstro2024"]["drawOptions"] = "facecolor='mediumturquoise', edgecolor='darkgreen', linewidth=0.5, alpha=0.8"
 exps["CAST2021"]["drawOptions"] = "facecolor='deepskyblue', edgecolor='blue', linewidth=0.5"
 exps["ALPSII_l"]["drawOptions"] = "color='black', linewidth=0.8, linestyle='-'"
 exps["BabyIAXO_l"]["drawOptions"] = "color='black', linewidth=0.8, linestyle='-'"
