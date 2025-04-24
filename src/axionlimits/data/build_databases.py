@@ -1,12 +1,14 @@
 import axionlimits.databases as db
+import os
 
 FILE_DATABASE = "Axions.db"
 
 print("File database: " + FILE_DATABASE)
-print("If it already exists, the table will be appended. Note this can cause to have duplicated rows.")
-if input("Are you sure you want to continue? (y/n)\n") not in ["y", "yes", "Y", "YES"]:
-    print("Aborting")
-    exit()
+if os.path.exists(FILE_DATABASE):
+    print("File already exists. Do you want to overwrite it? (y/n)")
+    if input() not in ["y", "yes", "Y", "YES"]:
+        print("Aborting")
+        exit()
 
 # ==================== DATABASES ====================
 path = "axion/"
@@ -200,11 +202,11 @@ AxionsGae= [
 ]
 
 # ===========================================================================#
-expGag = db.DataBaseGag(FILE_DATABASE, "AxionsGag", True)
+expGag = db.DataBaseGag(FILE_DATABASE, "AxionsGag", commit=True, new_database=True)
 expGag.insert_rows(AxionsGag)
 
-expGae = db.DataBaseGae(FILE_DATABASE, "AxionsGae", True)
+expGae = db.DataBaseGae(FILE_DATABASE, "AxionsGae", commit=True, new_database=True)
 expGae.insert_rows(AxionsGae)
 
-w = db.DataBaseWimps(FILE_DATABASE.replace("Axions","Wimps"), "Wimps_SI", True)
+w = db.DataBaseWimps(FILE_DATABASE.replace("Axions","Wimps"), "Wimps_SI", commit=True, new_database=True)
 w.insert_rows(Wimps)
