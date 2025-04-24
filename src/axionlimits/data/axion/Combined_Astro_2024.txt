@@ -1,3 +1,7 @@
+# Combined Astrophysical limits on axion->photon
+# m_a [eV]  g_ap [GeV^-1]
+# source: https://github.com/cajohare/AxionLimits/raw/master/limit_data/AxionPhoton/Combined_Astro.txt (commit: d8c5829)
+# It combines the best limits of Chandra, NuStar, Fermi, Pulsars, Globular clusters, Freeze-in, M-82, SN1987-A, BBN, GW17-gamma, GW170817, Low-energy SNe,
 1.000000000000000038e-25 5.047311029452131640e-13
 1.006277775224338473e-25 5.047311029452131640e-13
 1.012594960910435990e-25 5.047311029452131640e-13
