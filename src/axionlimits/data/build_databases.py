@@ -70,6 +70,7 @@ AxionsGag = [
     ['ADMX_SLIC', 'band', path + 'ADMX_SLIC.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.5, alpha=1", 0, '1911.05772', '2019', 0, 0, 1, 1, 0, 0, 0, 0],
     ['SHAFT', 'band', path + 'SHAFT.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.5, alpha=0.5", 0, '', '', 0, 0, 1, 1, 0, 0, 0, 0],
     ['TransmonMW_PC', 'band', path + 'TransmonMWphotoncounter_2024.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.5", 0, '2403.02321', '2024', 0, 0, 1, 1, 0, 0, 0, 0],
+    ['GIGABREAD2025', 'band', path + 'GigaBREAD_2025.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.5", 0, '10.1103/PhysRevLett.134.17100', '2025', 0, 0, 1, 1, 0, 0, 0, 0],
     
     ['TASEH_2022','band', path+'TASEH_2022.txt',"facecolor='limegreen',edgecolor='darkgreen',linewidth=0.2",0,'2205.05574','2022',0, 0, 1, 1, 0, 0, 0, 0],
     ['GraHal_2022','band', path+'GraHal_2022.txt',"facecolor='limegreen',edgecolor='darkgreen',linewidth=0.2",0,'2110.14406','2022',0, 0, 1, 1, 0, 0, 0, 0],
