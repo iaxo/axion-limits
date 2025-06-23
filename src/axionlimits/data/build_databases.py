@@ -63,6 +63,7 @@ AxionsGag = [
     ['QUAX', 'band', path + 'QUAX.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '', '', 0, 0, 1, 1, 0, 0, 0, 0],
     ['QUAX2021', 'band', path + 'QUAX2021.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '2012.09498', '2021', 0, 0, 1, 1, 0, 0, 0, 0],
     ['QUAX2024', 'band', path + 'QUAX2024.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '2402.19063', '2024', 0, 0, 1, 1, 0, 0, 0, 0],
+    ['QUAX2025', 'band', path + 'QUAX2025.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '2506.11589', '2025', 0, 0, 1, 1, 0, 0, 0, 0],
     ['RADES2021', 'band', path + 'RADES2021.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '2104.13798', '2021', 0, 0, 1, 1, 0, 0, 0, 0],
     ['ABRA10cm', 'band', path + 'ABRA10cm.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.5, alpha=0.5", 0, '', '', 0, 0, 1, 1, 0, 0, 0, 0],
     ['ABRA_2021', 'band', path + 'ABRA_2021.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.5, alpha=0.5", 0, '2102.06722', '2021', 0, 0, 1, 1, 0, 0, 0, 0],
