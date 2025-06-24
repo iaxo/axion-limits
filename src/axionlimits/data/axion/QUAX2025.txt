@@ -1,6 +1,7 @@
 # QUAX
 # https://arxiv.org/abs/2506.11589
 # file extracted from the reference using https://apps.automeris.io/wpd/
+# and applying the factor 1.57e-14 GeV-1 which is the KSVZ value at 42.1 ueV
 # mass [eV]; photon coupling [GeV-1]
 4.199075e-5; 1
 4.199084e-5; 9.149325e-14
