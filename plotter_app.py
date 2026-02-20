@@ -4,11 +4,14 @@ import axionlimits.databases as db
 from axionlimits.axion_plot import AxionGagPlot
 from axionlimits.wimp_plot import WimpPlot
 from axionlimits.utils import resolve_relative_path
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import os
 import pandas as pd
 import io
 import base64
+
+mpl.use("Agg")
 
 GENERATED_PLOT = None
 def create_plot(experiments, xrange=(1e-9, 10), yrange=(1e-17, 1e-6), plot_type="AxionGag"):
