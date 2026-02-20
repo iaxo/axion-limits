@@ -400,4 +400,4 @@ def generate_pdf_file(n_clicks):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run(debug=True)
