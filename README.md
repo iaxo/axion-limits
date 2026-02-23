@@ -69,11 +69,12 @@ exps = database.get_rows("name", experimentsToPlot)
 > <details>
 > <summary><h3> Can I edit the default plotting style of these items? </h3></summary>
 > Yes! The `exps` dictionary provides detailed row information from the database for each selected experiment. The keys in this dictionary correspond to the names of the experiments, and the values are nested dictionaries where column names serve as keys. You can modify these values to customize the plot beyond the default settings.
-> For example, to replicate the iconic [AxionLimits](https://cajohare.github.io/AxionLimits/) style for the QCD band:  
+> For example, to replicate the iconic [AxionLimits](https://cajohare.github.io/AxionLimits/) style for the QCD band:
+>
 > ```python
 > exps["qcdband"]["drawOptions"] = "cmap=('YlOrBr', 0, 0.45, 40)"
 > exps["ksvz"]["drawOptions"] += ", color='#a35c2f'"
-> ```  
+> ```
 > </details>
 
 
@@ -115,6 +116,7 @@ Use the parameter `experiments` and `labels` to pass the previously defined data
 > [!TIP]
 > <details>
 > <summary><h3> Can I draw additional matplotlib items into the plot? </h3></summary>
+>
 > Yes, you can add any additional matplotlib.pyplot object (such as lines or text) or further customize the figure. Just set the parameter `showplot=False` above and insert the desired plotting objects and customizations. Afterwards, remember to call the `show_plot` and `save_plot` methods. Check out this [example](myPlottingScripts/haloscope_zoom_Jun2024.py) for reference.
 > </details>
 
