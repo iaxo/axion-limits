@@ -124,6 +124,41 @@ Use the parameter `experiments` and `labels` to pass the previously defined data
 
 📂 Inside [myPlottingScripts](myPlottingScripts) folder you can find more complex examples of scripts used to generate the figures at [plots](plots) directory.
 
+## Add curves that are not in the database
+
+Sometimes you may want to plot curves that are not stored in the database, for example a future sensitivity projection, a preliminary result, or a custom line for quick comparisons. In these cases, add a new entry to the `exps` dictionary with the minimum required fields. For example:
+
+```python
+exps["myNewLine"] = {
+    "type": "line", # required: one of "line", "band", "region", or "fog"
+    "path": "/path/to/the/data/file.dat", # required
+    "drawOptions": "color='red', linewidth=0.5, linestyle='-'", # optional but recommended
+}
+```
+
+Keep in mind that the plotting order follows the insertion order of `exps`. If you need your custom curve in a specific position, split the experiment lists and build `exps` in steps. For example:
+
+```python
+# split the original experimentsToPlot list to insert 'myNewLine' in the middle
+qcdToPlot = [
+    "qcdband",
+    "ksvz",
+]
+experimentsToPlot = [
+    "CAST2021",
+]
+
+# add items in the desired plotting order
+exps = {}
+exps.update(database.get_rows("name", qcdToPlot))
+exps["myNewLine"] = {
+    "type": "line",
+    "path": "/path/to/the/data/file.dat",
+    "drawOptions": "color='red', linewidth=0.5, linestyle='-'",
+}
+exps.update(database.get_rows("name", experimentsToPlot))
+```
+
 ## Enhanced Options
 
 ### Gradient Filling with Colormap  
