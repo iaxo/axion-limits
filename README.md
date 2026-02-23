@@ -67,7 +67,7 @@ exps = database.get_rows("name", experimentsToPlot)
 ```
 > [!TIP]  
 > <details>
-> <summary><h3> Can I edit the default plotting style of these items? </h3></summary>
+> <summary><h3> Can I customize the default style of selected experiments? </h3></summary>
 > 
 > Yes! The `exps` dictionary provides detailed row information from the database for each selected experiment. The keys in this dictionary correspond to the names of the experiments, and the values are nested dictionaries where column names serve as keys. You can modify these values to customize the plot beyond the default settings.
 > For example, to replicate the iconic [AxionLimits](https://cajohare.github.io/AxionLimits/) style for the QCD band:
@@ -88,7 +88,7 @@ labels = [
 ```
 > [!TIP]
 > <details>
-> <summary><h3> Can I drag and move interactively the labels? </h3></summary>
+> <summary><h3> Can I move labels interactively? </h3></summary>
 > 
 > Yes! The text labels with the parameter `picker` set to true (see "Helioscopes (CAST)" label in the example above) can be modified interactively in the shown figure. There are three options:
 >
@@ -117,7 +117,7 @@ axionplot = AxionGagPlot(
 Use the parameter `experiments` and `labels` to pass the previously defined data and labels. If a string is given to the `saveplotname`, it will save the plot in a file with that name (default extension will be pdf if none is given within the filename). You can check other useful customization arguments at [axion_plot.py](src/axionlimits/axion_plot.py).
 > [!TIP]
 > <details>
-> <summary><h3> Can I draw additional matplotlib items into the plot? </h3></summary>
+> <summary><h3> Can I add extra Matplotlib elements to the plot? </h3></summary>
 >
 > Yes, you can add any additional matplotlib.pyplot object (such as lines or text) or further customize the figure. Just set the parameter `showplot=False` above and insert the desired plotting objects and customizations. Afterwards, remember to call the `show_plot` and `save_plot` methods. Check out this [example](myPlottingScripts/haloscope_zoom_Jun2024.py) for reference.
 > </details>
@@ -159,7 +159,7 @@ exps["myNewLine"] = {
 exps.update(database.get_rows("name", experimentsToPlot))
 ```
 
-## Enhanced Options
+## Enhanced Styling Options
 
 ### Gradient Filling with Colormap  
 
