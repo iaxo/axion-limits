@@ -68,6 +68,7 @@ exps = database.get_rows("name", experimentsToPlot)
 > [!TIP]  
 > <details>
 > <summary><h3> Can I edit the default plotting style of these items? </h3></summary>
+> 
 > Yes! The `exps` dictionary provides detailed row information from the database for each selected experiment. The keys in this dictionary correspond to the names of the experiments, and the values are nested dictionaries where column names serve as keys. You can modify these values to customize the plot beyond the default settings.
 > For example, to replicate the iconic [AxionLimits](https://cajohare.github.io/AxionLimits/) style for the QCD band:
 >
@@ -88,6 +89,7 @@ labels = [
 > [!TIP]
 > <details>
 > <summary><h3> Can I drag and move interactively the labels? </h3></summary>
+> 
 > Yes! The text labels with the parameter `picker` set to true (see "Helioscopes (CAST)" label in the example above) can be modified interactively in the shown figure. There are three options:
 >
 > * Move to a different position by clicking on the label and dragging it. The label will change the position when the click is released.
