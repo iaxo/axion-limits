@@ -269,6 +269,36 @@ class BasePlot(ABC):
             #"tickformatter_y": self.plot.yaxis.get_major_formatter(),
         }
 
+    def get_plot_labels(self):
+        labels = []
+        for text in self.plot.texts:
+            kwargs = {
+                "fontsize": text.get_fontsize(),
+                "ha": text.get_horizontalalignment(),
+                "va": text.get_verticalalignment(),
+                "rotation": text.get_rotation(),
+                "rotation_mode": text.get_rotation_mode(),
+            }
+            # check if the text has a path effect of type withStroke to extract border color and width
+            path_effects = text.get_path_effects()
+            if path_effects is not None:
+                for pe in path_effects:
+                    if isinstance(pe, mplpe.Stroke):
+                        kwargs["bordercolor"] = pe._gc.get("foreground", None)
+                        kwargs["borderwidth"] = pe._gc.get("linewidth", None)
+                        break
+            labels.append((text.get_text(), text.get_position()[0], text.get_position()[1], kwargs))
+        return labels
+
+    def get_plot_labels_str(self):
+        labels = self.get_plot_labels()
+        s = "[\n"
+        for label in labels:
+            kwargs_str = ", ".join(f"{k}={v}" for k, v in label[3].items())
+            s += f'    (r\'{label[0]}\', {label[1]}, {label[2]}, {label[3]}),\n'
+        s += "]"
+        return s
+
     def on_click(self, event):
         if event.button == 3:  # right click
             print(
