@@ -55,3 +55,31 @@ body {
 .dark-theme .rc-slider-mark {
     color: #bbb;
 }
+
+.labels-layer {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.draggable-label {
+    position: absolute;
+    cursor: move;
+    user-select: none;
+    background: rgba(0, 0, 0, 0.65);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+    padding: 0;
+    font-size: 13px;
+    line-height: 1.2;
+    white-space: nowrap;
+    transform: translate(0, 0);
+    transform-origin: top left;
+}
+
+.draggable-label.editing {
+    cursor: text;
+    outline: 1px solid rgba(255, 255, 255, 0.7);
+    background: rgba(20, 20, 20, 0.9);
+}
