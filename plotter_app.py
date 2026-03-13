@@ -10,6 +10,7 @@ import os
 import pandas as pd
 import io
 import base64
+import re
 
 mpl.use("Agg")
 
@@ -25,6 +26,45 @@ def _parse_css_px(value, default=0.0):
         return float(txt)
     except ValueError:
         return float(default)
+
+
+def _normalize_css_color_for_mpl(value, default="black"):
+    """Convert browser CSS color strings to matplotlib-compatible color strings."""
+    if value is None:
+        return default
+
+    text = str(value).strip()
+    if not text:
+        return default
+
+    lowered = text.lower()
+    if lowered.startswith("#"):
+        return text
+
+    if lowered.startswith("rgb(") or lowered.startswith("rgba("):
+        matches = re.findall(r"[0-9]*\.?[0-9]+", lowered)
+        if len(matches) >= 3:
+            try:
+                r = int(float(matches[0]))
+                g = int(float(matches[1]))
+                b = int(float(matches[2]))
+                r = min(max(r, 0), 255)
+                g = min(max(g, 0), 255)
+                b = min(max(b, 0), 255)
+
+                if len(matches) >= 4:
+                    a_raw = float(matches[3])
+                    # rgba() alpha can be 0..1 in CSS; clamp to matplotlib expected range.
+                    a = min(max(a_raw, 0.0), 1.0)
+                    a_hex = int(round(a * 255))
+                    return f"#{r:02x}{g:02x}{b:02x}{a_hex:02x}"
+
+                return f"#{r:02x}{g:02x}{b:02x}"
+            except ValueError:
+                return default
+
+    # Named colors (e.g. 'black', 'white') pass through unchanged.
+    return text
 
 
 def get_mpl_labels_from_drawn_labels(
@@ -70,6 +110,7 @@ def get_mpl_labels_from_drawn_labels(
                 "text": text,
                 "xpos_mpl": xpos_mpl,
                 "ypos_mpl": ypos_mpl,
+                "color": _normalize_css_color_for_mpl(style.get("color", "black")),
             }
         )
 
@@ -156,9 +197,11 @@ def create_plot(
             fig_px_font = font_px_browser * min(scale_x, scale_y)
             font_size_pt = max(fig_px_font * 72.0 / plot_obj.fig.dpi, 1.0)
             rotation_deg = float(label.get("rotation_deg", 0.0) or 0.0)
+            text_color = str(label.get("color", "black") or "black")
+            text_color = _normalize_css_color_for_mpl(text_color, default="black")
 
             text_style = {
-                "color": "black",
+                "color": text_color,
                 "size": font_size_pt,
                 "ha": "left",
                 "va": "top",
@@ -324,6 +367,10 @@ def get_mpl_labels_from_browser_snapshot(labels_snapshot):
                 "rotation_deg": float(label.get("rotationDeg", 0.0) or 0.0),
                 "layer_width_px": float(label.get("layerWidth", 0.0) or 0.0),
                 "layer_height_px": float(label.get("layerHeight", 0.0) or 0.0),
+                "color": _normalize_css_color_for_mpl(
+                    str(label.get("textColor", "black") or "black"),
+                    default="black",
+                ),
             }
         )
     return labels_mpl
@@ -454,6 +501,8 @@ app.layout = html.Div(
                                 "marginTop": "10px",
                                 "display": "flex",
                                 "gap": "10px",
+                                "alignItems": "center",
+                                "flexWrap": "wrap",
                             },
                             children=[
                                 html.Button(
@@ -483,6 +532,57 @@ app.layout = html.Div(
                                         "borderRadius": "5px",
                                         "fontSize": "16px",
                                     },
+                                ),
+                                html.Div(
+                                    style={
+                                        "display": "flex",
+                                        "alignItems": "center",
+                                        "gap": "8px",
+                                        "color": "#dfe4ff",
+                                        "fontSize": "14px",
+                                    },
+                                    children=[
+                                        html.Span("Label color:"),
+                                        html.Div(
+                                            id="label-color-palette",
+                                            style={
+                                                "display": "flex",
+                                                "gap": "6px",
+                                                "alignItems": "center",
+                                            },
+                                            children=[
+                                                html.Button(
+                                                    "",
+                                                    className="label-color-swatch",
+                                                    style={"backgroundColor": c},
+                                                    **{"data-color": c},
+                                                )
+                                                for c in [
+                                                    "#000000",
+                                                    "#ffffff",
+                                                    "#ff0404",
+                                                    "#ffee00",
+                                                    "#08fc00",
+                                                    "#0314fc",
+                                                    "#f708e3",
+                                                    "#fa8f04",
+                                                ]
+                                            ],
+                                        ),
+                                        html.Button(
+                                            "More colors",
+                                            id="btn-label-color-more",
+                                            style={
+                                                "backgroundColor": "#3f4b63",
+                                                "color": "white",
+                                                "padding": "6px 10px",
+                                                "border": "1px solid #64748b",
+                                                "cursor": "pointer",
+                                                "borderRadius": "6px",
+                                                "fontSize": "13px",
+                                            },
+                                        ),
+                                    ],
                                 ),
                             ],
                         ),
@@ -682,6 +782,7 @@ def add_draggable_label(n_clicks, existing_labels):
             style={
                 "left": f"{20 + (n_clicks - 1) * 12}px",
                 "top": f"{20 + (n_clicks - 1) * 12}px",
+                "color": "#000000",
             },
         )
     )

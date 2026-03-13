@@ -1,7 +1,22 @@
 (() => {
     let activeLabel = null;
+    let selectedLabel = null;
     let shiftX = 0;
     let shiftY = 0;
+    let colorButtons = [];
+
+    const getClosest = (target, selector) => {
+        if (!target) {
+            return null;
+        }
+        if (typeof target.closest === "function") {
+            return target.closest(selector);
+        }
+        const element = target.parentElement;
+        return element && typeof element.closest === "function"
+            ? element.closest(selector)
+            : null;
+    };
 
     const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
@@ -35,6 +50,33 @@
         activeLabel.style.zIndex = "2";
         activeLabel = null;
         document.body.style.userSelect = "";
+    };
+
+    const getLabelColor = (label) => {
+        const value = (label && label.style && label.style.color) || "";
+        return value && value.trim() ? value : "#000000";
+    };
+
+    const setSwatchesEnabled = (enabled) => {
+        colorButtons.forEach((btn) => {
+            btn.disabled = !enabled;
+            btn.classList.toggle("disabled", !enabled);
+        });
+    };
+
+    const selectLabel = (label) => {
+        selectedLabel = label || null;
+        document.querySelectorAll(".draggable-label.selected").forEach((el) => {
+            el.classList.remove("selected");
+        });
+
+        if (!selectedLabel) {
+            setSwatchesEnabled(false);
+            return;
+        }
+
+        selectedLabel.classList.add("selected");
+        setSwatchesEnabled(true);
     };
 
     const getRotationDeg = (label) => {
@@ -82,13 +124,20 @@
     };
 
     document.addEventListener("pointerdown", (event) => {
-        const label = event.target.closest(".draggable-label");
+        const label = getClosest(event.target, ".draggable-label");
         if (!label) {
+            const paletteClick = getClosest(event.target, ".label-color-swatch");
+            const moreColorsClick = getClosest(event.target, "#btn-label-color-more");
+            if (!paletteClick && !moreColorsClick) {
+                selectLabel(null);
+            }
             return;
         }
         if (label.classList.contains("editing")) {
             return;
         }
+
+        selectLabel(label);
 
         const labelRect = label.getBoundingClientRect();
         shiftX = event.clientX - labelRect.left;
@@ -106,7 +155,7 @@
     document.addEventListener(
         "wheel",
         (event) => {
-            const label = event.target.closest(".draggable-label");
+            const label = getClosest(event.target, ".draggable-label");
             if (!label || label.classList.contains("editing")) {
                 return;
             }
@@ -132,7 +181,7 @@
     );
 
     document.addEventListener("dblclick", (event) => {
-        const label = event.target.closest(".draggable-label");
+        const label = getClosest(event.target, ".draggable-label");
         if (!label) {
             return;
         }
@@ -140,7 +189,7 @@
     });
 
     document.addEventListener("keydown", (event) => {
-        const label = event.target.closest(".draggable-label.editing");
+        const label = getClosest(event.target, ".draggable-label.editing");
         if (!label) {
             return;
         }
@@ -163,7 +212,7 @@
     document.addEventListener(
         "blur",
         (event) => {
-            const label = event.target.closest(".draggable-label.editing");
+            const label = getClosest(event.target, ".draggable-label.editing");
             if (!label) {
                 return;
             }
@@ -175,6 +224,69 @@
     document.addEventListener("pointermove", onPointerMove);
     document.addEventListener("pointerup", stopDragging);
     document.addEventListener("pointercancel", stopDragging);
+
+    const initColorPicker = () => {
+        colorButtons = Array.from(document.querySelectorAll(".label-color-swatch"));
+        if (!colorButtons.length) {
+            return;
+        }
+
+        setSwatchesEnabled(!!selectedLabel);
+    };
+
+    document.addEventListener("click", (event) => {
+        const swatch = getClosest(event.target, ".label-color-swatch");
+        if (!swatch) {
+            return;
+        }
+
+        event.preventDefault();
+        const targetLabel =
+            selectedLabel || document.querySelector(".draggable-label.selected");
+        if (!targetLabel) {
+            return;
+        }
+
+        const color = swatch.dataset.color || "#000000";
+        targetLabel.style.color = color;
+        selectedLabel = targetLabel;
+    });
+
+    document.addEventListener("click", (event) => {
+        const moreColorsButton = getClosest(event.target, "#btn-label-color-more");
+        if (!moreColorsButton) {
+            return;
+        }
+
+        event.preventDefault();
+        const targetLabel =
+            selectedLabel || document.querySelector(".draggable-label.selected");
+        if (!targetLabel) {
+            return;
+        }
+
+        const nativePicker = document.createElement("input");
+        nativePicker.type = "color";
+        nativePicker.value = getLabelColor(targetLabel);
+        nativePicker.style.position = "fixed";
+        nativePicker.style.left = "-9999px";
+        nativePicker.style.top = "-9999px";
+        document.body.appendChild(nativePicker);
+
+        const applyAndCleanup = () => {
+            targetLabel.style.color = nativePicker.value || "#000000";
+            nativePicker.remove();
+        };
+        nativePicker.addEventListener("input", applyAndCleanup, { once: true });
+        nativePicker.addEventListener("change", applyAndCleanup, { once: true });
+        nativePicker.click();
+    });
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initColorPicker, { once: true });
+    } else {
+        initColorPicker();
+    }
 })();
 
 window.dash_clientside = Object.assign({}, window.dash_clientside, {
@@ -199,6 +311,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                     height: labelRect.height,
                     fontSizePx: parseFloat(computedStyle.fontSize || "13") || 13,
                     rotationDeg: parseFloat(label.dataset.rotationDeg || "0") || 0,
+                    textColor: computedStyle.color || label.style.color || "#000000",
                     layerWidth: layerRect.width,
                     layerHeight: layerRect.height,
                 };

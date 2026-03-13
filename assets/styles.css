@@ -67,7 +67,7 @@ body {
     cursor: move;
     user-select: none;
     background: rgba(0, 0, 0, 0.65);
-    color: #ffffff;
+    color: #000000;
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 4px;
     padding: 0;
@@ -78,10 +78,38 @@ body {
     transform-origin: top left;
 }
 
+.draggable-label.selected {
+    outline: 2px solid rgba(255, 214, 92, 0.95);
+    outline-offset: 1px;
+}
+
 .draggable-label.editing {
     cursor: text;
     outline: 1px solid rgba(255, 255, 255, 0.7);
     background: rgba(20, 20, 20, 0.9);
+}
+
+#label-color-picker:disabled {
+    opacity: 0.45;
+    cursor: not-allowed !important;
+}
+
+.label-color-swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    cursor: pointer;
+    padding: 0;
+}
+
+.label-color-swatch:hover {
+    transform: scale(1.08);
+}
+
+.label-color-swatch.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
 }
 
 /* Force dark styling for Dash controls (menu can render outside component tree) */
