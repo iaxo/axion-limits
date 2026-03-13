@@ -273,12 +273,13 @@ class BasePlot(ABC):
         labels = []
         for text in self.plot.texts:
             kwargs = {
+                "color": text.get_color(),
                 "fontsize": text.get_fontsize(),
                 "ha": text.get_horizontalalignment(),
                 "va": text.get_verticalalignment(),
                 "rotation": text.get_rotation(),
                 "rotation_mode": text.get_rotation_mode(),
-            }
+            } # text.properties()
             # check if the text has a path effect of type withStroke to extract border color and width
             path_effects = text.get_path_effects()
             if path_effects is not None:
