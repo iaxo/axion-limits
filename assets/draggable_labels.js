@@ -20,6 +20,12 @@
 
     const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
+    const getNumericStylePx = (element, prop, fallback = 0) => {
+        const raw = element && element.style ? element.style[prop] : "";
+        const value = parseFloat(raw || "");
+        return Number.isFinite(value) ? value : fallback;
+    };
+
     const onPointerMove = (event) => {
         if (!activeLabel) {
             return;
@@ -139,9 +145,17 @@
 
         selectLabel(label);
 
-        const labelRect = label.getBoundingClientRect();
-        shiftX = event.clientX - labelRect.left;
-        shiftY = event.clientY - labelRect.top;
+        const layer = label.parentElement;
+        if (!layer) {
+            return;
+        }
+        const layerRect = layer.getBoundingClientRect();
+        const currentLeft = getNumericStylePx(label, "left", 0);
+        const currentTop = getNumericStylePx(label, "top", 0);
+
+        // Compute shift from the label anchor (left/top), not from rotated bbox.
+        shiftX = event.clientX - (layerRect.left + currentLeft);
+        shiftY = event.clientY - (layerRect.top + currentTop);
         activeLabel = label;
 
         if (!label.dataset.rotationDeg) {
