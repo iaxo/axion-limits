@@ -415,6 +415,7 @@ app.layout = html.Div(
                             options=plot_options,
                             #value=plot_options[0]['value'],  # Set a default value
                             placeholder="Select a Plot Type",
+                            searchable=False,
                             style={"width": "100%", "marginBottom": "10px"},
                             className="dark-theme",
                         ),
