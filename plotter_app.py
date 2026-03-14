@@ -289,14 +289,17 @@ def generate_plotting_script_str(plot, filename="plotting_script.py"):
     experiments_init = "exps = " + plot.get_plotted_data_dict_str() + "\n"
     labels_init = "labels = " + plot.get_plot_labels_str() + "\n"
 
+    plot_customization = plot.get_plot_customization()
+    plot_customization_str = "" + "\n".join(f"    {k}={repr(v)}," for k, v in plot_customization.items())
+
     plot_init = f"plot = {plot.__class__.__name__}(\n"
     plot_init += f"    experiments=exps,\n"
     plot_init += f"    labels=labels,\n"
     if isinstance(plot, AxionGagPlot):
         plot_init += f"    plotCag={plot.plotCag},\n"
     plot_init += f"    showplot=True,\n"
-    plot_init += f"    **{plot.get_plot_customization()}\n"
-    plot_init += f")\n"
+    plot_init += plot_customization_str
+    plot_init += f"\n)\n"
 
     return imports + experiments_init + labels_init + plot_init
 
