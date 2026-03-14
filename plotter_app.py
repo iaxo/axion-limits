@@ -380,7 +380,7 @@ def get_mpl_labels_from_browser_snapshot(labels_snapshot):
 
 # Initialize Dash app
 app = Dash(__name__, external_stylesheets=[dag.themes.QUARTZ])
-app.title = "Interactive Axion Limits"
+app.title = "Interactive Plotter"
 
 # Load database
 database = db.DataBaseGag()
@@ -439,7 +439,7 @@ app.layout = html.Div(
         dcc.Store(id="labels-dom-store", data=[]),
         dcc.Interval(id="labels-sync-interval", interval=300, n_intervals=0),
         html.H1(
-            "Interactive Dark Matter Limits Graphs",
+            "Interactive Plotter",
             style={
                 "textAlign": "center",
                 "color": "#ffffff",
