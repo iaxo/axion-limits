@@ -379,7 +379,7 @@ def get_mpl_labels_from_browser_snapshot(labels_snapshot):
     return labels_mpl
 
 # Initialize Dash app
-app = Dash(__name__)
+app = Dash(__name__, external_stylesheets=[dag.themes.QUARTZ])
 app.title = "Interactive Axion Limits"
 
 # Load database
@@ -634,7 +634,7 @@ app.layout = html.Div(
                             rowData=df.to_dict("records"),
                             style={"height": "80vh", "width": "100%"},
                             dashGridOptions={"rowSelection": "multiple"},
-                            className="ag-theme-alpine-dark",
+                            className="ag-theme-quartz-dark",
                         ),
                         # Container for the two buttons side by side
                         html.Div(

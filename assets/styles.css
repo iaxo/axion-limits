@@ -112,267 +112,98 @@ body {
     cursor: not-allowed;
 }
 
-/* Force dark styling for Dash controls (menu can render outside component tree) */
-.Select-control {
-    background-color: #2f2f41 !important;
-    border: 1px solid #4a4a62 !important;
-    color: #f4f4f9 !important;
+/* Quartz Dark theme override for dropdown + sliders */
+:root {
+    --qz-bg: #1f2836;
+    --qz-bg-soft: #273444;
+    --qz-border: #3b4a5f;
+    --qz-text: #e6edf7;
+    --qz-text-muted: #b9c4d6;
+    --qz-accent: #7aa2f7;
+    --qz-accent-strong: #9bb9ff;
+    --qz-hover: #32465f;
+    --qz-selected: #415f84;
 }
 
-.Select-value-label,
-.Select-placeholder,
-.Select-input > input,
-.Select-arrow-zone,
-.Select-clear-zone {
-    color: #f4f4f9 !important;
-}
-
-.Select-menu-outer,
-.Select-menu {
-    background-color: #2f2f41 !important;
-    border: 1px solid #4a4a62 !important;
-    color: #f4f4f9 !important;
-}
-
-.Select-option {
-    background-color: transparent !important;
-    color: #f4f4f9 !important;
-}
-
-.Select-option.is-focused {
-    background-color: #454562 !important;
-}
-
-.Select-option.is-selected {
-    background-color: #5b7bb0 !important;
-    color: #ffffff !important;
-}
-
-.rc-slider-rail {
-    background-color: #4a4a62 !important;
-}
-
-.rc-slider-track {
-    background-color: #6d8fc8 !important;
-}
-
-.rc-slider-handle {
-    border-color: #c6d8ff !important;
-    background-color: #e5eeff !important;
-}
-
-.rc-slider-mark-text {
-    color: #bfc4d7 !important;
-}
-
-.rc-slider-tooltip-inner {
-    background-color: #171724 !important;
-    color: #f5f5ff !important;
-    border: 1px solid #4a4a62 !important;
-}
-
-.rc-slider-tooltip-arrow {
-    border-top-color: #171724 !important;
-}
-
-/* Explicit dark theme for plot-type selector (covers react-select v1 and v2 class patterns) */
-#plot-type-selector .Select-control,
-#plot-type-selector [class*="-control"] {
-    background-color: #2f2f41 !important;
-    border-color: #4a4a62 !important;
-    box-shadow: none !important;
-}
-
-#plot-type-selector .Select-menu-outer,
-#plot-type-selector .Select-menu,
-#plot-type-selector [class*="-menu"] {
-    background-color: #2f2f41 !important;
-    border: 1px solid #4a4a62 !important;
-    color: #f4f4f9 !important;
-}
-
-#plot-type-selector .Select-option,
-#plot-type-selector [class*="-option"] {
-    background-color: transparent !important;
-    color: #f4f4f9 !important;
-}
-
-#plot-type-selector .Select-option.is-focused,
-#plot-type-selector [class*="-option"][class*="focused"] {
-    background-color: #454562 !important;
-}
-
-#plot-type-selector .Select-option.is-selected,
-#plot-type-selector [class*="-option"][aria-selected="true"] {
-    background-color: #5b7bb0 !important;
-    color: #ffffff !important;
-}
-
-#plot-type-selector .Select-value-label,
-#plot-type-selector .Select-placeholder,
-#plot-type-selector .Select-input > input,
-#plot-type-selector [class*="-singleValue"],
-#plot-type-selector [class*="-placeholder"],
-#plot-type-selector [class*="-input"] input {
-    color: #f4f4f9 !important;
-}
-
-/* Strong AG Grid dark overrides */
-.ag-theme-alpine-dark {
-    --ag-background-color: #1f2430;
-    --ag-foreground-color: #f4f4f9;
-    --ag-header-background-color: #2b3242;
-    --ag-header-foreground-color: #f4f4f9;
-    --ag-odd-row-background-color: #242b39;
-    --ag-row-hover-color: #303a4f;
-    --ag-selected-row-background-color: #31435f;
-    --ag-border-color: #4a4a62;
-    --ag-secondary-border-color: #4a4a62;
-}
-
-.ag-theme-alpine-dark,
-.ag-theme-alpine-dark .ag-root-wrapper,
-.ag-theme-alpine-dark .ag-root,
-.ag-theme-alpine-dark .ag-header,
-.ag-theme-alpine-dark .ag-row,
-.ag-theme-alpine-dark .ag-cell,
-.ag-theme-alpine-dark .ag-paging-panel,
-.ag-theme-alpine-dark .ag-menu {
-    background-color: #1f2430 !important;
-    color: #f4f4f9 !important;
-    border-color: #4a4a62 !important;
-}
-
-/* Dash dcc.Dropdown in newer React Select versions may render menu in a portal */
-div[id^="react-select-"][id$="-listbox"] {
-    background-color: #2f2f41 !important;
-    border: 1px solid #4a4a62 !important;
-    color: #f4f4f9 !important;
-}
-
-div[id^="react-select-"][id*="-option-"] {
-    background-color: transparent !important;
-    color: #f4f4f9 !important;
-}
-
-div[id^="react-select-"][id*="-option-"]:hover,
-div[id^="react-select-"][id*="-option-"][aria-selected="false"] {
-    background-color: #454562 !important;
-}
-
-div[id^="react-select-"][id*="-option-"][aria-selected="true"] {
-    background-color: #5b7bb0 !important;
-    color: #ffffff !important;
-}
-
-/* Dash dcc.Dropdown often uses react-virtualized-select classes */
-.VirtualizedSelectOption {
-    background-color: #2f2f41 !important;
-    color: #f4f4f9 !important;
-}
-
-.VirtualizedSelectFocusedOption {
-    background-color: #454562 !important;
-    color: #ffffff !important;
-}
-
-.VirtualizedSelectSelectedOption {
-    background-color: #5b7bb0 !important;
-    color: #ffffff !important;
-}
-
-.VirtualizedSelectOption:hover {
-    background-color: #454562 !important;
-    color: #ffffff !important;
-}
-
-/* New Dash dropdown classnames (from plot-type-selector DOM snippet) */
+/* plot-type-selector value/control area */
 #plot-type-selector,
 #plot-type-selector-value,
-.dash-dropdown-value,
-.dash-dropdown-value-item {
-    background-color: #2f2f41 !important;
-    color: #f4f4f9 !important;
+#plot-type-selector .dash-dropdown-value,
+#plot-type-selector .dash-dropdown-value-item,
+#plot-type-selector .Select-control {
+    background: var(--qz-bg) !important;
+    color: var(--qz-text) !important;
+    border-color: var(--qz-border) !important;
 }
 
 #plot-type-selector .dash-dropdown-clear,
 #plot-type-selector .dash-dropdown-trigger-icon,
-.dash-dropdown-clear,
-.dash-dropdown-trigger-icon {
-    color: #d7d9e8 !important;
+#plot-type-selector .Select-placeholder,
+#plot-type-selector .Select-value-label {
+    color: var(--qz-text-muted) !important;
 }
 
-/* Menu container and options for dash-dropdown* implementation */
+/* Dropdown popup options (covers multiple Dash internals) */
 .dash-dropdown-menu,
-[class*="dash-dropdown-menu"] {
-    background-color: #2f2f41 !important;
-    border: 1px solid #4a4a62 !important;
-    color: #f4f4f9 !important;
+[class*="dash-dropdown-menu"],
+.Select-menu-outer,
+.Select-menu,
+div[role="listbox"],
+ul[role="listbox"],
+div[id^="react-select-"][id$="-listbox"] {
+    background: var(--qz-bg) !important;
+    border: 1px solid var(--qz-border) !important;
+    color: var(--qz-text) !important;
 }
 
 .dash-dropdown-option,
-[class*="dash-dropdown-option"] {
-    background-color: transparent !important;
-    color: #f4f4f9 !important;
+[class*="dash-dropdown-option"],
+.Select-option,
+.VirtualizedSelectOption,
+div[role="option"],
+li[role="option"],
+div[id^="react-select-"][id*="-option-"] {
+    background: transparent !important;
+    color: var(--qz-text) !important;
 }
 
 .dash-dropdown-option:hover,
 [class*="dash-dropdown-option"]:hover,
 .dash-dropdown-option--focused,
-[class*="dash-dropdown-option"][class*="focused"] {
-    background-color: #454562 !important;
+.Select-option.is-focused,
+.VirtualizedSelectFocusedOption,
+div[role="option"]:hover,
+li[role="option"]:hover,
+div[id^="react-select-"][id*="-option-"]:hover {
+    background: var(--qz-hover) !important;
     color: #ffffff !important;
 }
 
 .dash-dropdown-option--selected,
-[class*="dash-dropdown-option"][class*="selected"] {
-    background-color: #5b7bb0 !important;
-    color: #ffffff !important;
-}
-
-/* Final fallback: role-based popup styling for dropdown options rendered in portals */
-div[role="listbox"],
-ul[role="listbox"] {
-    background-color: #2f2f41 !important;
-    border: 1px solid #4a4a62 !important;
-    color: #f4f4f9 !important;
-}
-
-div[role="option"],
-li[role="option"] {
-    background-color: transparent !important;
-    color: #f4f4f9 !important;
-}
-
-div[role="option"]:hover,
-li[role="option"]:hover,
-div[role="option"][aria-selected="false"]:hover,
-li[role="option"][aria-selected="false"]:hover {
-    background-color: #454562 !important;
-    color: #ffffff !important;
-}
-
+.Select-option.is-selected,
+.VirtualizedSelectSelectedOption,
 div[role="option"][aria-selected="true"],
-li[role="option"][aria-selected="true"] {
-    background-color: #5b7bb0 !important;
+li[role="option"][aria-selected="true"],
+div[id^="react-select-"][id*="-option-"][aria-selected="true"] {
+    background: var(--qz-selected) !important;
     color: #ffffff !important;
 }
 
-/* Explicit dark theme for both range sliders */
+/* Quartz Dark sliders */
 #x-range-slider .rc-slider-rail,
 #y-range-slider .rc-slider-rail {
-    background-color: #3a3f52 !important;
+    background: var(--qz-bg-soft) !important;
 }
 
 #x-range-slider .rc-slider-track,
 #y-range-slider .rc-slider-track {
-    background-color: #6f90c9 !important;
+    background: var(--qz-accent) !important;
 }
 
 #x-range-slider .rc-slider-handle,
 #y-range-slider .rc-slider-handle {
-    background-color: #dfe9ff !important;
-    border: 2px solid #9db8f0 !important;
+    background: #dfe8ff !important;
+    border: 2px solid var(--qz-accent-strong) !important;
     box-shadow: none !important;
 }
 
@@ -380,67 +211,96 @@ li[role="option"][aria-selected="true"] {
 #x-range-slider .rc-slider-handle:active,
 #y-range-slider .rc-slider-handle:focus,
 #y-range-slider .rc-slider-handle:active {
-    border-color: #c2d6ff !important;
-    box-shadow: 0 0 0 4px rgba(112, 148, 216, 0.25) !important;
+    border-color: #c9dbff !important;
+    box-shadow: 0 0 0 4px rgba(122, 162, 247, 0.28) !important;
 }
 
 #x-range-slider .rc-slider-mark-text,
 #y-range-slider .rc-slider-mark-text {
-    color: #c5c9d9 !important;
+    color: var(--qz-text-muted) !important;
 }
 
-.rc-slider-tooltip .rc-slider-tooltip-inner {
-    background-color: #181c27 !important;
-    color: #f4f6ff !important;
-    border: 1px solid #505770 !important;
-}
-
-.rc-slider-tooltip .rc-slider-tooltip-arrow {
-    border-top-color: #181c27 !important;
-}
-
-/* Ensure selected-range numbers are readable in always-visible tooltips */
-#x-range-slider .rc-slider-tooltip-inner,
-#y-range-slider .rc-slider-tooltip-inner,
-.rc-slider-tooltip-open .rc-slider-tooltip-inner,
-.rc-slider-tooltip-placement-bottom .rc-slider-tooltip-inner,
-.rc-slider-tooltip-placement-top .rc-slider-tooltip-inner {
-    background-color: #161b26 !important;
-    color: #f3f6ff !important;
-    border: 1px solid #5a647f !important;
-    text-shadow: none !important;
-}
-
-#x-range-slider .rc-slider-tooltip-arrow,
-#y-range-slider .rc-slider-tooltip-arrow,
-.rc-slider-tooltip-placement-bottom .rc-slider-tooltip-arrow,
-.rc-slider-tooltip-placement-top .rc-slider-tooltip-arrow {
-    border-top-color: #161b26 !important;
-    border-bottom-color: #161b26 !important;
-}
-
-/* Dash slider tooltip class used in current UI */
 .dash-slider-tooltip,
-.dash-slider-tooltip.always-visible {
-    background-color: #161b26 !important;
-    color: #f3f6ff !important;
-    border: 1px solid #5a647f !important;
-    border-radius: 6px !important;
-    padding: 2px 8px !important;
-    box-shadow: none !important;
+.dash-slider-tooltip.always-visible,
+.rc-slider-tooltip .rc-slider-tooltip-inner,
+#x-range-slider .rc-slider-tooltip-inner,
+#y-range-slider .rc-slider-tooltip-inner {
+    background: var(--qz-bg) !important;
+    color: var(--qz-text) !important;
+    border: 1px solid var(--qz-border) !important;
 }
 
 .dash-slider-tooltip > div,
 .dash-slider-tooltip.always-visible > div {
-    color: #f3f6ff !important;
-    background: transparent !important;
-    text-shadow: none !important;
-    font-weight: 600 !important;
-    font-size: 16px !important;
-    line-height: 1.2 !important;
+    color: var(--qz-text) !important;
 }
 
-#x-range-slider .rc-slider-mark-text,
-#y-range-slider .rc-slider-mark-text {
-    font-size: 13px !important;
+/* Direct editable range input (Dash slider tooltip editor) */
+.dash-slider-tooltip input,
+.dash-slider-tooltip.always-visible input,
+[id^="x-range-slider-tooltip-"] input,
+[id^="y-range-slider-tooltip-"] input {
+    background: #121823 !important;
+    color: var(--qz-text) !important;
+    border: 1px solid var(--qz-border) !important;
+    border-radius: 4px !important;
+    padding: 2px 6px !important;
+    font-size: 15px !important;
+    line-height: 1.2 !important;
+    caret-color: var(--qz-text) !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
+
+.dash-slider-tooltip input:focus,
+.dash-slider-tooltip.always-visible input:focus,
+[id^="x-range-slider-tooltip-"] input:focus,
+[id^="y-range-slider-tooltip-"] input:focus {
+    border-color: var(--qz-accent) !important;
+    box-shadow: 0 0 0 2px rgba(122, 162, 247, 0.28) !important;
+}
+
+/* Direct side inputs for Dash RangeSlider */
+input.dash-input-container.dash-range-slider-input,
+input.dash-input-container.dash-range-slider-min-input,
+input.dash-input-container.dash-range-slider-max-input {
+    background: #121823 !important;
+    color: var(--qz-text) !important;
+    border: 1px solid var(--qz-border) !important;
+    border-radius: 6px !important;
+    padding: 3px 8px !important;
+    font-size: 14px !important;
+    line-height: 1.2 !important;
+    caret-color: var(--qz-text) !important;
+    outline: none !important;
+    box-shadow: none !important;
+    appearance: textfield !important;
+    -moz-appearance: textfield !important;
+}
+
+input.dash-input-container.dash-range-slider-input:focus,
+input.dash-input-container.dash-range-slider-min-input:focus,
+input.dash-input-container.dash-range-slider-max-input:focus {
+    border-color: var(--qz-accent) !important;
+    box-shadow: 0 0 0 2px rgba(122, 162, 247, 0.28) !important;
+}
+
+input.dash-input-container.dash-range-slider-input:disabled,
+input.dash-input-container.dash-range-slider-min-input:disabled,
+input.dash-input-container.dash-range-slider-max-input:disabled {
+    background: #1a2230 !important;
+    color: #9ca8bf !important;
+    border-color: #334257 !important;
+    opacity: 1 !important;
+}
+
+/* Keep number spinner buttons dark where supported */
+input.dash-input-container.dash-range-slider-input::-webkit-outer-spin-button,
+input.dash-input-container.dash-range-slider-input::-webkit-inner-spin-button,
+input.dash-input-container.dash-range-slider-min-input::-webkit-outer-spin-button,
+input.dash-input-container.dash-range-slider-min-input::-webkit-inner-spin-button,
+input.dash-input-container.dash-range-slider-max-input::-webkit-outer-spin-button,
+input.dash-input-container.dash-range-slider-max-input::-webkit-inner-spin-button {
+    filter: invert(0.85);
+}
+
