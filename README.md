@@ -81,12 +81,17 @@ Now, extract these rows (the _get_rows(field, values)_ method return the rows in
 exps = database.get_rows("name", experimentsToPlot)
 ```
 > [!TIP]  
-> The `exps` dictionary provides detailed row information from the database for each selected experiment. The keys in this dictionary correspond to the names of the experiments, and the values are nested dictionaries where column names serve as keys. You can modify these values to customize the plot beyond the default settings.  
-> For example, to replicate the iconic [AxionLimits](https://cajohare.github.io/AxionLimits/) style for the QCD band:  
+> <details>
+> <summary><h3> Can I customize the default style of selected experiments? </h3></summary>
+> 
+> Yes! The `exps` dictionary provides detailed row information from the database for each selected experiment. The keys in this dictionary correspond to the names of the experiments, and the values are nested dictionaries where column names serve as keys. You can modify these values to customize the plot beyond the default settings.
+> For example, to replicate the iconic [AxionLimits](https://cajohare.github.io/AxionLimits/) style for the QCD band:
+>
 > ```python
 > exps["qcdband"]["drawOptions"] = "cmap=('YlOrBr', 0, 0.45, 40)"
 > exps["ksvz"]["drawOptions"] += ", color='#a35c2f'"
-> ```  
+> ```
+> </details>
 
 
 You may now include some labels. In order to do that, you can build a list where each element will be a label to plot. Each of these elements (labels) should be a tuple (or list) containing at least a string with the text of the label (_LaTeX_ formatting is available), the x position and y position. Optionally, a 4th element can be given containing a dictionary with the [matplotlib.pyplot.text()](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.text.html) keyword arguments to customize the text label as you want. For example,
@@ -97,7 +102,11 @@ labels = [
 ]
 ```
 > [!TIP]
-> The text labels with the parameter `picker` set to true (see "Helioscopes (CAST)" label in the example above) can be modified interactively in the shown figure. There are three options:
+> <details>
+> <summary><h3> Can I move labels interactively? </h3></summary>
+> 
+> Yes! The text labels with the parameter `picker` set to true (see "Helioscopes (CAST)" label in the example above) can be modified interactively in the shown figure. There are three options:
+>
 > * Move to a different position by clicking on the label and dragging it. The label will change the position when the click is released.
 > * Increase or decrease the font size by scrolling the mouse roulette while holding the click on the text label or while keeping pressed the `ctrl` key.
 > * Rotate the label by pressing the keys `+` (anticlockwise) or `-` (clockwise) while holding the click on the text label.
@@ -107,6 +116,8 @@ labels = [
 > If you want to rotate or resize the text but don't want to move its position, hold the click on the anchor point. When saving the image don't worry about it, as the anchor point will be automatically deleted. Anyways, you can manually remove it using the right click.
 > 
 > Note that these changes on the text labels will be printed in the final graph image but it will not be recorded in the script, so the graph will not be reproducible. For that purpose, the values of the label position, fontsize and rotation (and rotation mode) will be printed in the output terminal so you can copy these values and change them manually on the script to keep record of the label positions.
+> </details>
+
 
 Finally, call the AxionPlot constructor to generate the plot.
 ```python
@@ -120,10 +131,50 @@ axionplot = AxionGagPlot(
 ```
 Use the parameter `experiments` and `labels` to pass the previously defined data and labels. If a string is given to the `saveplotname`, it will save the plot in a file with that name (default extension will be pdf if none is given within the filename). You can check other useful customization arguments at [axion_plot.py](src/axionlimits/axion_plot.py).
 > [!TIP]
-> You can add any additional matplotlib.pyplot object (such as lines or text) or further customize the figure. Just set the parameter `showplot=False` above and insert the desired plotting objects and customizations. Afterwards, remember to call the `show_plot` and `save_plot` methods. Check out this [example](myPlottingScripts/haloscope_zoom_Jun2024.py) for reference.
+> <details>
+> <summary><h3> Can I add extra Matplotlib elements to the plot? </h3></summary>
+>
+> Yes, you can add any additional matplotlib.pyplot object (such as lines or text) or further customize the figure. Just set the parameter `showplot=False` above and insert the desired plotting objects and customizations. Afterwards, remember to call the `show_plot` and `save_plot` methods. Check out this [example](myPlottingScripts/haloscope_zoom_Jun2024.py) for reference.
+> </details>
 
 📂 Inside [myPlottingScripts](myPlottingScripts) folder you can find more complex examples of scripts used to generate the figures at [plots](plots) directory.
-## Enhanced Options
+
+## Add curves that are not in the database
+
+Sometimes you may want to plot curves that are not stored in the database, for example a future sensitivity projection, a preliminary result, or a custom line for quick comparisons. In these cases, add a new entry to the `exps` dictionary with the minimum required fields. For example:
+
+```python
+exps["myNewLine"] = {
+    "type": "line", # required: one of "line", "band", "region", or "fog"
+    "path": "/path/to/the/data/file.dat", # required
+    "drawOptions": "color='red', linewidth=0.5, linestyle='-'", # optional but recommended
+}
+```
+
+Keep in mind that the plotting order follows the insertion order of `exps`. If you need your custom curve in a specific position, split the experiment lists and build `exps` in steps. For example:
+
+```python
+# split the original experimentsToPlot list to insert 'myNewLine' in the middle
+qcdToPlot = [
+    "qcdband",
+    "ksvz",
+]
+experimentsToPlot = [
+    "CAST2021",
+]
+
+# add items in the desired plotting order
+exps = {}
+exps.update(database.get_rows("name", qcdToPlot))
+exps["myNewLine"] = {
+    "type": "line",
+    "path": "/path/to/the/data/file.dat",
+    "drawOptions": "color='red', linewidth=0.5, linestyle='-'",
+}
+exps.update(database.get_rows("name", experimentsToPlot))
+```
+
+## Enhanced Styling Options
 
 ### Gradient Filling with Colormap  
 

@@ -1,19 +1,26 @@
 from __future__ import annotations
 
 import sqlite3 as sql
+import os
 from .utils import resolve_relative_path, get_absolute_path
 import pandas as pd
 
 # DataBase class is the generic database class that can be used to load an already existing database.
 class DataBase:
     def __init__(
-        self, file_database: str, name: str, commit: bool = False
+        self, file_database: str, name: str, commit: bool = False, new_database: bool = False
     ):  
         try:
             absolute_path = get_absolute_path(file_database)
+            if new_database:
+                absolute_path = os.path.abspath(file_database)
         except FileNotFoundError:
-            print(f"WARNING: The file '{file_database}' does not exist. Creating a new database.")
+            if not new_database:
+                print(f"WARNING: The file '{file_database}' ({absolute_path}) does not exist. Creating a new database.")
             absolute_path = file_database
+        if new_database and os.path.exists(absolute_path):
+            print(f"WARNING: The file '{file_database}' already exists in {absolute_path}.")
+
         self.FILE_DATABASE = absolute_path
 
         self.conn = sql.connect(self.FILE_DATABASE)
@@ -153,9 +160,9 @@ class DataBase:
 
 class DataBaseGag(DataBase):
     def __init__(
-        self, file_database="Axions.db", name: str = "AxionsGag", commit: bool = False
+        self, file_database="Axions.db", name: str = "AxionsGag", commit: bool = False, new_database: bool = False
     ):
-        super().__init__(file_database, name, commit)
+        super().__init__(file_database, name, commit, new_database)
 
         self.cursor.execute(
             f"""CREATE TABLE IF NOT EXISTS {self.name} (
@@ -241,9 +248,9 @@ class DataBaseGag(DataBase):
 
 class DataBaseGae(DataBase):
     def __init__(
-        self, file_database="Axions.db", name: str = "AxionsGae", commit: bool = False
+        self, file_database="Axions.db", name: str = "AxionsGae", commit: bool = False, new_database: bool = False
     ):
-        super().__init__(file_database, name, commit)
+        super().__init__(file_database, name, commit, new_database)
 
         self.cursor.execute(
             f"""CREATE TABLE IF NOT EXISTS {self.name} (
@@ -290,9 +297,9 @@ class DataBaseGae(DataBase):
 
 class DataBaseWimps(DataBase):
     def __init__(
-        self, file_database="Wimps.db", name: str = "Wimps_SI", commit: bool = False
+        self, file_database="Wimps.db", name: str = "Wimps_SI", commit: bool = False, new_database: bool = False
     ):
-        super().__init__(file_database, name, commit)
+        super().__init__(file_database, name, commit, new_database)
 
         self.cursor.execute(
             f"""CREATE TABLE IF NOT EXISTS {self.name} (

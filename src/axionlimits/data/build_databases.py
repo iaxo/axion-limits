@@ -1,12 +1,14 @@
 import axionlimits.databases as db
+import os
 
 FILE_DATABASE = "Axions.db"
 
 print("File database: " + FILE_DATABASE)
-print("If it already exists, the table will be appended. Note this can cause to have duplicated rows.")
-if input("Are you sure you want to continue? (y/n)\n") not in ["y", "yes", "Y", "YES"]:
-    print("Aborting")
-    exit()
+if os.path.exists(FILE_DATABASE):
+    print("File already exists. Do you want to overwrite it? (y/n)")
+    if input() not in ["y", "yes", "Y", "YES"]:
+        print("Aborting")
+        exit()
 
 # ==================== DATABASES ====================
 path = "axion/"
@@ -61,6 +63,7 @@ AxionsGag = [
     ['QUAX', 'band', path + 'QUAX.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '', '', 0, 0, 1, 1, 0, 0, 0, 0],
     ['QUAX2021', 'band', path + 'QUAX2021.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '2012.09498', '2021', 0, 0, 1, 1, 0, 0, 0, 0],
     ['QUAX2024', 'band', path + 'QUAX2024.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '2402.19063', '2024', 0, 0, 1, 1, 0, 0, 0, 0],
+    ['QUAX2025', 'band', path + 'QUAX2025.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '2506.11589', '2025', 0, 0, 1, 1, 0, 0, 0, 0],
     ['RADES2021', 'band', path + 'RADES2021.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '2104.13798', '2021', 0, 0, 1, 1, 0, 0, 0, 0],
     ['ABRA10cm', 'band', path + 'ABRA10cm.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.5, alpha=0.5", 0, '', '', 0, 0, 1, 1, 0, 0, 0, 0],
     ['ABRA_2021', 'band', path + 'ABRA_2021.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.5, alpha=0.5", 0, '2102.06722', '2021', 0, 0, 1, 1, 0, 0, 0, 0],
@@ -68,6 +71,8 @@ AxionsGag = [
     ['ADMX_SLIC', 'band', path + 'ADMX_SLIC.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.5, alpha=1", 0, '1911.05772', '2019', 0, 0, 1, 1, 0, 0, 0, 0],
     ['SHAFT', 'band', path + 'SHAFT.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.5, alpha=0.5", 0, '', '', 0, 0, 1, 1, 0, 0, 0, 0],
     ['TransmonMW_PC', 'band', path + 'TransmonMWphotoncounter_2024.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.5", 0, '2403.02321', '2024', 0, 0, 1, 1, 0, 0, 0, 0],
+    ['GIGABREAD2025', 'band', path + 'GigaBREAD_2025.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.5", 0, '10.1103/PhysRevLett.134.17100', '2025', 0, 0, 1, 1, 0, 0, 0, 0],
+    ['8CellCavity2025', 'band', path + 'Cylindrical8CellCavityHaloscope.txt', "facecolor='limegreen', edgecolor='darkgreen', linewidth=0.2", 0, '2507.04344', '2025', 0, 0, 1, 1, 0, 0, 0, 0],
     
     ['TASEH_2022','band', path+'TASEH_2022.txt',"facecolor='limegreen',edgecolor='darkgreen',linewidth=0.2",0,'2205.05574','2022',0, 0, 1, 1, 0, 0, 0, 0],
     ['GraHal_2022','band', path+'GraHal_2022.txt',"facecolor='limegreen',edgecolor='darkgreen',linewidth=0.2",0,'2110.14406','2022',0, 0, 1, 1, 0, 0, 0, 0],
@@ -108,6 +113,7 @@ AxionsGag = [
     ['HBalpbound', 'band', path + 'HBalpbound.txt', "facecolor='skyblue', edgecolor='blue', alpha=1, linewidth=0.5", 0, 'Ayala et al.', '', 0, 0, 0, 0, 1, 0, 0, 0],
     ['HBalpbound_l', 'line', path + 'HBalpbound.txt', "color='blue', linewidth=0.5", 0, '', '', 0, 0, 0, 0, 1, 0, 0, 0],
     ['solar_nu', 'band', path + 'ALPSun_nu.txt', "facecolor='steelblue', edgecolor='blue', linewidth=0.5", 0, 'Raffelt & Gondolo', '2008', 0, 0, 0, 0, 1, 0, 0, 0],
+    ['CombinedAstro2024', 'band', path + 'Combined_Astro_2024.txt', "facecolor='mediumturquoise', edgecolor='darkgreen', linewidth=0.5, alpha=0.8", 0, 'https://github.com/cajohare/AxionLimits (commit: d8c5829)', '2024', 0, 0, 0, 0, 1, 0, 0, 0],
     # STELLAR - HELIOSCOPES
     ['CAST', 'band', path + 'cast_env_2016.dat', "facecolor='deepskyblue', edgecolor='blue', linewidth=0.5", 0, '10.1038/nphys4109', '2017', 0, 0, 0, 0, 1, 1, 0, 0], #Up to Nature paper (2017)
     ['CAST2021', 'band', path + 'CAST_2019_2021_PRL.txt', "facecolor='deepskyblue', edgecolor='blue', linewidth=0.5", 0, '10.1103/PhysRevLett.133.221005', '2024', 0, 0, 0, 0, 1, 1, 0, 0], #Legacy results of all the data up to 2021.
@@ -199,11 +205,11 @@ AxionsGae= [
 ]
 
 # ===========================================================================#
-expGag = db.DataBaseGag(FILE_DATABASE, "AxionsGag", True)
+expGag = db.DataBaseGag(FILE_DATABASE, "AxionsGag", commit=True, new_database=True)
 expGag.insert_rows(AxionsGag)
 
-expGae = db.DataBaseGae(FILE_DATABASE, "AxionsGae", True)
+expGae = db.DataBaseGae(FILE_DATABASE, "AxionsGae", commit=True, new_database=True)
 expGae.insert_rows(AxionsGae)
 
-w = db.DataBaseWimps(FILE_DATABASE.replace("Axions","Wimps"), "Wimps_SI", True)
+w = db.DataBaseWimps(FILE_DATABASE.replace("Axions","Wimps"), "Wimps_SI", commit=True, new_database=True)
 w.insert_rows(Wimps)
