@@ -11,11 +11,13 @@ import pandas as pd
 import io
 import base64
 import re
+import math
 
 mpl.use("Agg")
 
 GENERATED_PLOT = None
 LABEL_FONT_SCALE_CORRECTION = 1.12
+LABEL_VERTICAL_OFFSET_TUNE = 2.24
 
 
 def _parse_css_px(value, default=0.0):
@@ -191,20 +193,39 @@ def create_plot(
 
             # Map axes coordinates to data coordinates using matplotlib transforms.
             x_disp, y_disp = plot_obj.plot.transAxes.transform((x_ax, y_ax))
-            x_data, y_data = plot_obj.plot.transData.inverted().transform((x_disp, y_disp))
 
             # Match browser font size: CSS px -> figure px -> matplotlib points.
             font_px_browser = float(label.get("font_size_px", 13.0) or 13.0)
+            line_height_px_browser = float(
+                label.get("line_height_px", font_px_browser * 1.2)
+                or (font_px_browser * 1.2)
+            )
             layer_w = float(label.get("layer_width_px", 0.0) or 0.0)
             layer_h = float(label.get("layer_height_px", 0.0) or 0.0)
             scale_x = fig_w_px / layer_w if layer_w > 0 else 1.0
             scale_y = fig_h_px / layer_h if layer_h > 0 else 1.0
             fig_px_font = font_px_browser * min(scale_x, scale_y)
+            # Browser text sits inside the line-height box with half-leading on top.
+            top_leading_px = max(
+                (line_height_px_browser - font_px_browser)
+                * 0.5
+                * LABEL_VERTICAL_OFFSET_TUNE,
+                0.0,
+            )
             font_size_pt = max(
                 fig_px_font * 72.0 / plot_obj.fig.dpi * LABEL_FONT_SCALE_CORRECTION,
                 1.0,
             )
+
             rotation_deg = float(label.get("rotation_deg", 0.0) or 0.0)
+            theta = math.radians(rotation_deg)
+            # Apply top-leading correction in label-local +y direction (rotated in browser).
+            offset_x_browser = -math.sin(theta) * top_leading_px
+            offset_y_browser = math.cos(theta) * top_leading_px
+            x_disp += offset_x_browser * scale_x
+            y_disp -= offset_y_browser * scale_y
+            x_data, y_data = plot_obj.plot.transData.inverted().transform((x_disp, y_disp))
+
             text_color = str(label.get("color", "black") or "black")
             text_color = _normalize_css_color_for_mpl(text_color, default="black")
 
@@ -375,6 +396,7 @@ def get_mpl_labels_from_browser_snapshot(labels_snapshot):
                 "xpos_mpl": xpos_mpl,
                 "ypos_mpl": ypos_mpl,
                 "font_size_px": float(label.get("fontSizePx", 13.0) or 13.0),
+                "line_height_px": float(label.get("lineHeightPx", 0.0) or 0.0),
                 "rotation_deg": float(label.get("rotationDeg", 0.0) or 0.0),
                 "layer_width_px": float(label.get("layerWidth", 0.0) or 0.0),
                 "layer_height_px": float(label.get("layerHeight", 0.0) or 0.0),

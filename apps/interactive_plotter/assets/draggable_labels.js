@@ -317,13 +317,17 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             return labels.map((label) => {
                 const labelRect = label.getBoundingClientRect();
                 const computedStyle = window.getComputedStyle(label);
+                const fontSizePx = parseFloat(computedStyle.fontSize || "13") || 13;
+                const lineHeightPx =
+                    parseFloat(computedStyle.lineHeight || "") || fontSizePx * 1.2;
                 return {
                     text: (label.textContent || "").trim(),
                     left: parseFloat(label.style.left || "0") || 0,
                     top: parseFloat(label.style.top || "0") || 0,
                     width: labelRect.width,
                     height: labelRect.height,
-                    fontSizePx: parseFloat(computedStyle.fontSize || "13") || 13,
+                    fontSizePx,
+                    lineHeightPx,
                     rotationDeg: parseFloat(label.dataset.rotationDeg || "0") || 0,
                     textColor: computedStyle.color || label.style.color || "#000000",
                     layerWidth: layerRect.width,
