@@ -15,6 +15,9 @@ import re
 mpl.use("Agg")
 
 GENERATED_PLOT = None
+LABEL_FONT_SCALE_CORRECTION = 1.12
+
+
 def _parse_css_px(value, default=0.0):
     """Parse CSS pixel values like '24px' to float."""
     if value is None:
@@ -197,7 +200,10 @@ def create_plot(
             scale_x = fig_w_px / layer_w if layer_w > 0 else 1.0
             scale_y = fig_h_px / layer_h if layer_h > 0 else 1.0
             fig_px_font = font_px_browser * min(scale_x, scale_y)
-            font_size_pt = max(fig_px_font * 72.0 / plot_obj.fig.dpi, 1.0)
+            font_size_pt = max(
+                fig_px_font * 72.0 / plot_obj.fig.dpi * LABEL_FONT_SCALE_CORRECTION,
+                1.0,
+            )
             rotation_deg = float(label.get("rotation_deg", 0.0) or 0.0)
             text_color = str(label.get("color", "black") or "black")
             text_color = _normalize_css_color_for_mpl(text_color, default="black")
