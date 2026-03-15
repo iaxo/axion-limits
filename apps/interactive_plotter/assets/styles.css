@@ -1,0 +1,322 @@
+body {
+    margin: 0;
+    background-color: #1e1e2f;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+/* Dark theme for Dropdown menus */
+.dark-theme .Select-control {
+    background-color: #333;
+    color: #fff;
+    border-color: #444;
+}
+
+.dark-theme .Select-menu-outer {
+    background-color: #444;
+    color: #fff;
+}
+
+.dark-theme .Select-option {
+    color: #fff;
+}
+
+.dark-theme .Select-option.is-focused {
+    background-color: #555;
+}
+
+.dark-theme .Select-placeholder {
+    color: #bbb;
+}
+
+/* Dark theme for RangeSlider */
+.dark-theme .rc-slider {
+    background-color: #333;
+}
+
+.dark-theme .rc-slider-rail {
+    background-color: #444;
+}
+
+.dark-theme .rc-slider-track {
+    background-color: #555;
+}
+
+.dark-theme .rc-slider-handle {
+    border-color: #777;
+    background-color: #fff;
+}
+
+.dark-theme .rc-slider-handle:focus {
+    border-color: #ccc;
+}
+
+.dark-theme .rc-slider-mark {
+    color: #bbb;
+}
+
+.labels-layer {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.draggable-label {
+    position: absolute;
+    cursor: move;
+    user-select: none;
+    background: rgba(0, 0, 0, 0.65);
+    color: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+    padding: 0;
+    font-size: 13px;
+    line-height: 1.2;
+    white-space: nowrap;
+    transform: translate(0, 0);
+    transform-origin: top left;
+}
+
+.draggable-label.selected {
+    outline: 2px solid rgba(255, 214, 92, 0.95);
+    outline-offset: 1px;
+}
+
+.draggable-label.editing {
+    cursor: text;
+    outline: 1px solid rgba(255, 255, 255, 0.7);
+    background: rgba(20, 20, 20, 0.9);
+}
+
+#label-color-picker:disabled {
+    opacity: 0.45;
+    cursor: not-allowed !important;
+}
+
+.label-color-swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    cursor: pointer;
+    padding: 0;
+}
+
+.label-color-swatch:hover {
+    transform: scale(1.08);
+}
+
+.label-color-swatch.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+/* Quartz Dark theme override for dropdown + sliders */
+:root {
+    --qz-bg: #1f2836;
+    --qz-bg-soft: #273444;
+    --qz-border: #3b4a5f;
+    --qz-text: #e6edf7;
+    --qz-text-muted: #b9c4d6;
+    --qz-accent: #7aa2f7;
+    --qz-accent-strong: #9bb9ff;
+    --qz-hover: #32465f;
+    --qz-selected: #415f84;
+}
+
+/* plot-type-selector value/control area */
+#plot-type-selector,
+#ticksopt-x-selector,
+#ticksopt-y-selector,
+#plot-type-selector-value,
+#plot-type-selector .dash-dropdown-value,
+#plot-type-selector .dash-dropdown-value-item,
+#plot-type-selector .Select-control,
+#ticksopt-x-selector .dash-dropdown-value,
+#ticksopt-x-selector .dash-dropdown-value-item,
+#ticksopt-x-selector .Select-control,
+#ticksopt-y-selector .dash-dropdown-value,
+#ticksopt-y-selector .dash-dropdown-value-item,
+#ticksopt-y-selector .Select-control {
+    background: var(--qz-bg) !important;
+    color: var(--qz-text) !important;
+    border-color: var(--qz-border) !important;
+}
+
+#plot-type-selector .dash-dropdown-clear,
+#plot-type-selector .dash-dropdown-trigger-icon,
+#plot-type-selector .Select-placeholder,
+#plot-type-selector .Select-value-label,
+#ticksopt-x-selector .dash-dropdown-clear,
+#ticksopt-x-selector .dash-dropdown-trigger-icon,
+#ticksopt-x-selector .Select-placeholder,
+#ticksopt-x-selector .Select-value-label,
+#ticksopt-y-selector .dash-dropdown-clear,
+#ticksopt-y-selector .dash-dropdown-trigger-icon,
+#ticksopt-y-selector .Select-placeholder,
+#ticksopt-y-selector .Select-value-label {
+    color: var(--qz-text-muted) !important;
+}
+
+/* Dropdown popup options (covers multiple Dash internals) */
+.dash-dropdown-menu,
+[class*="dash-dropdown-menu"],
+.Select-menu-outer,
+.Select-menu,
+div[role="listbox"],
+ul[role="listbox"],
+div[id^="react-select-"][id$="-listbox"] {
+    background: var(--qz-bg) !important;
+    border: 1px solid var(--qz-border) !important;
+    color: var(--qz-text) !important;
+}
+
+.dash-dropdown-option,
+[class*="dash-dropdown-option"],
+.Select-option,
+.VirtualizedSelectOption,
+div[role="option"],
+li[role="option"],
+div[id^="react-select-"][id*="-option-"] {
+    background: transparent !important;
+    color: var(--qz-text) !important;
+}
+
+.dash-dropdown-option:hover,
+[class*="dash-dropdown-option"]:hover,
+.dash-dropdown-option--focused,
+.Select-option.is-focused,
+.VirtualizedSelectFocusedOption,
+div[role="option"]:hover,
+li[role="option"]:hover,
+div[id^="react-select-"][id*="-option-"]:hover {
+    background: var(--qz-hover) !important;
+    color: #ffffff !important;
+}
+
+.dash-dropdown-option--selected,
+.Select-option.is-selected,
+.VirtualizedSelectSelectedOption,
+div[role="option"][aria-selected="true"],
+li[role="option"][aria-selected="true"],
+div[id^="react-select-"][id*="-option-"][aria-selected="true"] {
+    background: var(--qz-selected) !important;
+    color: #ffffff !important;
+}
+
+/* Quartz Dark sliders */
+#x-range-slider .rc-slider-rail,
+#y-range-slider .rc-slider-rail {
+    background: var(--qz-bg-soft) !important;
+}
+
+#x-range-slider .rc-slider-track,
+#y-range-slider .rc-slider-track {
+    background: var(--qz-accent) !important;
+}
+
+#x-range-slider .rc-slider-handle,
+#y-range-slider .rc-slider-handle {
+    background: #dfe8ff !important;
+    border: 2px solid var(--qz-accent-strong) !important;
+    box-shadow: none !important;
+}
+
+#x-range-slider .rc-slider-handle:focus,
+#x-range-slider .rc-slider-handle:active,
+#y-range-slider .rc-slider-handle:focus,
+#y-range-slider .rc-slider-handle:active {
+    border-color: #c9dbff !important;
+    box-shadow: 0 0 0 4px rgba(122, 162, 247, 0.28) !important;
+}
+
+#x-range-slider .rc-slider-mark-text,
+#y-range-slider .rc-slider-mark-text {
+    color: var(--qz-text-muted) !important;
+}
+
+.dash-slider-tooltip,
+.dash-slider-tooltip.always-visible,
+.rc-slider-tooltip .rc-slider-tooltip-inner,
+#x-range-slider .rc-slider-tooltip-inner,
+#y-range-slider .rc-slider-tooltip-inner {
+    background: var(--qz-bg) !important;
+    color: var(--qz-text) !important;
+    border: 1px solid var(--qz-border) !important;
+}
+
+.dash-slider-tooltip > div,
+.dash-slider-tooltip.always-visible > div {
+    color: var(--qz-text) !important;
+}
+
+/* Direct editable range input (Dash slider tooltip editor) */
+.dash-slider-tooltip input,
+.dash-slider-tooltip.always-visible input,
+[id^="x-range-slider-tooltip-"] input,
+[id^="y-range-slider-tooltip-"] input {
+    background: #121823 !important;
+    color: var(--qz-text) !important;
+    border: 1px solid var(--qz-border) !important;
+    border-radius: 4px !important;
+    padding: 2px 6px !important;
+    font-size: 15px !important;
+    line-height: 1.2 !important;
+    caret-color: var(--qz-text) !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.dash-slider-tooltip input:focus,
+.dash-slider-tooltip.always-visible input:focus,
+[id^="x-range-slider-tooltip-"] input:focus,
+[id^="y-range-slider-tooltip-"] input:focus {
+    border-color: var(--qz-accent) !important;
+    box-shadow: 0 0 0 2px rgba(122, 162, 247, 0.28) !important;
+}
+
+/* Direct side inputs for Dash RangeSlider */
+input.dash-input-container.dash-range-slider-input,
+input.dash-input-container.dash-range-slider-min-input,
+input.dash-input-container.dash-range-slider-max-input {
+    background: #121823 !important;
+    color: var(--qz-text) !important;
+    border: 1px solid var(--qz-border) !important;
+    border-radius: 6px !important;
+    padding: 3px 8px !important;
+    font-size: 14px !important;
+    line-height: 1.2 !important;
+    caret-color: var(--qz-text) !important;
+    outline: none !important;
+    box-shadow: none !important;
+    appearance: textfield !important;
+    -moz-appearance: textfield !important;
+}
+
+input.dash-input-container.dash-range-slider-input:focus,
+input.dash-input-container.dash-range-slider-min-input:focus,
+input.dash-input-container.dash-range-slider-max-input:focus {
+    border-color: var(--qz-accent) !important;
+    box-shadow: 0 0 0 2px rgba(122, 162, 247, 0.28) !important;
+}
+
+input.dash-input-container.dash-range-slider-input:disabled,
+input.dash-input-container.dash-range-slider-min-input:disabled,
+input.dash-input-container.dash-range-slider-max-input:disabled {
+    background: #1a2230 !important;
+    color: #9ca8bf !important;
+    border-color: #334257 !important;
+    opacity: 1 !important;
+}
+
+/* Keep number spinner buttons dark where supported */
+input.dash-input-container.dash-range-slider-input::-webkit-outer-spin-button,
+input.dash-input-container.dash-range-slider-input::-webkit-inner-spin-button,
+input.dash-input-container.dash-range-slider-min-input::-webkit-outer-spin-button,
+input.dash-input-container.dash-range-slider-min-input::-webkit-inner-spin-button,
+input.dash-input-container.dash-range-slider-max-input::-webkit-outer-spin-button,
+input.dash-input-container.dash-range-slider-max-input::-webkit-inner-spin-button {
+    filter: invert(0.85);
+}
+

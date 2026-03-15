@@ -3,6 +3,7 @@ from __future__ import annotations
 import sqlite3 as sql
 import os
 from .utils import resolve_relative_path, get_absolute_path
+import pandas as pd
 
 # DataBase class is the generic database class that can be used to load an already existing database.
 class DataBase:
@@ -30,19 +31,34 @@ class DataBase:
     def set_commit(self, commit: bool):
         self.commit = commit
 
+    def get_table_names(self):
+        self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = self.cursor.fetchall()
+        try:
+            table_names = [table[0] for table in tables]
+        except:
+            table_names = tables
+        return table_names
+
     def get_columns(self):
         self.cursor.execute(f"PRAGMA table_info({self.name})")
         columns = self.cursor.fetchall()
         return columns
+
     def get_columns_names(self):
         columns = self.get_columns()
         return [col[1] for col in columns]
+
     def get_columns_types(self):
         columns = self.get_columns()
         return [col[2] for col in columns]
+
     def get_columns_names_types(self):
         columns = self.get_columns()
         return [(col[1], col[2]) for col in columns]
+    
+    def get_pandas_dataframe(self):
+        return pd.read_sql_query(f"SELECT * FROM {self.name}", self.conn)
 
     def get_rows_where(self, selection: str = ""):
         instruction = f"SELECT * FROM {self.name}"

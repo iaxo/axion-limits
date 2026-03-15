@@ -7,6 +7,21 @@ You can find some examples of the generated [plots](plots) in the plots folder:
 [<img align="center" height="275" src="plots/haloscopes_2024_stylish.png">](plots/haloscopes_2024_stylish.png)
 
 [<img align="center" height="350" src="plots/wimps_lowmass.png">](plots/wimps_lowmass.png)
+
+# User Tools 🛠️
+
+This repository also includes ready-to-use user applications to make plot building faster and more convenient.
+
+## Interactive Plotter
+
+The interactive app at [apps/interactive_plotter](apps/interactive_plotter) provides a visual workflow to:
+- select experiments from the database,
+- tune axis ranges and tick density,
+- add/drag/rotate labels,
+- and export both PDF plots and reproducible Python scripts.
+
+[<img align="center" height="420" src="apps/interactive_plotter/docs/interactive_plotter_Gag.png">](apps/interactive_plotter)
+
 # Installation ⚙️
 This package is currently not available at PyPi, so the installation requieres to download the source code from this repository. To do so, follow these steps:
 

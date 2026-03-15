@@ -128,6 +128,8 @@ class BasePlot(ABC):
         self.anchor_point = None  # store the anchor point of the dragged text object
         self.saveplotname = saveplotname
 
+        self.data_to_plot = []
+
     # ==============================================================================#
     # will draw a new exclusion line to the plot, no to be filled
     #
@@ -227,6 +229,78 @@ class BasePlot(ABC):
     @abstractmethod
     def plot_data(self, data: list):
         pass
+    
+    def get_plotted_data_dict(self):
+        d = {}
+        for item in self.data_to_plot:
+            properties = {}
+            #properties["name"] = item.name
+            properties["type"] = item.typeitem
+            properties["path"] = item.short_filename
+            properties["drawOptions"] = item.drawopt
+            # remove the color sequence as it will be regenerated from cmap when plotting
+            properties["drawOptions"].pop("cseq", None)
+            d[item.name] = properties.copy()
+        return d.copy()
+    
+    def get_plotted_data_dict_str(self):
+        d = self.get_plotted_data_dict()
+        s = "{\n"
+        for name, properties in d.items():
+            s += f'    "{name}": {properties},\n'
+        s += "}"
+        return s
+    
+    def get_plotted_data_names(self):
+        return [item.name for item in self.data_to_plot]
+    
+    def get_plot_customization(self):
+        return {
+            "labelx": self.plot.get_xlabel(),
+            "labely": self.plot.get_ylabel(),
+            "figx": self.fig.get_figwidth(),
+            "figy": self.fig.get_figheight(),
+            "ymin": self.plot.get_ylim()[0],
+            "ymax": self.plot.get_ylim()[1],
+            "xmin": self.plot.get_xlim()[0],
+            "xmax": self.plot.get_xlim()[1],
+            #"ticksopt_x": "dense" if self.plot.xaxis.get_major_locator().base == 100.0 else "normal",
+            #"ticksopt_y": "dense" if self.plot.yaxis.get_major_locator().base == 100.0 else "normal",
+            #"labelfontsize": self.plot.get_xlabel().get_fontsize(),
+            #"tickformatter_x": self.plot.xaxis.get_major_formatter(),
+            #"tickformatter_y": self.plot.yaxis.get_major_formatter(),
+        }
+
+    def get_plot_labels(self):
+        labels = []
+        for text in self.plot.texts:
+            kwargs = {
+                "color": text.get_color(),
+                "fontsize": text.get_fontsize(),
+                "ha": text.get_horizontalalignment(),
+                "va": text.get_verticalalignment(),
+                "rotation": text.get_rotation(),
+                "rotation_mode": text.get_rotation_mode(),
+            } # text.properties()
+            # check if the text has a path effect of type withStroke to extract border color and width
+            path_effects = text.get_path_effects()
+            if path_effects is not None:
+                for pe in path_effects:
+                    if isinstance(pe, mplpe.Stroke):
+                        kwargs["bordercolor"] = pe._gc.get("foreground", None)
+                        kwargs["borderwidth"] = pe._gc.get("linewidth", None)
+                        break
+            labels.append((text.get_text(), text.get_position()[0], text.get_position()[1], kwargs))
+        return labels
+
+    def get_plot_labels_str(self):
+        labels = self.get_plot_labels()
+        s = "[\n"
+        for label in labels:
+            kwargs_str = ", ".join(f"{k}={v}" for k, v in label[3].items())
+            s += f'    (r\'{label[0]}\', {label[1]}, {label[2]}, {label[3]}),\n'
+        s += "]"
+        return s
 
     def on_click(self, event):
         if event.button == 3:  # right click

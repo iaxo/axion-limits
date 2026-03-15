@@ -16,7 +16,7 @@ def renorm_item(item: ExPltItem):
 class AxionGagPlot(BasePlot):
     def __init__(
         self,
-        experiments=[],
+        experiments={},
         labels=[],
         plotCag=False,
         showplot=True,
@@ -53,9 +53,9 @@ class AxionGagPlot(BasePlot):
             tickformatter_y=tickformatter_y,
         )
         self.saveplotname = saveplotname
-        self.axionDB = []
+        self.data_to_plot = []
         self.plotCag = plotCag
-        # print(self.axionDB.get_rows())
+        # print(self.data_to_plot.get_rows())
 
         # Plotting Data
         print("\n")
@@ -89,7 +89,7 @@ class AxionGagPlot(BasePlot):
             if self.plotCag:
                 renorm_item(pltItem)
             pltItem.draw_item(self)
-            self.axionDB.append(pltItem)
+            self.data_to_plot.append(pltItem)
 
 
 """
@@ -126,9 +126,9 @@ class AxionGaePlot:
             labelfontsize=labelfontsize,
         )
 
-        self.axionDB = database
+        self.data_to_plot = database
         self.labelsDB = labels
-        # print(self.axionDB.get_rows())
+        # print(self.data_to_plot.get_rows())
 
         self.PlotData(plottype, projections)
         self.PlotLabels(projections)
@@ -146,9 +146,9 @@ class AxionGaePlot:
         if plottype not in self.ListOfPlotTypes:
             plottype = "wildType"
 
-        data = self.axionDB.get_rows(f"{plottype}==1")
+        data = self.data_to_plot.get_rows(f"{plottype}==1")
         if projections:
-            data = data + self.axionDB.get_rows(
+            data = data + self.data_to_plot.get_rows(
                 f"projection==1 AND {plottype}==0"
             )  # get projections not already included
         for row in data:
