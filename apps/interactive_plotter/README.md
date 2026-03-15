@@ -1,11 +1,13 @@
 # Interactive Plotter 🌌📱
 
-A Dash web app for interactively building and exporting publication-quality physics limit plots (axion and WIMP parameter space) powered by the `axionlimits` library.
+A Dash web app for interactively building and exporting publication-quality physics limit plots (axion and WIMP parameter space) powered by the [axionlimits](https://github.com/iaxo/axion-limits) library.
+
+[<img align="center" height="400" src="docs/interactive_plotter_Gag.png">](docs/interactive_plotter_Gag.png)
 
 ## Requirements ⚙️
 
 - Python 3.9+
-- `axionlimits` python package (see [axionlimits installation guide](../../README.md) for more details).
+- `axionlimits` python package (see [axionlimits installation guide](../../README.md#installation-%EF%B8%8F) for more details).
 - `dash`, `dash-ag-grid`:
     ```bash
     cd apps/interactive_plotter
@@ -59,6 +61,14 @@ Two `RangeSlider` controls below the plot set the axis limits on a **log₁₀ s
 - **Y-Axis Range** — sets $\log_{10}$ of the coupling or cross-section.
 
 You can also type values directly into the numeric inputs on either side of each slider.
+
+### Tick density dropdowns
+
+At the left of each axis slider, there is a dropdown to control tick density for that axis:
+Accepted values are:
+
+- **`normal`**: one tick every factor 10.
+- **`dense`**: one tick every factor 100.
 
 ---
 
