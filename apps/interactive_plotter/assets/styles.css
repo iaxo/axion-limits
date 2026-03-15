@@ -127,10 +127,18 @@ body {
 
 /* plot-type-selector value/control area */
 #plot-type-selector,
+#ticksopt-x-selector,
+#ticksopt-y-selector,
 #plot-type-selector-value,
 #plot-type-selector .dash-dropdown-value,
 #plot-type-selector .dash-dropdown-value-item,
-#plot-type-selector .Select-control {
+#plot-type-selector .Select-control,
+#ticksopt-x-selector .dash-dropdown-value,
+#ticksopt-x-selector .dash-dropdown-value-item,
+#ticksopt-x-selector .Select-control,
+#ticksopt-y-selector .dash-dropdown-value,
+#ticksopt-y-selector .dash-dropdown-value-item,
+#ticksopt-y-selector .Select-control {
     background: var(--qz-bg) !important;
     color: var(--qz-text) !important;
     border-color: var(--qz-border) !important;
@@ -139,7 +147,15 @@ body {
 #plot-type-selector .dash-dropdown-clear,
 #plot-type-selector .dash-dropdown-trigger-icon,
 #plot-type-selector .Select-placeholder,
-#plot-type-selector .Select-value-label {
+#plot-type-selector .Select-value-label,
+#ticksopt-x-selector .dash-dropdown-clear,
+#ticksopt-x-selector .dash-dropdown-trigger-icon,
+#ticksopt-x-selector .Select-placeholder,
+#ticksopt-x-selector .Select-value-label,
+#ticksopt-y-selector .dash-dropdown-clear,
+#ticksopt-y-selector .dash-dropdown-trigger-icon,
+#ticksopt-y-selector .Select-placeholder,
+#ticksopt-y-selector .Select-value-label {
     color: var(--qz-text-muted) !important;
 }
 

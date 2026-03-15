@@ -151,6 +151,8 @@ def create_plot(
     yrange=(1e-17, 1e-6),
     plot_type="AxionGag",
     labels_mpl=None,
+    ticksopt_x="normal",
+    ticksopt_y="normal",
 ):
     #exps = database.get_rows("name", experiments)
     #exps = df[df["name"].isin(experiments)].values.tolist()
@@ -225,8 +227,8 @@ def create_plot(
             "ymax": yrange[1],
             "xmin": xrange[0],
             "xmax": xrange[1],
-            "ticksopt_x": "normal",
-            "ticksopt_y": "normal",
+            "ticksopt_x": ticksopt_x,
+            "ticksopt_y": ticksopt_y,
         }
         print("AxionGag entrado")
     elif plot_type == "AxionCag":
@@ -241,8 +243,8 @@ def create_plot(
             "ymax": yrange[1],
             "xmin": xrange[0],
             "xmax": xrange[1],
-            "ticksopt_x": "normal",
-            "ticksopt_y": "normal",
+            "ticksopt_x": ticksopt_x,
+            "ticksopt_y": ticksopt_y,
             "labely": r"$|C_{a\gamma}|\tilde{\rho}_a^{1/2}$",
         }
     elif plot_type == "WIMPSSI":
@@ -254,8 +256,8 @@ def create_plot(
             "ymax": yrange[1],
             "xmin": xrange[0],
             "xmax": xrange[1],
-            "ticksopt_x": "normal",
-            "ticksopt_y": "normal",
+            "ticksopt_x": ticksopt_x,
+            "ticksopt_y": ticksopt_y,
         }
     else:
         return ""
@@ -591,13 +593,39 @@ app.layout = html.Div(
                         ),
                         html.Div(
                             children=[
-                                dcc.RangeSlider(
-                                    id="x-range-slider",
-                                    min=-15, max=15, step=0.1,
-                                    marks={i: str(i) for i in range(-15, 16, 2)},
-                                    value=[-11, 9],
-                                    tooltip={"placement": "bottom", "always_visible": True},
-                                    className="dark-theme",
+                                html.Div(
+                                    style={
+                                        "display": "flex",
+                                        "alignItems": "center",
+                                        "gap": "10px",
+                                    },
+                                    children=[
+                                        dcc.Dropdown(
+                                            id="ticksopt-x-selector",
+                                            options=[
+                                                {"label": "normal", "value": "normal"},
+                                                {"label": "dense", "value": "dense"},
+                                            ],
+                                            value="normal",
+                                            clearable=False,
+                                            searchable=False,
+                                            style={"width": "120px"},
+                                            className="dark-theme",
+                                        ),
+                                        html.Div(
+                                            style={"flex": "1"},
+                                            children=[
+                                                dcc.RangeSlider(
+                                                    id="x-range-slider",
+                                                    min=-15, max=15, step=0.1,
+                                                    marks={i: str(i) for i in range(-15, 16, 2)},
+                                                    value=[-11, 9],
+                                                    tooltip={"placement": "bottom", "always_visible": True},
+                                                    className="dark-theme",
+                                                ),
+                                            ],
+                                        ),
+                                    ],
                                 ),
                                 html.Div(
                                     "X-Axis Range",
@@ -608,13 +636,39 @@ app.layout = html.Div(
                         ),
                         html.Div(
                             children=[
-                                dcc.RangeSlider(
-                                    id="y-range-slider",
-                                    min=-20, max=5, step=0.1,
-                                    marks={i: str(i) for i in range(-20, 6, 2)},
-                                    value=[-18, -4],
-                                    tooltip={"placement": "bottom", "always_visible": True},
-                                    className="dark-theme",
+                                html.Div(
+                                    style={
+                                        "display": "flex",
+                                        "alignItems": "center",
+                                        "gap": "10px",
+                                    },
+                                    children=[
+                                        dcc.Dropdown(
+                                            id="ticksopt-y-selector",
+                                            options=[
+                                                {"label": "normal", "value": "normal"},
+                                                {"label": "dense", "value": "dense"},
+                                            ],
+                                            value="normal",
+                                            clearable=False,
+                                            searchable=False,
+                                            style={"width": "120px"},
+                                            className="dark-theme",
+                                        ),
+                                        html.Div(
+                                            style={"flex": "1"},
+                                            children=[
+                                                dcc.RangeSlider(
+                                                    id="y-range-slider",
+                                                    min=-20, max=5, step=0.1,
+                                                    marks={i: str(i) for i in range(-20, 6, 2)},
+                                                    value=[-18, -4],
+                                                    tooltip={"placement": "bottom", "always_visible": True},
+                                                    className="dark-theme",
+                                                ),
+                                            ],
+                                        ),
+                                    ],
                                 ),
                                 html.Div(
                                     "Y-Axis Range",
@@ -706,11 +760,21 @@ app.clientside_callback(
     Output("curve-plot", "src"),
     Input("x-range-slider", "value"),
     Input("y-range-slider", "value"),
+    Input("ticksopt-x-selector", "value"),
+    Input("ticksopt-y-selector", "value"),
     Input("ag-grid", "selectedRows"),
     Input("ag-grid", "cellValueChanged"),
     Input("plot-type-selector", "value"),
 )
-def update_plot_axis_ranges(x_range, y_range, selected_curves, cell_changed, plot_type):
+def update_plot_axis_ranges(
+    x_range,
+    y_range,
+    ticksopt_x,
+    ticksopt_y,
+    selected_curves,
+    cell_changed,
+    plot_type,
+):
     if not selected_curves:
         selected_curves = []
     print("selected curves en el callback", selected_curves)
@@ -722,6 +786,8 @@ def update_plot_axis_ranges(x_range, y_range, selected_curves, cell_changed, plo
         xrange=(10 ** x_range[0], 10 ** x_range[1]),
         yrange=(10 ** y_range[0], 10 ** y_range[1]),
         plot_type=plot_type,
+        ticksopt_x=ticksopt_x or "normal",
+        ticksopt_y=ticksopt_y or "normal",
     )
 
 # change sliders range
@@ -797,6 +863,8 @@ def add_draggable_label(n_clicks, existing_labels):
     Input("btn-apply-labels", "n_clicks"),
     State("x-range-slider", "value"),
     State("y-range-slider", "value"),
+    State("ticksopt-x-selector", "value"),
+    State("ticksopt-y-selector", "value"),
     State("ag-grid", "selectedRows"),
     State("plot-type-selector", "value"),
     State("labels-dom-store", "data"),
@@ -806,6 +874,8 @@ def apply_labels_to_current_plot(
     n_clicks,
     x_range,
     y_range,
+    ticksopt_x,
+    ticksopt_y,
     selected_curves,
     plot_type,
     labels_snapshot,
@@ -824,6 +894,8 @@ def apply_labels_to_current_plot(
         yrange=(10 ** y_range[0], 10 ** y_range[1]),
         plot_type=plot_type,
         labels_mpl=labels_mpl,
+        ticksopt_x=ticksopt_x or "normal",
+        ticksopt_y=ticksopt_y or "normal",
     )
 
 @app.callback(
