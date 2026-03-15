@@ -238,6 +238,8 @@ class BasePlot(ABC):
             properties["type"] = item.typeitem
             properties["path"] = item.short_filename
             properties["drawOptions"] = item.drawopt
+            # remove the color sequence as it will be regenerated from cmap when plotting
+            properties["drawOptions"].pop("cseq", None)
             d[item.name] = properties.copy()
         return d.copy()
     
