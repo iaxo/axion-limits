@@ -158,10 +158,14 @@ def create_plot(
     labels_mpl=None,
     ticksopt_x="normal",
     ticksopt_y="normal",
+    figx=6.5,
+    figy=6.0,
 ):
     #exps = database.get_rows("name", experiments)
     #exps = df[df["name"].isin(experiments)].values.tolist()
     exps = experiments
+    figx = float(figx or 6.5)
+    figy = float(figy or 6.0)
 
     def _convert_labels_for_plot_constructor(plot_obj, labels_for_plot):
         """Convert figure-fraction label positions to data coordinates for plot.labels."""
@@ -248,8 +252,8 @@ def create_plot(
             "experiments": exps,
             "plotCag": False,
             "showplot": False,
-            "figx": 6.5,
-            "figy": 6,
+            "figx": figx,
+            "figy": figy,
             "ymin": yrange[0],
             "ymax": yrange[1],
             "xmin": xrange[0],
@@ -264,8 +268,8 @@ def create_plot(
             "experiments": exps,
             "plotCag": True,
             "showplot": False,
-            "figx": 6.5,
-            "figy": 6,
+            "figx": figx,
+            "figy": figy,
             "ymin": yrange[0],
             "ymax": yrange[1],
             "xmin": xrange[0],
@@ -498,6 +502,47 @@ app.layout = html.Div(
                             searchable=False,
                             style={"width": "100%", "marginBottom": "10px"},
                             className="dark-theme",
+                        ),
+                        html.Div(
+                            style={
+                                "display": "flex",
+                                "alignItems": "center",
+                                "gap": "10px",
+                                "marginTop": "10px",
+                            },
+                            children=[
+                                html.Span(
+                                    "Figure size (in):",
+                                    style={"color": "#dfe4ff", "fontSize": "14px"},
+                                ),
+                                dcc.Input(
+                                    id="figx-input",
+                                    type="number",
+                                    min=1,
+                                    max=20,
+                                    step=0.1,
+                                    value=6.5,
+                                    debounce=True,
+                                    className="dark-theme",
+                                    style={"width": "50px"},
+                                ),
+                                html.Span("x", style={"color": "#dfe4ff"}),
+                                dcc.Input(
+                                    id="figy-input",
+                                    type="number",
+                                    min=1,
+                                    max=20,
+                                    step=0.1,
+                                    value=6.0,
+                                    debounce=True,
+                                    className="dark-theme",
+                                    style={"width": "50px"},
+                                ),
+                                html.Span(
+                                    "(Valid range 1-20 in)",
+                                    style={"color": "#dfe4ff", "fontSize": "14px"},
+                                ),
+                            ],
                         ),
                         html.Div(
                             id="plot-container",
@@ -790,6 +835,8 @@ app.clientside_callback(
     Input("y-range-slider", "value"),
     Input("ticksopt-x-selector", "value"),
     Input("ticksopt-y-selector", "value"),
+    Input("figx-input", "value"),
+    Input("figy-input", "value"),
     Input("ag-grid", "selectedRows"),
     Input("ag-grid", "cellValueChanged"),
     Input("plot-type-selector", "value"),
@@ -799,6 +846,8 @@ def update_plot_axis_ranges(
     y_range,
     ticksopt_x,
     ticksopt_y,
+    figx,
+    figy,
     selected_curves,
     cell_changed,
     plot_type,
@@ -816,6 +865,8 @@ def update_plot_axis_ranges(
         plot_type=plot_type,
         ticksopt_x=ticksopt_x or "normal",
         ticksopt_y=ticksopt_y or "normal",
+        figx=figx or 6.5,
+        figy=figy or 6.0,
     )
 
 # change sliders range
@@ -893,6 +944,8 @@ def add_draggable_label(n_clicks, existing_labels):
     State("y-range-slider", "value"),
     State("ticksopt-x-selector", "value"),
     State("ticksopt-y-selector", "value"),
+    State("figx-input", "value"),
+    State("figy-input", "value"),
     State("ag-grid", "selectedRows"),
     State("plot-type-selector", "value"),
     State("labels-dom-store", "data"),
@@ -904,6 +957,8 @@ def apply_labels_to_current_plot(
     y_range,
     ticksopt_x,
     ticksopt_y,
+    figx,
+    figy,
     selected_curves,
     plot_type,
     labels_snapshot,
@@ -924,6 +979,8 @@ def apply_labels_to_current_plot(
         labels_mpl=labels_mpl,
         ticksopt_x=ticksopt_x or "normal",
         ticksopt_y=ticksopt_y or "normal",
+        figx=figx or 6.5,
+        figy=figy or 6.0,
     )
 
 @app.callback(
