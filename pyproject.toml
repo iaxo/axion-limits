@@ -19,6 +19,7 @@ dependencies = [
     "matplotlib",
     "numpy",
     "scipy",
+    "pandas",
     "pylatexenc",
     "shapely",
 ]
