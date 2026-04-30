@@ -156,12 +156,17 @@ def create_plot(
     yrange=(1e-17, 1e-6),
     plot_type="AxionGag",
     labels_mpl=None,
+    arrows_mpl=None,
     ticksopt_x="normal",
     ticksopt_y="normal",
+    figx=6.5,
+    figy=6.0,
 ):
     #exps = database.get_rows("name", experiments)
     #exps = df[df["name"].isin(experiments)].values.tolist()
     exps = experiments
+    figx = float(figx or 6.5)
+    figy = float(figy or 6.0)
 
     def _convert_labels_for_plot_constructor(plot_obj, labels_for_plot):
         """Convert figure-fraction label positions to data coordinates for plot.labels."""
@@ -248,8 +253,8 @@ def create_plot(
             "experiments": exps,
             "plotCag": False,
             "showplot": False,
-            "figx": 6.5,
-            "figy": 6,
+            "figx": figx,
+            "figy": figy,
             "ymin": yrange[0],
             "ymax": yrange[1],
             "xmin": xrange[0],
@@ -264,8 +269,8 @@ def create_plot(
             "experiments": exps,
             "plotCag": True,
             "showplot": False,
-            "figx": 6.5,
-            "figy": 6,
+            "figx": figx,
+            "figy": figy,
             "ymin": yrange[0],
             "ymax": yrange[1],
             "xmin": xrange[0],
@@ -296,6 +301,80 @@ def create_plot(
         labels_for_constructor = _convert_labels_for_plot_constructor(plot, labels_mpl)
         plt.close(plot.fig)
         plot = plot_class(labels=labels_for_constructor, **plot_kwargs)
+
+    if arrows_mpl:
+        fig_w_px, fig_h_px = plot.fig.get_size_inches() * plot.fig.dpi
+        axes_bbox = plot.plot.get_position()
+        x0_ax, y0_ax, x1_ax, y1_ax = (
+            axes_bbox.x0,
+            axes_bbox.y0,
+            axes_bbox.x1,
+            axes_bbox.y1,
+        )
+        ax_w = max(x1_ax - x0_ax, 1e-12)
+        ax_h = max(y1_ax - y0_ax, 1e-12)
+
+        for arrow in arrows_mpl:
+            x_fig = float(arrow.get("xpos_mpl", 0.0))
+            y_fig = float(arrow.get("ypos_mpl", 0.0))
+            x_fig = min(max(x_fig, 0.0), 1.0)
+            y_fig = min(max(y_fig, 0.0), 1.0)
+
+            x_ax = min(max((x_fig - x0_ax) / ax_w, 0.0), 1.0)
+            y_ax = min(max((y_fig - y0_ax) / ax_h, 0.0), 1.0)
+            x_disp, y_disp = plot.plot.transAxes.transform((x_ax, y_ax))
+
+            length_px_browser = max(float(arrow.get("length_px", 80.0) or 80.0), 0.0)
+            line_width_px_browser = max(
+                float(arrow.get("line_width_px", 2.0) or 2.0), 0.5
+            )
+            head_width_px_browser = max(
+                float(arrow.get("head_width_px", line_width_px_browser * 4.0)
+                      or (line_width_px_browser * 4.0)),
+                4.0,
+            )
+            rotation_deg = float(arrow.get("rotation_deg", 0.0) or 0.0)
+            layer_w = float(arrow.get("layer_width_px", 0.0) or 0.0)
+            layer_h = float(arrow.get("layer_height_px", 0.0) or 0.0)
+            scale_x = fig_w_px / layer_w if layer_w > 0 else 1.0
+            scale_y = fig_h_px / layer_h if layer_h > 0 else 1.0
+            scale = min(scale_x, scale_y)
+
+            length_fig_px = length_px_browser * scale
+            theta = math.radians(rotation_deg)
+            dx_disp = math.cos(theta) * length_fig_px
+            dy_disp = -math.sin(theta) * length_fig_px
+
+            x2_disp = x_disp + dx_disp
+            y2_disp = y_disp + dy_disp
+
+            x1_data, y1_data = plot.plot.transData.inverted().transform((x_disp, y_disp))
+            x2_data, y2_data = plot.plot.transData.inverted().transform((x2_disp, y2_disp))
+
+            color = _normalize_css_color_for_mpl(
+                str(arrow.get("color", "#000000") or "#000000"),
+                default="#000000",
+            )
+            arrow_style = str(arrow.get("arrow_style", "-|>") or "-|>")
+            if arrow_style not in ARROW_STYLE_OPTIONS:
+                arrow_style = "-|>"
+            line_width_pt = max(line_width_px_browser * scale * 72.0 / plot.fig.dpi, 0.5)
+            head_width_pt = max(head_width_px_browser * scale * 72.0 / plot.fig.dpi, 2.0)
+            mutation_scale = max(8.0, head_width_pt * 2.0)
+
+            plot.plot.annotate(
+                "",
+                xy=(float(x2_data), float(y2_data)),
+                xytext=(float(x1_data), float(y1_data)),
+                arrowprops={
+                    "arrowstyle": arrow_style,
+                    "color": color,
+                    "lw": line_width_pt,
+                    "shrinkA": 0,
+                    "shrinkB": 0,
+                    "mutation_scale": mutation_scale,
+                },
+            )
 
     global GENERATED_PLOT
     GENERATED_PLOT = plot
@@ -408,6 +487,44 @@ def get_mpl_labels_from_browser_snapshot(labels_snapshot):
         )
     return labels_mpl
 
+
+def get_mpl_arrows_from_browser_snapshot(arrows_snapshot):
+    """Convert synced browser arrows into mpl-ready arrow geometry."""
+    arrows_mpl = []
+    for arrow in arrows_snapshot or []:
+        coords = label_browser_to_mpl_figure_coords(
+            {
+                "left": float(arrow.get("left", 0.0) or 0.0),
+                "top": float(arrow.get("top", 0.0) or 0.0),
+                "width": 0.0,
+                "height": 0.0,
+                "layerWidth": float(arrow.get("layerWidth", 0.0) or 0.0),
+                "layerHeight": float(arrow.get("layerHeight", 0.0) or 0.0),
+            }
+        )
+        if not coords:
+            continue
+
+        xpos_mpl, ypos_mpl = coords
+        arrows_mpl.append(
+            {
+                "xpos_mpl": xpos_mpl,
+                "ypos_mpl": ypos_mpl,
+                "length_px": float(arrow.get("lengthPx", 80.0) or 80.0),
+                "line_width_px": float(arrow.get("lineWidthPx", 2.0) or 2.0),
+                "head_width_px": float(arrow.get("headWidthPx", 10.0) or 10.0),
+                "arrow_style": str(arrow.get("arrowStyle", "-|>") or "-|>"),
+                "rotation_deg": float(arrow.get("rotationDeg", 0.0) or 0.0),
+                "layer_width_px": float(arrow.get("layerWidth", 0.0) or 0.0),
+                "layer_height_px": float(arrow.get("layerHeight", 0.0) or 0.0),
+                "color": _normalize_css_color_for_mpl(
+                    str(arrow.get("color", "#000000") or "#000000"),
+                    default="#000000",
+                ),
+            }
+        )
+    return arrows_mpl
+
 # Initialize Dash app
 app = Dash(__name__, external_stylesheets=[dag.themes.QUARTZ])
 app.title = "Interactive Plotter"
@@ -441,6 +558,20 @@ plot_option_database = {
     "WIMPSSI": db.DataBaseWimps,
 }
 
+ARROW_STYLE_OPTIONS = [
+    "->",
+    "-|>",
+    "-",
+    "-[",
+    "|-|",
+    "<->",
+    "<|-",
+    "<|-|>",
+    "simple",
+    "fancy",
+    "wedge",
+]
+
 
 # Define column definitions for AgGrid
 columns_defs = [
@@ -467,6 +598,7 @@ for col in columns_defs:
 app.layout = html.Div(
     children=[
         dcc.Store(id="labels-dom-store", data=[]),
+        dcc.Store(id="arrows-dom-store", data=[]),
         dcc.Interval(id="labels-sync-interval", interval=300, n_intervals=0),
         html.H1(
             "Interactive Plotter",
@@ -498,6 +630,47 @@ app.layout = html.Div(
                             searchable=False,
                             style={"width": "100%", "marginBottom": "10px"},
                             className="dark-theme",
+                        ),
+                        html.Div(
+                            style={
+                                "display": "flex",
+                                "alignItems": "center",
+                                "gap": "10px",
+                                "marginTop": "10px",
+                            },
+                            children=[
+                                html.Span(
+                                    "Figure size (in):",
+                                    style={"color": "#dfe4ff", "fontSize": "14px"},
+                                ),
+                                dcc.Input(
+                                    id="figx-input",
+                                    type="number",
+                                    min=1,
+                                    max=20,
+                                    step=0.1,
+                                    value=6.5,
+                                    debounce=True,
+                                    className="dark-theme",
+                                    style={"width": "50px"},
+                                ),
+                                html.Span("x", style={"color": "#dfe4ff"}),
+                                dcc.Input(
+                                    id="figy-input",
+                                    type="number",
+                                    min=1,
+                                    max=20,
+                                    step=0.1,
+                                    value=6.0,
+                                    debounce=True,
+                                    className="dark-theme",
+                                    style={"width": "50px"},
+                                ),
+                                html.Span(
+                                    "(Valid range 1-20 in)",
+                                    style={"color": "#dfe4ff", "fontSize": "14px"},
+                                ),
+                            ],
                         ),
                         html.Div(
                             id="plot-container",
@@ -551,6 +724,45 @@ app.layout = html.Div(
                                         "borderRadius": "5px",
                                         "fontSize": "16px",
                                     },
+                                ),
+                                html.Button(
+                                    "Add Arrow",
+                                    id="btn-add-arrow",
+                                    n_clicks=0,
+                                    style={
+                                        "backgroundColor": "#4c6a9a",
+                                        "color": "white",
+                                        "padding": "8px 18px",
+                                        "border": "none",
+                                        "cursor": "pointer",
+                                        "borderRadius": "5px",
+                                        "fontSize": "16px",
+                                    },
+                                ),
+                                html.Div(
+                                    style={
+                                        "display": "flex",
+                                        "alignItems": "center",
+                                        "gap": "8px",
+                                    },
+                                    children=[
+                                        html.Span(
+                                            "Arrow head:",
+                                            style={"color": "#dfe4ff", "fontSize": "14px"},
+                                        ),
+                                        dcc.Dropdown(
+                                            id="arrow-head-style-selector",
+                                            options=[
+                                                {"label": style, "value": style}
+                                                for style in ARROW_STYLE_OPTIONS
+                                            ],
+                                            value="-|>",
+                                            clearable=False,
+                                            searchable=False,
+                                            style={"width": "130px"},
+                                            className="dark-theme",
+                                        ),
+                                    ],
                                 ),
                                 html.Button(
                                     "Apply Labels",
@@ -780,6 +992,7 @@ app.layout = html.Div(
 app.clientside_callback(
     ClientsideFunction(namespace="labels", function_name="snapshot"),
     Output("labels-dom-store", "data"),
+    Output("arrows-dom-store", "data"),
     Input("labels-sync-interval", "n_intervals"),
 )
 
@@ -790,6 +1003,8 @@ app.clientside_callback(
     Input("y-range-slider", "value"),
     Input("ticksopt-x-selector", "value"),
     Input("ticksopt-y-selector", "value"),
+    Input("figx-input", "value"),
+    Input("figy-input", "value"),
     Input("ag-grid", "selectedRows"),
     Input("ag-grid", "cellValueChanged"),
     Input("plot-type-selector", "value"),
@@ -799,6 +1014,8 @@ def update_plot_axis_ranges(
     y_range,
     ticksopt_x,
     ticksopt_y,
+    figx,
+    figy,
     selected_curves,
     cell_changed,
     plot_type,
@@ -816,6 +1033,8 @@ def update_plot_axis_ranges(
         plot_type=plot_type,
         ticksopt_x=ticksopt_x or "normal",
         ticksopt_y=ticksopt_y or "normal",
+        figx=figx or 6.5,
+        figy=figy or 6.0,
     )
 
 # change sliders range
@@ -887,15 +1106,53 @@ def add_draggable_label(n_clicks, existing_labels):
 
 
 @app.callback(
+    Output("labels-layer", "children", allow_duplicate=True),
+    Input("btn-add-arrow", "n_clicks"),
+    State("labels-layer", "children"),
+    prevent_initial_call=True,
+)
+def add_draggable_arrow(n_clicks, existing_labels):
+    labels = existing_labels if existing_labels else []
+    labels.append(
+        html.Div(
+            children=[
+                html.Span(className="arrow-handle arrow-handle-start", **{"data-handle": "start"}),
+                html.Span(className="arrow-handle arrow-handle-end", **{"data-handle": "end"}),
+            ],
+            className="draggable-arrow",
+            style={
+                "left": f"{40 + (n_clicks - 1) * 12}px",
+                "top": f"{40 + (n_clicks - 1) * 12}px",
+                "color": "#000000",
+                "width": "80px",
+                "borderTopWidth": "2px",
+                "--arrow-head-width-px": "10px",
+            },
+            **{
+                "data-length-px": "80",
+                "data-line-width-px": "2",
+                "data-head-width-px": "10",
+                "data-arrow-style": "-|>",
+                "data-rotation-deg": "0",
+            },
+        )
+    )
+    return labels
+
+
+@app.callback(
     Output("curve-plot", "src", allow_duplicate=True),
     Input("btn-apply-labels", "n_clicks"),
     State("x-range-slider", "value"),
     State("y-range-slider", "value"),
     State("ticksopt-x-selector", "value"),
     State("ticksopt-y-selector", "value"),
+    State("figx-input", "value"),
+    State("figy-input", "value"),
     State("ag-grid", "selectedRows"),
     State("plot-type-selector", "value"),
     State("labels-dom-store", "data"),
+    State("arrows-dom-store", "data"),
     prevent_initial_call=True,
 )
 def apply_labels_to_current_plot(
@@ -904,9 +1161,12 @@ def apply_labels_to_current_plot(
     y_range,
     ticksopt_x,
     ticksopt_y,
+    figx,
+    figy,
     selected_curves,
     plot_type,
     labels_snapshot,
+    arrows_snapshot,
 ):
     if not selected_curves:
         selected_curves = []
@@ -916,14 +1176,18 @@ def apply_labels_to_current_plot(
         exps[row["name"]] = row.copy()
 
     labels_mpl = get_mpl_labels_from_browser_snapshot(labels_snapshot)
+    arrows_mpl = get_mpl_arrows_from_browser_snapshot(arrows_snapshot)
     return create_plot(
         experiments=exps,
         xrange=(10 ** x_range[0], 10 ** x_range[1]),
         yrange=(10 ** y_range[0], 10 ** y_range[1]),
         plot_type=plot_type,
         labels_mpl=labels_mpl,
+        arrows_mpl=arrows_mpl,
         ticksopt_x=ticksopt_x or "normal",
         ticksopt_y=ticksopt_y or "normal",
+        figx=figx or 6.5,
+        figy=figy or 6.0,
     )
 
 @app.callback(
@@ -952,4 +1216,4 @@ def generate_pdf_file(n_clicks):
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)
