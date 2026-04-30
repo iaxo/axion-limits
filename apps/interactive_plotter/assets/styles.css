@@ -89,6 +89,62 @@ body {
     background: rgba(20, 20, 20, 0.9);
 }
 
+.draggable-arrow {
+    position: absolute;
+    height: 0;
+    width: 80px;
+    --arrow-head-width-px: 10px;
+    color: #000000;
+    border-top: 2px solid currentColor;
+    cursor: move;
+    user-select: none;
+    transform: translateY(-50%);
+    transform-origin: left center;
+}
+
+.draggable-arrow .arrow-handle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    background: currentColor;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.7;
+    cursor: grab;
+}
+
+.draggable-arrow .arrow-handle:active {
+    cursor: grabbing;
+}
+
+.draggable-arrow .arrow-handle-start {
+    left: 0;
+}
+
+.draggable-arrow .arrow-handle-end {
+    left: 100%;
+}
+
+.draggable-arrow::after {
+    content: "";
+    position: absolute;
+    right: -1px;
+    top: calc(var(--arrow-head-width-px) * -0.6);
+    border-top: calc(var(--arrow-head-width-px) * 0.6) solid transparent;
+    border-bottom: calc(var(--arrow-head-width-px) * 0.6) solid transparent;
+    border-left: var(--arrow-head-width-px) solid currentColor;
+}
+
+.draggable-arrow.selected {
+    filter: drop-shadow(0 0 2px rgba(255, 214, 92, 0.95));
+}
+
+.draggable-arrow.selected .arrow-handle {
+    opacity: 1;
+}
+
 #label-color-picker:disabled {
     opacity: 0.45;
     cursor: not-allowed !important;
