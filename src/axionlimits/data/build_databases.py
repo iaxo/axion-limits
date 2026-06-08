@@ -192,6 +192,7 @@ Wimps = [
     ['XENONnT_light_2026', 'line', path+'limit_data/XENONnT_light_2026.dat', "color='#f58231'", 0, '2601.11296', '2026', "XENONnT", 6, 9e-44, "color='#f58231', size=10"],
     ['LZ_2025', 'line', path+'limit_data/LZ_2025.dat', "color='#f58231'", 0, '10.1103/4dyc-z8zf', '2025', "LZ", 6, 9e-44, "color='#f58231', size=10"],
     ['LZ_light_2025', 'line', path+'limit_data/LZ_light_2025.dat', "color='#f58231'", 0, '2512.08065', '2025', "LZ", 6, 9e-44, "color='#f58231', size=10"],
+    ['DEAP3600_2026', 'line', path+'limit_data/DEAP3600_2026.dat', "color='#800080'", 0, '2603.13965', '2026', "DEAP-3600", 25, 4.2e-43, "color='#800080', size=10"],
 
 ]
 
