@@ -163,7 +163,7 @@ Wimps = [
     ['DAMIC_2020', 'line', path+'limit_data/DAMIC_2020.dat', "color='#7E0505'", 0, '2007.15622', '2020', "DAMIC", 0.95, 1.25e-37, "color='#7E0505', size=10"],
     ['DAMIC_SNOLAB_2016', 'line', path+'limit_data/DAMIC_SNOLAB_2016.dat', "color='#7E0505'", 0, '1607.07410', '2018', "DAMIC", 1, 2.2e-36, "color='#7E0505', size=10"],
     ['XMASS_2018', 'line', path+'limit_data/XMASS_2018.dat', "color='#fabebe'", 0, '1804.02180', '2018', "XMASS", 0.38, 1.4e-31, "color='#fabebe', size=10"],
-    ['SuperCDMS_SNOLAB_projection_2017', 'line', path+'limit_data/SuperCDMS_SNOLAB_projection_2017.dat', "color='#e6194b'", 0, '1610.00006', '2017', "SuperCDMS", 1.4, 1.2e-44, "color='#e6194b', size=10"],
+    ['SuperCDMS_SNOLAB_projection_2017', 'line', path+'limit_data/SuperCDMS_SNOLAB_projection_2017.dat', "color='#e6194b'", 1, '1610.00006', '2017', "SuperCDMS", 1.4, 1.2e-44, "color='#e6194b', size=10"],
     ['PandaX-4T_2022', 'line', path+'limit_data/PandaX-4T_2022.dat', "color='#f58231'", 0, '2107.13438', '2022', "PandaX-4T", 3.8, 2.3e-45, "color='#f58231', size=10, rotation=-45"],
     ['eDM_DAMIC_FDM1_2019', 'line', path+'limit_data/eDM_DAMIC_FDM1_2019.dat', "color='#7E0505'", 0, '1907.12628', '2019', "DAMIC", 0.55, 9.1e-30, "color='#7E0505', size=10"],
     ['PICO_C3F8_2017', 'line', path+'limit_data/PICO_C3F8_2017.dat', "color='#911eb4'", 0, '1702.07666', '2017', "PICO C3F8", 3.45, 4.35e-38, "color='#911eb4', size=10"],
@@ -185,6 +185,15 @@ Wimps = [
     ['DEAP3600_2019', 'line', path+'limit_data/DEAP3600_2019.dat', "color='#800080'", 0, '1902.04048', '2019', "DEAP-3600", 25, 4.2e-43, "color='#800080', size=10"],
     ['LZ_projection_2018', 'line', path+'limit_data/LZ_projection_2018.dat', "color='#000000'", 1, '1802.06039', '2018', "LZ", 3e+02, 1.1e-47, "color='#000000', size=10"],
     ['PandaX_2017', 'line', path+'limit_data/PandaX_2017.dat', "color='#f58231'", 0, '1708.06917', '2017', "PandaX-II", 6, 9e-44, "color='#f58231', size=10"],
+    ['CRESSTIII_2024', 'line', path+'limit_data/CRESSTIII_2024.dat', "color='#4363d8'", 0, '10.1103/PhysRevD.110.083038', '2024', "CRESST-III", 0.4, 4e-36, "color='#4363d8', size=10"],
+    ['PandaX_2025', 'line', path+'limit_data/PandaX-4T_2025.dat', "color='#f58231'", 0, '10.1103/PhysRevLett.134.011805', '2025', "PandaX-4T", 6, 9e-44, "color='#f58231', size=10"],
+    ['PandaX_light_2025', 'line', path+'limit_data/PandaX-4T_light_2025.dat', "color='#f58231'", 0, '2507.11930', '2025', "PandaX-4T", 6, 9e-44, "color='#f58231', size=10"],
+    ['XENONnT_2025', 'line', path+'limit_data/XENONnT_2025.dat', "color='#3cb44b'", 0, '10.1088/1742-6596/3162/1/012008', '2025', "XENONnT", 6, 9e-44, "color='#f58231', size=10"],
+    ['XENONnT_light_2026', 'line', path+'limit_data/XENONnT_light_2026.dat', "color='#3cb44b'", 0, '2601.11296', '2026', "XENONnT", 6, 9e-44, "color='#f58231', size=10"],
+    ['LZ_2025', 'line', path+'limit_data/LZ_2025.dat', "color='gold'", 0, '10.1103/4dyc-z8zf', '2025', "LZ", 6, 9e-44, "color='#f58231', size=10"],
+    ['LZ_light_2025', 'line', path+'limit_data/LZ_light_2025.dat', "color='gold'", 0, '2512.08065', '2025', "LZ", 6, 9e-44, "color='#f58231', size=10"],
+    ['DEAP3600_2026', 'line', path+'limit_data/DEAP3600_2026.dat', "color='#800080'", 0, '2603.13965', '2026', "DEAP-3600", 25, 4.2e-43, "color='#800080', size=10"],
+
 ]
 
 path1 = 'axion/hints/'
