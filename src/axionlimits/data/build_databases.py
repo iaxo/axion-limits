@@ -163,7 +163,7 @@ Wimps = [
     ['DAMIC_2020', 'line', path+'limit_data/DAMIC_2020.dat', "color='#7E0505'", 0, '2007.15622', '2020', "DAMIC", 0.95, 1.25e-37, "color='#7E0505', size=10"],
     ['DAMIC_SNOLAB_2016', 'line', path+'limit_data/DAMIC_SNOLAB_2016.dat', "color='#7E0505'", 0, '1607.07410', '2018', "DAMIC", 1, 2.2e-36, "color='#7E0505', size=10"],
     ['XMASS_2018', 'line', path+'limit_data/XMASS_2018.dat', "color='#fabebe'", 0, '1804.02180', '2018', "XMASS", 0.38, 1.4e-31, "color='#fabebe', size=10"],
-    ['SuperCDMS_SNOLAB_projection_2017', 'line', path+'limit_data/SuperCDMS_SNOLAB_projection_2017.dat', "color='#e6194b'", 0, '1610.00006', '2017', "SuperCDMS", 1.4, 1.2e-44, "color='#e6194b', size=10"],
+    ['SuperCDMS_SNOLAB_projection_2017', 'line', path+'limit_data/SuperCDMS_SNOLAB_projection_2017.dat', "color='#e6194b'", 1, '1610.00006', '2017', "SuperCDMS", 1.4, 1.2e-44, "color='#e6194b', size=10"],
     ['PandaX-4T_2022', 'line', path+'limit_data/PandaX-4T_2022.dat', "color='#f58231'", 0, '2107.13438', '2022', "PandaX-4T", 3.8, 2.3e-45, "color='#f58231', size=10, rotation=-45"],
     ['eDM_DAMIC_FDM1_2019', 'line', path+'limit_data/eDM_DAMIC_FDM1_2019.dat', "color='#7E0505'", 0, '1907.12628', '2019', "DAMIC", 0.55, 9.1e-30, "color='#7E0505', size=10"],
     ['PICO_C3F8_2017', 'line', path+'limit_data/PICO_C3F8_2017.dat', "color='#911eb4'", 0, '1702.07666', '2017', "PICO C3F8", 3.45, 4.35e-38, "color='#911eb4', size=10"],
