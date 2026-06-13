@@ -1,6 +1,7 @@
 (() => {
-    let activeLabel = null;
-    let selectedLabel = null;
+    let activeElement = null;
+    let activeArrowHandle = null;
+    let selectedElement = null;
     let shiftX = 0;
     let shiftY = 0;
     let colorButtons = [];
@@ -26,40 +27,75 @@
         return Number.isFinite(value) ? value : fallback;
     };
 
+    const isLabel = (element) => element && element.classList.contains("draggable-label");
+    const isArrow = (element) => element && element.classList.contains("draggable-arrow");
+
     const onPointerMove = (event) => {
-        if (!activeLabel) {
+        if (activeArrowHandle) {
+            const { arrow, handleType, fixedX, fixedY } = activeArrowHandle;
+            const layer = arrow.parentElement;
+            if (!layer) {
+                return;
+            }
+
+            const layerRect = layer.getBoundingClientRect();
+            const pointer = getPointerInLayer(event, layerRect);
+            const clamped = clampPointToLayer(pointer.x, pointer.y, layerRect);
+
+            if (handleType === "start") {
+                setArrowFromEndpoints(arrow, clamped.x, clamped.y, fixedX, fixedY);
+            } else {
+                setArrowFromEndpoints(arrow, fixedX, fixedY, clamped.x, clamped.y);
+            }
             return;
         }
 
-        const layer = activeLabel.parentElement;
+        if (!activeElement) {
+            return;
+        }
+
+        const layer = activeElement.parentElement;
         if (!layer) {
             return;
         }
 
         const layerRect = layer.getBoundingClientRect();
-        const labelRect = activeLabel.getBoundingClientRect();
+        const itemRect = activeElement.getBoundingClientRect();
 
         const nextLeft = event.clientX - layerRect.left - shiftX;
         const nextTop = event.clientY - layerRect.top - shiftY;
 
-        const maxLeft = layerRect.width - labelRect.width;
-        const maxTop = layerRect.height - labelRect.height;
+        // For arrows, clamp by anchor point (left/top) so length does not block movement.
+        const maxLeft = isArrow(activeElement)
+            ? layerRect.width
+            : layerRect.width - itemRect.width;
+        const maxTop = isArrow(activeElement)
+            ? layerRect.height
+            : layerRect.height - itemRect.height;
 
-        activeLabel.style.left = `${clamp(nextLeft, 0, Math.max(0, maxLeft))}px`;
-        activeLabel.style.top = `${clamp(nextTop, 0, Math.max(0, maxTop))}px`;
+        activeElement.style.left = `${clamp(nextLeft, 0, Math.max(0, maxLeft))}px`;
+        activeElement.style.top = `${clamp(nextTop, 0, Math.max(0, maxTop))}px`;
     };
 
     const stopDragging = () => {
-        if (!activeLabel) {
+        if (!activeElement && !activeArrowHandle) {
             return;
         }
-        activeLabel.style.zIndex = "2";
-        activeLabel = null;
+
+        if (activeElement) {
+            activeElement.style.zIndex = "2";
+        }
+        if (activeArrowHandle && activeArrowHandle.arrow) {
+            activeArrowHandle.arrow.style.zIndex = "2";
+        }
+
+        activeElement = null;
+        activeArrowHandle = null;
         document.body.style.userSelect = "";
     };
 
-    const getLabelColor = (label) => {
-        const value = (label && label.style && label.style.color) || "";
+    const getElementColor = (element) => {
+        const value = (element && element.style && element.style.color) || "";
         return value && value.trim() ? value : "#000000";
     };
 
@@ -70,30 +106,144 @@
         });
     };
 
-    const selectLabel = (label) => {
-        selectedLabel = label || null;
-        document.querySelectorAll(".draggable-label.selected").forEach((el) => {
-            el.classList.remove("selected");
-        });
+    const selectElement = (element) => {
+        selectedElement = element || null;
+        document
+            .querySelectorAll(".draggable-label.selected, .draggable-arrow.selected")
+            .forEach((el) => {
+                el.classList.remove("selected");
+            });
 
-        if (!selectedLabel) {
+        if (!selectedElement) {
             setSwatchesEnabled(false);
+            syncArrowStyleSelectorWithSelection();
             return;
         }
 
-        selectedLabel.classList.add("selected");
+        selectedElement.classList.add("selected");
         setSwatchesEnabled(true);
+        syncArrowStyleSelectorWithSelection();
     };
 
-    const getRotationDeg = (label) => {
-        const value = parseFloat(label.dataset.rotationDeg || "0");
+    const getRotationDeg = (element) => {
+        const value = parseFloat(element.dataset.rotationDeg || "0");
         return Number.isFinite(value) ? value : 0;
     };
 
-    const setRotationDeg = (label, rotationDeg) => {
-        label.dataset.rotationDeg = `${rotationDeg}`;
-        label.style.transform = `rotate(${rotationDeg}deg)`;
-        label.style.transformOrigin = "top left";
+    const setRotationDeg = (element, rotationDeg) => {
+        element.dataset.rotationDeg = `${rotationDeg}`;
+        if (isLabel(element)) {
+            element.style.transform = `rotate(${rotationDeg}deg)`;
+            element.style.transformOrigin = "top left";
+            return;
+        }
+        if (isArrow(element)) {
+            element.style.transform = `translateY(-50%) rotate(${rotationDeg}deg)`;
+            element.style.transformOrigin = "left center";
+        }
+    };
+
+    const setArrowLengthPx = (arrow, lengthPx) => {
+        const nextLength = Math.max(lengthPx, 1);
+        arrow.dataset.lengthPx = `${nextLength}`;
+        arrow.style.width = `${nextLength}px`;
+    };
+
+    const setArrowLineWidthPx = (arrow, lineWidthPx) => {
+        const nextWidth = clamp(lineWidthPx, 1, 8);
+        arrow.dataset.lineWidthPx = `${nextWidth}`;
+        arrow.style.borderTopWidth = `${nextWidth}px`;
+    };
+
+    const setArrowHeadWidthPx = (arrow, headWidthPx) => {
+        const nextWidth = clamp(headWidthPx, 6, 36);
+        arrow.dataset.headWidthPx = `${nextWidth}`;
+        arrow.style.setProperty("--arrow-head-width-px", `${nextWidth}px`);
+    };
+
+    const setArrowStyle = (arrow, arrowStyle) => {
+        const nextStyle = (arrowStyle || "-|>").toString();
+        arrow.dataset.arrowStyle = nextStyle;
+    };
+
+    const getArrowHeadStyleSelector = () =>
+        document.getElementById("arrow-head-style-selector");
+
+    const syncArrowStyleSelectorWithSelection = () => {
+        const selector = getArrowHeadStyleSelector();
+        if (!selector) {
+            return;
+        }
+
+        if (!selectedElement || !isArrow(selectedElement)) {
+            selector.disabled = true;
+            return;
+        }
+
+        selector.disabled = false;
+        selector.value = selectedElement.dataset.arrowStyle || "-|>";
+    };
+
+    const getArrowLengthPx = (arrow) =>
+        parseFloat(arrow.dataset.lengthPx || arrow.style.width || "80") || 80;
+
+    const getArrowEndpoints = (arrow) => {
+        const startX = getNumericStylePx(arrow, "left", 0);
+        const startY = getNumericStylePx(arrow, "top", 0);
+        const rotationDeg = getRotationDeg(arrow);
+        const lengthPx = getArrowLengthPx(arrow);
+        const theta = (rotationDeg * Math.PI) / 180;
+        return {
+            startX,
+            startY,
+            endX: startX + Math.cos(theta) * lengthPx,
+            endY: startY + Math.sin(theta) * lengthPx,
+        };
+    };
+
+    const setArrowFromEndpoints = (arrow, startX, startY, endX, endY) => {
+        const dx = endX - startX;
+        const dy = endY - startY;
+        const lengthPx = Math.hypot(dx, dy);
+        const rotationDeg = (Math.atan2(dy, dx) * 180) / Math.PI;
+
+        arrow.style.left = `${startX}px`;
+        arrow.style.top = `${startY}px`;
+        setArrowLengthPx(arrow, lengthPx);
+        setRotationDeg(arrow, rotationDeg);
+    };
+
+    const clampPointToLayer = (x, y, layerRect) => ({
+        x: clamp(x, 0, Math.max(0, layerRect.width)),
+        y: clamp(y, 0, Math.max(0, layerRect.height)),
+    });
+
+    const getPointerInLayer = (event, layerRect) => ({
+        x: event.clientX - layerRect.left,
+        y: event.clientY - layerRect.top,
+    });
+
+    const ensureArrowHandles = (arrow) => {
+        if (!arrow || !isArrow(arrow)) {
+            return;
+        }
+        if (arrow.querySelector(".arrow-handle-start") && arrow.querySelector(".arrow-handle-end")) {
+            return;
+        }
+
+        const startHandle = document.createElement("span");
+        startHandle.className = "arrow-handle arrow-handle-start";
+        startHandle.dataset.handle = "start";
+        arrow.appendChild(startHandle);
+
+        const endHandle = document.createElement("span");
+        endHandle.className = "arrow-handle arrow-handle-end";
+        endHandle.dataset.handle = "end";
+        arrow.appendChild(endHandle);
+    };
+
+    const ensureAllArrowHandles = () => {
+        document.querySelectorAll(".draggable-arrow").forEach(ensureArrowHandles);
     };
 
     const finishEdit = (label) => {
@@ -130,66 +280,159 @@
     };
 
     document.addEventListener("pointerdown", (event) => {
-        const label = getClosest(event.target, ".draggable-label");
-        if (!label) {
+        const arrowHandle = getClosest(event.target, ".arrow-handle");
+        if (arrowHandle) {
+            const arrow = getClosest(arrowHandle, ".draggable-arrow");
+            if (!arrow) {
+                return;
+            }
+
+            selectElement(arrow);
+            if (!arrow.dataset.rotationDeg) {
+                setRotationDeg(arrow, 0);
+            }
+            if (!arrow.dataset.lengthPx) {
+                setArrowLengthPx(arrow, getNumericStylePx(arrow, "width", 80));
+            }
+            if (!arrow.dataset.lineWidthPx) {
+                const width =
+                    parseFloat(window.getComputedStyle(arrow).borderTopWidth || "2") || 2;
+                setArrowLineWidthPx(arrow, width);
+            }
+            if (!arrow.dataset.headWidthPx) {
+                setArrowHeadWidthPx(arrow, 10);
+            }
+            if (!arrow.dataset.arrowStyle) {
+                setArrowStyle(arrow, "-|>");
+            }
+
+            const endpoints = getArrowEndpoints(arrow);
+            if (arrowHandle.dataset.handle === "start") {
+                activeArrowHandle = {
+                    arrow,
+                    handleType: "start",
+                    fixedX: endpoints.endX,
+                    fixedY: endpoints.endY,
+                };
+            } else {
+                activeArrowHandle = {
+                    arrow,
+                    handleType: "end",
+                    fixedX: endpoints.startX,
+                    fixedY: endpoints.startY,
+                };
+            }
+
+            arrow.style.zIndex = "3";
+            document.body.style.userSelect = "none";
+            event.preventDefault();
+            return;
+        }
+
+        const element = getClosest(
+            event.target,
+            ".draggable-label, .draggable-arrow"
+        );
+        if (!element) {
             const paletteClick = getClosest(event.target, ".label-color-swatch");
             const moreColorsClick = getClosest(event.target, "#btn-label-color-more");
             if (!paletteClick && !moreColorsClick) {
-                selectLabel(null);
+                selectElement(null);
             }
             return;
         }
-        if (label.classList.contains("editing")) {
+
+        if (isLabel(element) && element.classList.contains("editing")) {
             return;
         }
 
-        selectLabel(label);
+        selectElement(element);
 
-        const layer = label.parentElement;
+        const layer = element.parentElement;
         if (!layer) {
             return;
         }
         const layerRect = layer.getBoundingClientRect();
-        const currentLeft = getNumericStylePx(label, "left", 0);
-        const currentTop = getNumericStylePx(label, "top", 0);
+        const currentLeft = getNumericStylePx(element, "left", 0);
+        const currentTop = getNumericStylePx(element, "top", 0);
 
-        // Compute shift from the label anchor (left/top), not from rotated bbox.
         shiftX = event.clientX - (layerRect.left + currentLeft);
         shiftY = event.clientY - (layerRect.top + currentTop);
-        activeLabel = label;
+        activeElement = element;
 
-        if (!label.dataset.rotationDeg) {
-            setRotationDeg(label, 0);
+        if (!element.dataset.rotationDeg) {
+            setRotationDeg(element, 0);
+        }
+        if (isArrow(element)) {
+            ensureArrowHandles(element);
+            if (!element.dataset.lengthPx) {
+                setArrowLengthPx(element, getNumericStylePx(element, "width", 80));
+            }
+            if (!element.dataset.lineWidthPx) {
+                const width =
+                    parseFloat(window.getComputedStyle(element).borderTopWidth || "2") || 2;
+                setArrowLineWidthPx(element, width);
+            }
+            if (!element.dataset.headWidthPx) {
+                setArrowHeadWidthPx(element, 10);
+            }
+            if (!element.dataset.arrowStyle) {
+                setArrowStyle(element, "-|>");
+            }
         }
 
-        label.style.zIndex = "3";
+        element.style.zIndex = "3";
         document.body.style.userSelect = "none";
     });
 
     document.addEventListener(
         "wheel",
         (event) => {
-            const label = getClosest(event.target, ".draggable-label");
-            if (!label || label.classList.contains("editing")) {
+            const element = getClosest(
+                event.target,
+                ".draggable-label, .draggable-arrow"
+            );
+            if (!element) {
+                return;
+            }
+            if (isLabel(element) && element.classList.contains("editing")) {
                 return;
             }
 
             event.preventDefault();
 
             if (event.shiftKey) {
-                const currentRotation = getRotationDeg(label);
+                if (isArrow(element)) {
+                    const currentHeadWidth =
+                        parseFloat(element.dataset.headWidthPx || "10") || 10;
+                    const nextHeadWidth = currentHeadWidth + (event.deltaY > 0 ? -1 : 1);
+                    setArrowHeadWidthPx(element, nextHeadWidth);
+                    return;
+                }
+
+                const currentRotation = getRotationDeg(element);
                 const nextRotation = currentRotation + (event.deltaY > 0 ? 2 : -2);
-                setRotationDeg(label, nextRotation);
+                setRotationDeg(element, nextRotation);
                 return;
             }
 
-            const currentFontPx =
-                parseFloat(window.getComputedStyle(label).fontSize || "13") || 13;
-            const nextFontPx = Math.min(
-                72,
-                Math.max(6, currentFontPx + (event.deltaY > 0 ? -1 : 1))
-            );
-            label.style.fontSize = `${nextFontPx}px`;
+            if (isLabel(element)) {
+                const currentFontPx =
+                    parseFloat(window.getComputedStyle(element).fontSize || "13") || 13;
+                const nextFontPx = Math.min(
+                    72,
+                    Math.max(6, currentFontPx + (event.deltaY > 0 ? -1 : 1))
+                );
+                element.style.fontSize = `${nextFontPx}px`;
+                return;
+            }
+
+            if (isArrow(element)) {
+                const currentLineWidth =
+                    parseFloat(element.dataset.lineWidthPx || element.style.borderTopWidth || "2") || 2;
+                const nextLineWidth = currentLineWidth + (event.deltaY > 0 ? -0.5 : 0.5);
+                setArrowLineWidthPx(element, nextLineWidth);
+            }
         },
         { passive: false }
     );
@@ -240,12 +483,27 @@
     document.addEventListener("pointercancel", stopDragging);
 
     const initColorPicker = () => {
+        ensureAllArrowHandles();
         colorButtons = Array.from(document.querySelectorAll(".label-color-swatch"));
-        if (!colorButtons.length) {
-            return;
+        if (colorButtons.length) {
+            setSwatchesEnabled(!!selectedElement);
         }
 
-        setSwatchesEnabled(!!selectedLabel);
+        const arrowHeadStyleSelector = getArrowHeadStyleSelector();
+        if (arrowHeadStyleSelector && !arrowHeadStyleSelector.dataset.boundChangeListener) {
+            arrowHeadStyleSelector.addEventListener("change", (event) => {
+                const targetArrow =
+                    (selectedElement && isArrow(selectedElement) ? selectedElement : null) ||
+                    document.querySelector(".draggable-arrow.selected");
+                if (!targetArrow) {
+                    return;
+                }
+                setArrowStyle(targetArrow, event.target.value || "-|>");
+            });
+            arrowHeadStyleSelector.dataset.boundChangeListener = "1";
+        }
+
+        syncArrowStyleSelectorWithSelection();
     };
 
     document.addEventListener("click", (event) => {
@@ -255,15 +513,16 @@
         }
 
         event.preventDefault();
-        const targetLabel =
-            selectedLabel || document.querySelector(".draggable-label.selected");
-        if (!targetLabel) {
+        const targetElement =
+            selectedElement ||
+            document.querySelector(".draggable-label.selected, .draggable-arrow.selected");
+        if (!targetElement) {
             return;
         }
 
         const color = swatch.dataset.color || "#000000";
-        targetLabel.style.color = color;
-        selectedLabel = targetLabel;
+        targetElement.style.color = color;
+        selectedElement = targetElement;
     });
 
     document.addEventListener("click", (event) => {
@@ -273,22 +532,23 @@
         }
 
         event.preventDefault();
-        const targetLabel =
-            selectedLabel || document.querySelector(".draggable-label.selected");
-        if (!targetLabel) {
+        const targetElement =
+            selectedElement ||
+            document.querySelector(".draggable-label.selected, .draggable-arrow.selected");
+        if (!targetElement) {
             return;
         }
 
         const nativePicker = document.createElement("input");
         nativePicker.type = "color";
-        nativePicker.value = getLabelColor(targetLabel);
+        nativePicker.value = getElementColor(targetElement);
         nativePicker.style.position = "fixed";
         nativePicker.style.left = "-9999px";
         nativePicker.style.top = "-9999px";
         document.body.appendChild(nativePicker);
 
         const applyAndCleanup = () => {
-            targetLabel.style.color = nativePicker.value || "#000000";
+            targetElement.style.color = nativePicker.value || "#000000";
             nativePicker.remove();
         };
         nativePicker.addEventListener("input", applyAndCleanup, { once: true });
@@ -301,6 +561,23 @@
     } else {
         initColorPicker();
     }
+
+    const observeLayerMutations = () => {
+        const layer = document.getElementById("labels-layer");
+        if (!layer) {
+            return;
+        }
+        const observer = new MutationObserver(() => {
+            ensureAllArrowHandles();
+        });
+        observer.observe(layer, { childList: true, subtree: true });
+    };
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", observeLayerMutations, { once: true });
+    } else {
+        observeLayerMutations();
+    }
 })();
 
 window.dash_clientside = Object.assign({}, window.dash_clientside, {
@@ -308,13 +585,14 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         snapshot: function (nIntervals) {
             const layer = document.getElementById("labels-layer");
             if (!layer) {
-                return [];
+                return [[], []];
             }
 
             const layerRect = layer.getBoundingClientRect();
             const labels = Array.from(layer.querySelectorAll(".draggable-label"));
+            const arrows = Array.from(layer.querySelectorAll(".draggable-arrow"));
 
-            return labels.map((label) => {
+            const labelsSnapshot = labels.map((label) => {
                 const labelRect = label.getBoundingClientRect();
                 const computedStyle = window.getComputedStyle(label);
                 const fontSizePx = parseFloat(computedStyle.fontSize || "13") || 13;
@@ -334,6 +612,25 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                     layerHeight: layerRect.height,
                 };
             });
+
+            const arrowsSnapshot = arrows.map((arrow) => {
+                const computedStyle = window.getComputedStyle(arrow);
+                return {
+                    left: parseFloat(arrow.style.left || "0") || 0,
+                    top: parseFloat(arrow.style.top || "0") || 0,
+                    lengthPx: parseFloat(arrow.dataset.lengthPx || arrow.style.width || "80") || 80,
+                    lineWidthPx:
+                        parseFloat(arrow.dataset.lineWidthPx || computedStyle.borderTopWidth || "2") || 2,
+                    headWidthPx: parseFloat(arrow.dataset.headWidthPx || "10") || 10,
+                    arrowStyle: arrow.dataset.arrowStyle || "-|>",
+                    rotationDeg: parseFloat(arrow.dataset.rotationDeg || "0") || 0,
+                    color: computedStyle.color || arrow.style.color || "#000000",
+                    layerWidth: layerRect.width,
+                    layerHeight: layerRect.height,
+                };
+            });
+
+            return [labelsSnapshot, arrowsSnapshot];
         },
     },
 });
