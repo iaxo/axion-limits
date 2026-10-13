@@ -18,6 +18,8 @@ The interactive app at [apps/interactive_plotter](apps/interactive_plotter) prov
 - select experiments from the database,
 - tune axis ranges and tick density,
 - add/drag/rotate labels,
+- add/drag/rotate arrows,
+- import a plotting script
 - and export both PDF plots and reproducible Python scripts.
 
 [<img align="center" height="420" src="apps/interactive_plotter/docs/interactive_plotter_Gag.png">](apps/interactive_plotter)
