@@ -631,14 +631,27 @@ def get_experiments_from_selection(selected_rows, row_data):
     (script import), before the grid reports the selected rows back.
     """
     if isinstance(selected_rows, dict):
-        rows_by_name = {row.get("name"): row for row in row_data or []}
+        rows_by_id = {row.get("_row_id", row.get("name")): row for row in row_data or []}
         selected_rows = [
-            rows_by_name[name] for name in selected_rows.get("ids", []) if name in rows_by_name
+            rows_by_id[row_id] for row_id in selected_rows.get("ids", []) if row_id in rows_by_id
         ]
     exps = {}
     for row in selected_rows or []:
         exps[row["name"]] = row.copy()
     return exps
+
+
+def with_row_ids(rows):
+    """Give each grid row a unique id (getRowId): its name, or name#N if repeated.
+
+    Experiment names are not unique in the databases (e.g. 'ABRA1_l' in Gag).
+    """
+    counts = {}
+    for row in rows:
+        name = row.get("name")
+        counts[name] = counts.get(name, 0) + 1
+        row["_row_id"] = name if counts[name] == 1 else f"{name}#{counts[name]}"
+    return rows
 
 
 def resolve_axis_range(slider_value, exact_limits, axis):
@@ -1102,10 +1115,18 @@ app.layout = html.Div(
                         dag.AgGrid(
                             id="ag-grid",
                             columnDefs=columns_defs,
-                            rowData=df.to_dict("records"),
+                            rowData=with_row_ids(df.to_dict("records")),
                             style={"height": "80vh", "width": "100%"},
-                            dashGridOptions={"rowSelection": "multiple"},
-                            getRowId="params.data.name",
+                            dashGridOptions={
+                                "rowSelection": "multiple",
+                                # a row click toggles that row instead of replacing the
+                                # selection (see assets/dashAgGridFunctions.js)
+                                "suppressRowClickSelection": True,
+                            },
+                            eventListeners={
+                                "cellClicked": ["toggleRowSelectionOnClick(params)"],
+                            },
+                            getRowId="params.data._row_id",
                             className="ag-theme-quartz-dark",
                         ),
                         # Container for the two buttons side by side
@@ -1356,18 +1377,21 @@ def import_plotting_script(script_contents, script_filename, layer_size):
     # Imported experiments first (in the script order) with their draw options,
     # followed by the rest of the database.
     db_rows = select_database(plot_type)
-    rows_by_name = {row["name"]: row for row in db_rows}
+    rows_by_name = {}
+    for row in db_rows:
+        rows_by_name.setdefault(row["name"], row)  # first row of repeated names
     imported_rows = []
     n_custom = 0
     for name, experiment in result["experiments"].items():
-        row = rows_by_name.pop(name, None)
+        row = rows_by_name.get(name)
         if row is None:
-            row = {"name": name}
+            row = {"name": name, "_row_id": name}
             n_custom += 1
         row.update(experiment)
         imported_rows.append(row)
-    row_data = imported_rows + [row for row in db_rows if row["name"] in rows_by_name]
-    selected = {"ids": list(result["experiments"].keys())}
+    imported_ids = {id(row) for row in imported_rows}
+    row_data = imported_rows + [row for row in db_rows if id(row) not in imported_ids]
+    selected = {"ids": [row["_row_id"] for row in imported_rows]}
 
     figx, figy = result["figsize"]
     labels_children = build_overlay_labels(
@@ -1423,7 +1447,7 @@ def select_database(plot_type):
         return []
     db_selected = plot_option_database.get(plot_type, None)
     df = db_selected().get_pandas_dataframe()
-    return df.to_dict("records")
+    return with_row_ids(df.to_dict("records"))
 
 # Update data on cell value change
 @app.callback(

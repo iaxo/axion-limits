@@ -54,7 +54,7 @@ The **Figure size (in)** inputs next to the plot type selector set the matplotli
 
 The AG Grid table lists all available experiments from the database for the selected plot type.
 
-- **Select rows** by clicking the checkbox on the left of each row — selected experiments are drawn on the plot.
+- **Select rows** by clicking the checkbox on the left of each row, or anywhere else on the row (except the `drawOptions` cell). Each click toggles only that row and keeps the rest of the selection. Selected experiments are drawn on the plot.
 - The **`drawOptions`** column is editable: click a cell to modify the drawing style for that experiment (e.g. colour, fill, line style). Changes are reflected in the plot on the next update.
 
 ### Axis range sliders
