@@ -1,4 +1,7 @@
 (() => {
+    // Shared state between the overlay modules (labels and arrows).
+    const overlay = (window.axlimOverlay = window.axlimOverlay || {});
+
     let activeLabel = null;
     let selectedLabel = null;
     let shiftX = 0;
@@ -64,11 +67,20 @@
     };
 
     const setSwatchesEnabled = (enabled) => {
-        colorButtons.forEach((btn) => {
+        // Query the swatches each time: Dash renders them after this file loads.
+        document.querySelectorAll(".label-color-swatch").forEach((btn) => {
             btn.disabled = !enabled;
             btn.classList.toggle("disabled", !enabled);
         });
     };
+
+    // The palette colours the selected label or the selected arrow.
+    const refreshSwatches = () => {
+        const arrowSelected =
+            typeof overlay.hasSelectedArrow === "function" && overlay.hasSelectedArrow();
+        setSwatchesEnabled(!!selectedLabel || arrowSelected);
+    };
+    overlay.refreshSwatches = refreshSwatches;
 
     const selectLabel = (label) => {
         selectedLabel = label || null;
@@ -76,13 +88,10 @@
             el.classList.remove("selected");
         });
 
-        if (!selectedLabel) {
-            setSwatchesEnabled(false);
-            return;
+        if (selectedLabel) {
+            selectedLabel.classList.add("selected");
         }
-
-        selectedLabel.classList.add("selected");
-        setSwatchesEnabled(true);
+        refreshSwatches();
     };
 
     const getRotationDeg = (label) => {
@@ -245,7 +254,7 @@
             return;
         }
 
-        setSwatchesEnabled(!!selectedLabel);
+        refreshSwatches();
     };
 
     document.addEventListener("click", (event) => {
@@ -255,13 +264,16 @@
         }
 
         event.preventDefault();
+        const color = swatch.dataset.color || "#000000";
         const targetLabel =
             selectedLabel || document.querySelector(".draggable-label.selected");
         if (!targetLabel) {
+            if (typeof overlay.setSelectedArrowColor === "function") {
+                overlay.setSelectedArrowColor(color);
+            }
             return;
         }
 
-        const color = swatch.dataset.color || "#000000";
         targetLabel.style.color = color;
         selectedLabel = targetLabel;
     });
@@ -275,20 +287,29 @@
         event.preventDefault();
         const targetLabel =
             selectedLabel || document.querySelector(".draggable-label.selected");
-        if (!targetLabel) {
+        const arrowColor =
+            !targetLabel && typeof overlay.getSelectedArrowColor === "function"
+                ? overlay.getSelectedArrowColor()
+                : null;
+        if (!targetLabel && !arrowColor) {
             return;
         }
 
         const nativePicker = document.createElement("input");
         nativePicker.type = "color";
-        nativePicker.value = getLabelColor(targetLabel);
+        nativePicker.value = targetLabel ? getLabelColor(targetLabel) : arrowColor;
         nativePicker.style.position = "fixed";
         nativePicker.style.left = "-9999px";
         nativePicker.style.top = "-9999px";
         document.body.appendChild(nativePicker);
 
         const applyAndCleanup = () => {
-            targetLabel.style.color = nativePicker.value || "#000000";
+            const color = nativePicker.value || "#000000";
+            if (targetLabel) {
+                targetLabel.style.color = color;
+            } else {
+                overlay.setSelectedArrowColor(color);
+            }
             nativePicker.remove();
         };
         nativePicker.addEventListener("input", applyAndCleanup, { once: true });
@@ -320,6 +341,13 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const fontSizePx = parseFloat(computedStyle.fontSize || "13") || 13;
                 const lineHeightPx =
                     parseFloat(computedStyle.lineHeight || "") || fontSizePx * 1.2;
+                // Extra matplotlib text options kept from an imported script.
+                let mplExtra = {};
+                try {
+                    mplExtra = JSON.parse(label.dataset.mplExtra || "{}") || {};
+                } catch (err) {
+                    mplExtra = {};
+                }
                 return {
                     text: (label.textContent || "").trim(),
                     left: parseFloat(label.style.left || "0") || 0,
@@ -332,6 +360,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                     textColor: computedStyle.color || label.style.color || "#000000",
                     layerWidth: layerRect.width,
                     layerHeight: layerRect.height,
+                    mplExtra,
                 };
             });
         },
