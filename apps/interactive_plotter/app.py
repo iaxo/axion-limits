@@ -1,8 +1,9 @@
-from dash import Dash, html, dcc, Input, Output, State, ClientsideFunction
+from dash import Dash, html, dcc, Input, Output, State, ClientsideFunction, no_update
 import dash_ag_grid as dag
 import axionlimits.databases as db
 from axionlimits.axion_plot import AxionGagPlot
 from axionlimits.wimp_plot import WimpPlot
+from axionlimits.x_plotter import BasePlot
 from axionlimits.utils import resolve_relative_path
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -12,12 +13,197 @@ import io
 import base64
 import re
 import math
+import numpy as np
 
 mpl.use("Agg")
 
 GENERATED_PLOT = None
 LABEL_FONT_SCALE_CORRECTION = 1.12
 LABEL_VERTICAL_OFFSET_TUNE = 2.24
+
+
+def _dict_to_params_str(d):
+    """Convert a dictionary to function parameter format: key='value', key2=value2"""
+    if not d or not isinstance(d, dict):
+        return ""
+    parts = []
+    for key, value in d.items():
+        if isinstance(value, str):
+            parts.append(f"{key}='{value}'")
+        else:
+            parts.append(f"{key}={value}")
+    return ", ".join(parts)
+
+
+def _decode_uploaded_script(contents):
+    if not contents:
+        raise ValueError("No file content received.")
+    parts = contents.split(",", 1)
+    if len(parts) != 2:
+        raise ValueError("Unexpected upload payload format.")
+    try:
+        decoded = base64.b64decode(parts[1]).decode("utf-8")
+    except Exception as exc:
+        raise ValueError(f"Could not decode uploaded script: {exc}") from exc
+    return decoded
+
+
+def _extract_plot_from_namespace(namespace):
+    explicit = namespace.get("plot")
+    if isinstance(explicit, BasePlot):
+        return explicit
+
+    latest = None
+    for value in namespace.values():
+        if isinstance(value, BasePlot):
+            latest = value
+    if latest is None:
+        raise ValueError(
+            "No AxionGagPlot/WimpPlot object found. Define `plot = AxionGagPlot(...)` "
+            "or `plot = WimpPlot(...)` in the script."
+        )
+    return latest
+
+
+def _run_uploaded_script_and_get_plot(contents):
+    script_code = _decode_uploaded_script(contents)
+    execution_globals = {
+        "__name__": "__main__",
+        "db": db,
+        "np": np,
+        "AxionGagPlot": AxionGagPlot,
+        "WimpPlot": WimpPlot,
+    }
+    try:
+        compiled = compile(script_code, "uploaded_plot_script.py", "exec")
+    except SyntaxError as exc:
+        raise ValueError(f"Syntax error in uploaded script: {exc}") from exc
+
+    try:
+        exec(compiled, execution_globals)
+    except Exception as exc:
+        raise ValueError(f"Script execution failed: {exc}") from exc
+
+    plot_obj = _extract_plot_from_namespace(execution_globals)
+    if not isinstance(plot_obj, (AxionGagPlot, WimpPlot)):
+        raise ValueError(
+            "Unsupported plot object type. Only AxionGagPlot and WimpPlot are supported."
+        )
+    return plot_obj
+
+
+def _infer_plot_type(plot_obj):
+    if isinstance(plot_obj, WimpPlot):
+        return "WIMPSSI"
+    if isinstance(plot_obj, AxionGagPlot):
+        return "AxionCag" if getattr(plot_obj, "plotCag", False) else "AxionGag"
+    raise ValueError("Unsupported plot object class.")
+
+
+def _safe_log10_slider_value(value, fallback=0.0):
+    try:
+        v = float(value)
+        if v <= 0:
+            return float(fallback)
+        return float(np.log10(v))
+    except Exception:
+        return float(fallback)
+
+
+def _labels_to_browser_snapshot(plot_obj, labels):
+    snapshot = []
+    fig_w_px, fig_h_px = plot_obj.fig.get_size_inches() * plot_obj.fig.dpi
+    layer_w = max(float(fig_w_px), 1.0)
+    layer_h = max(float(fig_h_px), 1.0)
+
+    for label in labels:
+        if len(label) < 4:
+            continue
+        text, x_data, y_data, kwargs = label
+        try:
+            x_disp, y_disp = plot_obj.plot.transData.transform((float(x_data), float(y_data)))
+        except Exception:
+            continue
+
+        x_fig = x_disp / layer_w
+        y_fig = y_disp / layer_h
+        x_fig = min(max(x_fig, 0.0), 1.0)
+        y_fig = min(max(y_fig, 0.0), 1.0)
+
+        fontsize_pt = float(kwargs.get("fontsize", kwargs.get("size", 13.0)) or 13.0)
+        fontsize_px = max(fontsize_pt * plot_obj.fig.dpi / 72.0, 1.0)
+        line_height_px = fontsize_px * 1.2
+
+        color = _normalize_css_color_for_mpl(str(kwargs.get("color", "#000000") or "#000000"))
+        rotation = float(kwargs.get("rotation", 0.0) or 0.0)
+
+        snapshot.append(
+            {
+                "text": str(text),
+                "left": x_fig * layer_w,
+                "top": (1.0 - y_fig) * layer_h,
+                "layerWidth": layer_w,
+                "layerHeight": layer_h,
+                "fontSizePx": fontsize_px,
+                "lineHeightPx": line_height_px,
+                "rotationDeg": -rotation,
+                "textColor": color,
+            }
+        )
+    return snapshot
+
+
+def _labels_snapshot_to_layer_children(labels_snapshot):
+    children = []
+    for label in labels_snapshot or []:
+        text = str(label.get("text", "") or "")
+        if not text.strip():
+            continue
+
+        left = float(label.get("left", 0.0) or 0.0)
+        top = float(label.get("top", 0.0) or 0.0)
+        font_size_px = float(label.get("fontSizePx", 13.0) or 13.0)
+        color = str(label.get("textColor", "#000000") or "#000000")
+
+        children.append(
+            html.Div(
+                text,
+                className="draggable-label",
+                style={
+                    "left": f"{left}px",
+                    "top": f"{top}px",
+                    "color": color,
+                    "fontSize": f"{font_size_px}px",
+                },
+            )
+        )
+    return children
+
+
+def _merge_selected_rows_with_imported_experiments(row_data, imported_experiments):
+    row_data = row_data or []
+    imported_experiments = imported_experiments or {}
+    by_name = {
+        str(row.get("name")): row
+        for row in row_data
+        if isinstance(row, dict) and row.get("name")
+    }
+
+    selected_rows = []
+    missing = []
+    for name, imported in imported_experiments.items():
+        if name in by_name:
+            row = by_name[name].copy()
+            row["type"] = imported.get("type", row.get("type", ""))
+            row["path"] = imported.get("path", row.get("path", ""))
+            row["drawOptions"] = imported.get("drawOptions", row.get("drawOptions", ""))
+            if "projection" in imported:
+                row["projection"] = imported.get("projection")
+            selected_rows.append(row)
+        else:
+            missing.append(name)
+
+    return selected_rows, missing
 
 
 def _parse_css_px(value, default=0.0):
@@ -156,12 +342,17 @@ def create_plot(
     yrange=(1e-17, 1e-6),
     plot_type="AxionGag",
     labels_mpl=None,
+    arrows_mpl=None,
     ticksopt_x="normal",
     ticksopt_y="normal",
+    figx=6.5,
+    figy=6.0,
 ):
     #exps = database.get_rows("name", experiments)
     #exps = df[df["name"].isin(experiments)].values.tolist()
     exps = experiments
+    figx = float(figx or 6.5)
+    figy = float(figy or 6.0)
 
     def _convert_labels_for_plot_constructor(plot_obj, labels_for_plot):
         """Convert figure-fraction label positions to data coordinates for plot.labels."""
@@ -248,8 +439,8 @@ def create_plot(
             "experiments": exps,
             "plotCag": False,
             "showplot": False,
-            "figx": 6.5,
-            "figy": 6,
+            "figx": figx,
+            "figy": figy,
             "ymin": yrange[0],
             "ymax": yrange[1],
             "xmin": xrange[0],
@@ -264,8 +455,8 @@ def create_plot(
             "experiments": exps,
             "plotCag": True,
             "showplot": False,
-            "figx": 6.5,
-            "figy": 6,
+            "figx": figx,
+            "figy": figy,
             "ymin": yrange[0],
             "ymax": yrange[1],
             "xmin": xrange[0],
@@ -296,6 +487,80 @@ def create_plot(
         labels_for_constructor = _convert_labels_for_plot_constructor(plot, labels_mpl)
         plt.close(plot.fig)
         plot = plot_class(labels=labels_for_constructor, **plot_kwargs)
+
+    if arrows_mpl:
+        fig_w_px, fig_h_px = plot.fig.get_size_inches() * plot.fig.dpi
+        axes_bbox = plot.plot.get_position()
+        x0_ax, y0_ax, x1_ax, y1_ax = (
+            axes_bbox.x0,
+            axes_bbox.y0,
+            axes_bbox.x1,
+            axes_bbox.y1,
+        )
+        ax_w = max(x1_ax - x0_ax, 1e-12)
+        ax_h = max(y1_ax - y0_ax, 1e-12)
+
+        for arrow in arrows_mpl:
+            x_fig = float(arrow.get("xpos_mpl", 0.0))
+            y_fig = float(arrow.get("ypos_mpl", 0.0))
+            x_fig = min(max(x_fig, 0.0), 1.0)
+            y_fig = min(max(y_fig, 0.0), 1.0)
+
+            x_ax = min(max((x_fig - x0_ax) / ax_w, 0.0), 1.0)
+            y_ax = min(max((y_fig - y0_ax) / ax_h, 0.0), 1.0)
+            x_disp, y_disp = plot.plot.transAxes.transform((x_ax, y_ax))
+
+            length_px_browser = max(float(arrow.get("length_px", 80.0) or 80.0), 0.0)
+            line_width_px_browser = max(
+                float(arrow.get("line_width_px", 2.0) or 2.0), 0.5
+            )
+            head_width_px_browser = max(
+                float(arrow.get("head_width_px", line_width_px_browser * 4.0)
+                      or (line_width_px_browser * 4.0)),
+                4.0,
+            )
+            rotation_deg = float(arrow.get("rotation_deg", 0.0) or 0.0)
+            layer_w = float(arrow.get("layer_width_px", 0.0) or 0.0)
+            layer_h = float(arrow.get("layer_height_px", 0.0) or 0.0)
+            scale_x = fig_w_px / layer_w if layer_w > 0 else 1.0
+            scale_y = fig_h_px / layer_h if layer_h > 0 else 1.0
+            scale = min(scale_x, scale_y)
+
+            length_fig_px = length_px_browser * scale
+            theta = math.radians(rotation_deg)
+            dx_disp = math.cos(theta) * length_fig_px
+            dy_disp = -math.sin(theta) * length_fig_px
+
+            x2_disp = x_disp + dx_disp
+            y2_disp = y_disp + dy_disp
+
+            x1_data, y1_data = plot.plot.transData.inverted().transform((x_disp, y_disp))
+            x2_data, y2_data = plot.plot.transData.inverted().transform((x2_disp, y2_disp))
+
+            color = _normalize_css_color_for_mpl(
+                str(arrow.get("color", "#000000") or "#000000"),
+                default="#000000",
+            )
+            arrow_style = str(arrow.get("arrow_style", "-|>") or "-|>")
+            if arrow_style not in ARROW_STYLE_OPTIONS:
+                arrow_style = "-|>"
+            line_width_pt = max(line_width_px_browser * scale * 72.0 / plot.fig.dpi, 0.5)
+            head_width_pt = max(head_width_px_browser * scale * 72.0 / plot.fig.dpi, 2.0)
+            mutation_scale = max(8.0, head_width_pt * 2.0)
+
+            plot.plot.annotate(
+                "",
+                xy=(float(x2_data), float(y2_data)),
+                xytext=(float(x1_data), float(y1_data)),
+                arrowprops={
+                    "arrowstyle": arrow_style,
+                    "color": color,
+                    "lw": line_width_pt,
+                    "shrinkA": 0,
+                    "shrinkB": 0,
+                    "mutation_scale": mutation_scale,
+                },
+            )
 
     global GENERATED_PLOT
     GENERATED_PLOT = plot
@@ -408,6 +673,44 @@ def get_mpl_labels_from_browser_snapshot(labels_snapshot):
         )
     return labels_mpl
 
+
+def get_mpl_arrows_from_browser_snapshot(arrows_snapshot):
+    """Convert synced browser arrows into mpl-ready arrow geometry."""
+    arrows_mpl = []
+    for arrow in arrows_snapshot or []:
+        coords = label_browser_to_mpl_figure_coords(
+            {
+                "left": float(arrow.get("left", 0.0) or 0.0),
+                "top": float(arrow.get("top", 0.0) or 0.0),
+                "width": 0.0,
+                "height": 0.0,
+                "layerWidth": float(arrow.get("layerWidth", 0.0) or 0.0),
+                "layerHeight": float(arrow.get("layerHeight", 0.0) or 0.0),
+            }
+        )
+        if not coords:
+            continue
+
+        xpos_mpl, ypos_mpl = coords
+        arrows_mpl.append(
+            {
+                "xpos_mpl": xpos_mpl,
+                "ypos_mpl": ypos_mpl,
+                "length_px": float(arrow.get("lengthPx", 80.0) or 80.0),
+                "line_width_px": float(arrow.get("lineWidthPx", 2.0) or 2.0),
+                "head_width_px": float(arrow.get("headWidthPx", 10.0) or 10.0),
+                "arrow_style": str(arrow.get("arrowStyle", "-|>") or "-|>"),
+                "rotation_deg": float(arrow.get("rotationDeg", 0.0) or 0.0),
+                "layer_width_px": float(arrow.get("layerWidth", 0.0) or 0.0),
+                "layer_height_px": float(arrow.get("layerHeight", 0.0) or 0.0),
+                "color": _normalize_css_color_for_mpl(
+                    str(arrow.get("color", "#000000") or "#000000"),
+                    default="#000000",
+                ),
+            }
+        )
+    return arrows_mpl
+
 # Initialize Dash app
 app = Dash(__name__, external_stylesheets=[dag.themes.QUARTZ])
 app.title = "Interactive Plotter"
@@ -441,6 +744,20 @@ plot_option_database = {
     "WIMPSSI": db.DataBaseWimps,
 }
 
+ARROW_STYLE_OPTIONS = [
+    "->",
+    "-|>",
+    "-",
+    "-[",
+    "|-|",
+    "<->",
+    "<|-",
+    "<|-|>",
+    "simple",
+    "fancy",
+    "wedge",
+]
+
 
 # Define column definitions for AgGrid
 columns_defs = [
@@ -467,6 +784,8 @@ for col in columns_defs:
 app.layout = html.Div(
     children=[
         dcc.Store(id="labels-dom-store", data=[]),
+        dcc.Store(id="arrows-dom-store", data=[]),
+        dcc.Store(id="imported-plot-store", data={}),
         dcc.Interval(id="labels-sync-interval", interval=300, n_intervals=0),
         html.H1(
             "Interactive Plotter",
@@ -498,6 +817,47 @@ app.layout = html.Div(
                             searchable=False,
                             style={"width": "100%", "marginBottom": "10px"},
                             className="dark-theme",
+                        ),
+                        html.Div(
+                            style={
+                                "display": "flex",
+                                "alignItems": "center",
+                                "gap": "10px",
+                                "marginTop": "10px",
+                            },
+                            children=[
+                                html.Span(
+                                    "Figure size (in):",
+                                    style={"color": "#dfe4ff", "fontSize": "14px"},
+                                ),
+                                dcc.Input(
+                                    id="figx-input",
+                                    type="number",
+                                    min=1,
+                                    max=20,
+                                    step=0.1,
+                                    value=6.5,
+                                    debounce=True,
+                                    className="dark-theme",
+                                    style={"width": "50px"},
+                                ),
+                                html.Span("x", style={"color": "#dfe4ff"}),
+                                dcc.Input(
+                                    id="figy-input",
+                                    type="number",
+                                    min=1,
+                                    max=20,
+                                    step=0.1,
+                                    value=6.0,
+                                    debounce=True,
+                                    className="dark-theme",
+                                    style={"width": "50px"},
+                                ),
+                                html.Span(
+                                    "(Valid range 1-20 in)",
+                                    style={"color": "#dfe4ff", "fontSize": "14px"},
+                                ),
+                            ],
                         ),
                         html.Div(
                             id="plot-container",
@@ -551,6 +911,45 @@ app.layout = html.Div(
                                         "borderRadius": "5px",
                                         "fontSize": "16px",
                                     },
+                                ),
+                                html.Button(
+                                    "Add Arrow",
+                                    id="btn-add-arrow",
+                                    n_clicks=0,
+                                    style={
+                                        "backgroundColor": "#4c6a9a",
+                                        "color": "white",
+                                        "padding": "8px 18px",
+                                        "border": "none",
+                                        "cursor": "pointer",
+                                        "borderRadius": "5px",
+                                        "fontSize": "16px",
+                                    },
+                                ),
+                                html.Div(
+                                    style={
+                                        "display": "flex",
+                                        "alignItems": "center",
+                                        "gap": "8px",
+                                    },
+                                    children=[
+                                        html.Span(
+                                            "Arrow head:",
+                                            style={"color": "#dfe4ff", "fontSize": "14px"},
+                                        ),
+                                        dcc.Dropdown(
+                                            id="arrow-head-style-selector",
+                                            options=[
+                                                {"label": style, "value": style}
+                                                for style in ARROW_STYLE_OPTIONS
+                                            ],
+                                            value="-|>",
+                                            clearable=False,
+                                            searchable=False,
+                                            style={"width": "130px"},
+                                            className="dark-theme",
+                                        ),
+                                    ],
                                 ),
                                 html.Button(
                                     "Apply Labels",
@@ -748,6 +1147,30 @@ app.layout = html.Div(
                                     ],
                                     style={"marginRight": "20px"},  # separation between buttons
                                 ),
+                                html.Div(
+                                    children=[
+                                        dcc.Upload(
+                                            id="upload-plot-script",
+                                            children=html.Button(
+                                                "Import Python",
+                                                id="btn-import-py",
+                                                n_clicks=0,
+                                                style={
+                                                    "backgroundColor": "#2563eb",
+                                                    "color": "white",
+                                                    "padding": "10px 24px",
+                                                    "border": "none",
+                                                    "cursor": "pointer",
+                                                    "borderRadius": "5px",
+                                                    "fontSize": "24px",
+                                                },
+                                            ),
+                                            multiple=False,
+                                            accept=".py,text/x-python,text/plain",
+                                        ),
+                                    ],
+                                    style={"marginRight": "20px"},
+                                ),
                                 # Container for the Generate PDF button
                                 html.Div(
                                     children=[
@@ -770,6 +1193,16 @@ app.layout = html.Div(
                                 ),
                             ],
                         ),
+                        html.Div(
+                            "",
+                            id="import-status",
+                            style={
+                                "marginTop": "10px",
+                                "color": "#dfe4ff",
+                                "fontSize": "14px",
+                                "whiteSpace": "pre-wrap",
+                            },
+                        ),
                     ],
                 ),
             ],
@@ -780,6 +1213,7 @@ app.layout = html.Div(
 app.clientside_callback(
     ClientsideFunction(namespace="labels", function_name="snapshot"),
     Output("labels-dom-store", "data"),
+    Output("arrows-dom-store", "data"),
     Input("labels-sync-interval", "n_intervals"),
 )
 
@@ -790,6 +1224,8 @@ app.clientside_callback(
     Input("y-range-slider", "value"),
     Input("ticksopt-x-selector", "value"),
     Input("ticksopt-y-selector", "value"),
+    Input("figx-input", "value"),
+    Input("figy-input", "value"),
     Input("ag-grid", "selectedRows"),
     Input("ag-grid", "cellValueChanged"),
     Input("plot-type-selector", "value"),
@@ -799,6 +1235,8 @@ def update_plot_axis_ranges(
     y_range,
     ticksopt_x,
     ticksopt_y,
+    figx,
+    figy,
     selected_curves,
     cell_changed,
     plot_type,
@@ -816,6 +1254,8 @@ def update_plot_axis_ranges(
         plot_type=plot_type,
         ticksopt_x=ticksopt_x or "normal",
         ticksopt_y=ticksopt_y or "normal",
+        figx=figx or 6.5,
+        figy=figy or 6.0,
     )
 
 # change sliders range
@@ -887,15 +1327,53 @@ def add_draggable_label(n_clicks, existing_labels):
 
 
 @app.callback(
+    Output("labels-layer", "children", allow_duplicate=True),
+    Input("btn-add-arrow", "n_clicks"),
+    State("labels-layer", "children"),
+    prevent_initial_call=True,
+)
+def add_draggable_arrow(n_clicks, existing_labels):
+    labels = existing_labels if existing_labels else []
+    labels.append(
+        html.Div(
+            children=[
+                html.Span(className="arrow-handle arrow-handle-start", **{"data-handle": "start"}),
+                html.Span(className="arrow-handle arrow-handle-end", **{"data-handle": "end"}),
+            ],
+            className="draggable-arrow",
+            style={
+                "left": f"{40 + (n_clicks - 1) * 12}px",
+                "top": f"{40 + (n_clicks - 1) * 12}px",
+                "color": "#000000",
+                "width": "80px",
+                "borderTopWidth": "2px",
+                "--arrow-head-width-px": "10px",
+            },
+            **{
+                "data-length-px": "80",
+                "data-line-width-px": "2",
+                "data-head-width-px": "10",
+                "data-arrow-style": "-|>",
+                "data-rotation-deg": "0",
+            },
+        )
+    )
+    return labels
+
+
+@app.callback(
     Output("curve-plot", "src", allow_duplicate=True),
     Input("btn-apply-labels", "n_clicks"),
     State("x-range-slider", "value"),
     State("y-range-slider", "value"),
     State("ticksopt-x-selector", "value"),
     State("ticksopt-y-selector", "value"),
+    State("figx-input", "value"),
+    State("figy-input", "value"),
     State("ag-grid", "selectedRows"),
     State("plot-type-selector", "value"),
     State("labels-dom-store", "data"),
+    State("arrows-dom-store", "data"),
     prevent_initial_call=True,
 )
 def apply_labels_to_current_plot(
@@ -904,9 +1382,12 @@ def apply_labels_to_current_plot(
     y_range,
     ticksopt_x,
     ticksopt_y,
+    figx,
+    figy,
     selected_curves,
     plot_type,
     labels_snapshot,
+    arrows_snapshot,
 ):
     if not selected_curves:
         selected_curves = []
@@ -916,14 +1397,19 @@ def apply_labels_to_current_plot(
         exps[row["name"]] = row.copy()
 
     labels_mpl = get_mpl_labels_from_browser_snapshot(labels_snapshot)
+    arrows_mpl = get_mpl_arrows_from_browser_snapshot(arrows_snapshot)
+    print(arrows_mpl)
     return create_plot(
         experiments=exps,
         xrange=(10 ** x_range[0], 10 ** x_range[1]),
         yrange=(10 ** y_range[0], 10 ** y_range[1]),
         plot_type=plot_type,
         labels_mpl=labels_mpl,
+        arrows_mpl=arrows_mpl,
         ticksopt_x=ticksopt_x or "normal",
         ticksopt_y=ticksopt_y or "normal",
+        figx=figx or 6.5,
+        figy=figy or 6.0,
     )
 
 @app.callback(
@@ -951,5 +1437,167 @@ def generate_pdf_file(n_clicks):
     return dcc.send_bytes(buffer.getvalue(), filename="grafico_generado.pdf")
 
 
+@app.callback(
+    Output("imported-plot-store", "data"),
+    Output("plot-type-selector", "value", allow_duplicate=True),
+    Output("figx-input", "value", allow_duplicate=True),
+    Output("figy-input", "value", allow_duplicate=True),
+    Output("x-range-slider", "value", allow_duplicate=True),
+    Output("y-range-slider", "value", allow_duplicate=True),
+    Output("labels-dom-store", "data", allow_duplicate=True),
+    Output("arrows-dom-store", "data", allow_duplicate=True),
+    Output("labels-layer", "children", allow_duplicate=True),
+    Output("curve-plot", "src", allow_duplicate=True),
+    Output("import-status", "children"),
+    Input("upload-plot-script", "contents"),
+    State("upload-plot-script", "filename"),
+    prevent_initial_call=True,
+)
+def import_plot_script(contents, filename):
+    if not contents:
+        return (
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            "No script was uploaded.",
+        )
+
+    try:
+        imported_plot = _run_uploaded_script_and_get_plot(contents)
+        plot_type = _infer_plot_type(imported_plot)
+        plot_customization = imported_plot.get_plot_customization()
+        imported_experiments = imported_plot.get_plotted_data_dict()
+        imported_labels = imported_plot.get_plot_labels()
+
+        x_slider = [
+            _safe_log10_slider_value(plot_customization.get("xmin", 1e-11), -11.0),
+            _safe_log10_slider_value(plot_customization.get("xmax", 1e9), 9.0),
+        ]
+        y_slider = [
+            _safe_log10_slider_value(plot_customization.get("ymin", 1e-18), -18.0),
+            _safe_log10_slider_value(plot_customization.get("ymax", 1e-4), -4.0),
+        ]
+
+        labels_snapshot = _labels_to_browser_snapshot(imported_plot, imported_labels)
+        label_children = _labels_snapshot_to_layer_children(labels_snapshot)
+
+        figx = float(plot_customization.get("figx", 6.5) or 6.5)
+        figy = float(plot_customization.get("figy", 6.0) or 6.0)
+
+        imported_payload = {
+            "plotType": plot_type,
+            "experiments": imported_experiments,
+            "filename": filename or "uploaded_script.py",
+        }
+
+        global GENERATED_PLOT
+        GENERATED_PLOT = imported_plot
+
+        plot_image_buffer = io.BytesIO()
+        imported_plot.fig.savefig(plot_image_buffer, format="png")
+        plot_image_buffer.seek(0)
+        plot_src = "data:image/png;base64," + base64.b64encode(plot_image_buffer.read()).decode()
+        plt.close(imported_plot.fig)
+
+        status = f"Imported {len(imported_experiments)} experiments and {len(imported_labels)} labels from {filename or 'uploaded script'}."
+        return (
+            imported_payload,
+            plot_type,
+            figx,
+            figy,
+            x_slider,
+            y_slider,
+            labels_snapshot,
+            [],
+            label_children,
+            plot_src,
+            status,
+        )
+    except Exception as exc:
+        return (
+            {},
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            no_update,
+            f"Import failed: {exc}",
+        )
+
+
+@app.callback(
+    Output("ag-grid", "rowData", allow_duplicate=True),
+    Output("ag-grid", "selectedRows", allow_duplicate=True),
+    Output("import-status", "children", allow_duplicate=True),
+    Input("imported-plot-store", "data"),
+    State("ag-grid", "rowData"),
+    prevent_initial_call=True,
+)
+def sync_selected_rows_from_import(imported_data, row_data):
+    print(f"DEBUG: sync_selected_rows_from_import called")
+    if not imported_data:
+        print("DEBUG: imported_data is empty, returning no_update")
+        return no_update, [], ""
+
+    plot_type = imported_data.get("plotType")
+    
+    # Fetch fresh rowData based on the imported plot type to avoid race condition
+    if plot_type:
+        db_selected = plot_option_database.get(plot_type, None)
+        if db_selected:
+            try:
+                df = db_selected().get_pandas_dataframe()
+                row_data = df.to_dict("records")
+                print(f"DEBUG: Fetched fresh rowData with {len(row_data)} rows")
+            except Exception as e:
+                print(f"DEBUG: Error fetching fresh rowData: {e}")
+                pass
+
+    imported_experiments = imported_data.get("experiments", {})
+    imported_names = set(imported_experiments.keys())
+    print(f"DEBUG: Looking for {len(imported_names)} imported experiments: {imported_names}")
+    
+    row_data = row_data or []
+    selected_rows = []
+    
+    # Update rowData with imported drawOptions and build selectedRows
+    for row in row_data:
+        if isinstance(row, dict) and row.get("name"):
+            name = str(row.get("name"))
+            if name in imported_names:
+                # Update drawOptions from imported data and convert to parameter string format
+                imported = imported_experiments[name]
+                draw_opts = imported.get("drawOptions", row.get("drawOptions", ""))
+                # Convert dict to parameter format: key='value', key2=value2
+                if isinstance(draw_opts, dict):
+                    row["drawOptions"] = _dict_to_params_str(draw_opts)
+                else:
+                    row["drawOptions"] = str(draw_opts) if draw_opts else ""
+                if "projection" in imported:
+                    row["projection"] = imported.get("projection")
+                selected_rows.append(row)
+                print(f"DEBUG: Selected row {name} with drawOptions={row.get('drawOptions')}")
+
+    filename = imported_data.get("filename", "uploaded script")
+    status = f"Imported {len(selected_rows)} experiments from {filename}."
+    missing = imported_names - {row.get("name") for row in selected_rows if isinstance(row, dict) and row.get("name")}
+    if missing:
+        status += " Missing from current database: " + ", ".join(sorted(missing))
+    
+    print(f"DEBUG: Returning rowData with updated drawOptions and selectedRows with {len(selected_rows)} rows")
+    return row_data, selected_rows, status
+
+
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)
